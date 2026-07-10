@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Приглашение — Toi Invite</title>
+    <meta name="description" content="Публичная страница приглашения с программой, фото, картой и RSVP." />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <a class="brand" href="index.html" aria-label="Toi Invite">
+          <span class="brand-mark">TI</span>
+          <span class="brand-text">
+            <strong>Toi Invite</strong>
+            <small>Публичное приглашение</small>
+          </span>
+        </a>
+        <nav class="nav" aria-label="Основная навигация">
+          <a href="templates.html">Шаблоны</a>
+          <a href="builder.html">Конструктор</a>
+          <a href="dashboard.html">Кабинет</a>
+          <a class="nav-cta" href="builder.html">Редактировать</a>
+        </nav>
+      </header>
+
+      <section class="page-hero">
+        <div>
+          <span class="eyebrow">Свадьба</span>
+          <h1>Арман и Аружан</h1>
+          <p>
+            Приглашаем вас разделить с нами один из самых важных дней. Ниже размещены дата,
+            место, программа, фото, музыка и форма подтверждения участия.
+          </p>
+        </div>
+        <div class="pill-row">
+          <span class="pill">12 сентября 2026</span>
+          <span class="pill">18:30</span>
+          <span class="pill">Royal Hall, Алматы</span>
+        </div>
+      </section>
+
+      <section class="invite-page">
+        <article class="invite-main">
+          <div class="invite-hero">
+            <span class="eyebrow" style="color: rgba(255,255,255,0.82); border-color: rgba(255,255,255,0.18); background: rgba(255,255,255,0.1);">Премиальный шаблон</span>
+            <h2>Арман и Аружан</h2>
+            <p>
+              С теплом и уважением приглашаем вас на наше торжество. Будем рады видеть вас
+              в этот вечер рядом с нами.
+            </p>
+          </div>
+
+          <div class="invite-sections">
+            <section class="invite-block">
+              <h3>Фото</h3>
+              <p>Здесь размещается галерея или hero photo приглашения.</p>
+            </section>
+            <section class="invite-block">
+              <h3>Программа</h3>
+              <p>18:30 - Сбор гостей</p>
+              <p>19:00 - Церемония</p>
+              <p>20:00 - Праздничный ужин</p>
+            </section>
+            <section class="invite-block">
+              <h3>Локация</h3>
+              <p>Royal Hall, проспект Абая, 120, Алматы.</p>
+              <div class="hero-actions">
+                <a class="button button-primary" href="#rsvp">RSVP</a>
+                <a class="button button-secondary" href="#rsvp">Открыть карту</a>
+              </div>
+            </section>
+            <section class="invite-block" id="rsvp">
+              <h3>Подтверждение участия</h3>
+              <div class="form-grid">
+                <div class="field">
+                  <label for="guest-name">Имя</label>
+                  <input id="guest-name" type="text" placeholder="Ваше имя" />
+                </div>
+                <div class="field">
+                  <label for="guest-count">Гостей</label>
+                  <input id="guest-count" type="number" min="0" value="2" />
+                </div>
+                <div class="field" style="grid-column: 1 / -1;">
+                  <label for="guest-note">Комментарий</label>
+                  <textarea id="guest-note" placeholder="Ваше пожелание или комментарий"></textarea>
+                </div>
+              </div>
+              <div class="hero-actions" style="margin-top: 16px;">
+                <a class="button button-primary" href="#rsvp">Отправить ответ</a>
+              </div>
+            </section>
+          </div>
+        </article>
+
+        <aside class="invite-aside">
+          <span class="eyebrow">До события</span>
+          <div class="countdown">
+            <div><strong>24</strong><span>дня</span></div>
+            <div><strong>08</strong><span>часов</span></div>
+            <div><strong>45</strong><span>мин</span></div>
+            <div><strong>12</strong><span>сек</span></div>
+          </div>
+
+          <div class="panel-link">Музыка: включена</div>
+          <div class="panel-link">Wishes wall: активен</div>
+          <div class="panel-link">Share: WhatsApp / Telegram</div>
+          <div class="panel-link">Status: опубликовано</div>
+        </aside>
+      </section>
+    </div>
+  </body>
+</html>

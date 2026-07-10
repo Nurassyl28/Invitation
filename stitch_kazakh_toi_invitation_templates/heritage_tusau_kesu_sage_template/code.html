@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="kk"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Тұсау Кесу | Amanat Heritage</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&amp;family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline": "#707974",
+                        "secondary-fixed-dim": "#ffb3ad",
+                        "tertiary-fixed": "#ffe088",
+                        "tertiary": "#735c00",
+                        "secondary-fixed": "#ffdad7",
+                        "on-tertiary": "#ffffff",
+                        "outline-variant": "#bfc9c3",
+                        "surface-container-high": "#eaead1",
+                        "surface-dim": "#dbdcc3",
+                        "inverse-surface": "#303221",
+                        "surface-bright": "#fbfbe2",
+                        "error": "#ba1a1a",
+                        "on-secondary-container": "#721315",
+                        "on-tertiary-fixed": "#241a00",
+                        "on-secondary-fixed": "#410004",
+                        "primary-container": "#064e3b",
+                        "tertiary-fixed-dim": "#e9c349",
+                        "surface-container-highest": "#e4e4cc",
+                        "on-tertiary-fixed-variant": "#574500",
+                        "inverse-primary": "#95d3ba",
+                        "surface-tint": "#2b6954",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container": "#efefd7",
+                        "on-primary-container": "#80bea6",
+                        "secondary-container": "#fe7c74",
+                        "primary": "#003527",
+                        "on-primary-fixed": "#002117",
+                        "inverse-on-surface": "#f2f2d9",
+                        "surface-variant": "#e4e4cc",
+                        "secondary": "#a53936",
+                        "on-primary-fixed-variant": "#0b513d",
+                        "on-error-container": "#93000a",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-container": "#4e3d00",
+                        "on-error": "#ffffff",
+                        "tertiary-container": "#cca72f",
+                        "on-secondary": "#ffffff",
+                        "surface-container-low": "#f5f5dc",
+                        "primary-fixed-dim": "#95d3ba",
+                        "on-surface-variant": "#404944",
+                        "primary-fixed": "#b0f0d6",
+                        "on-primary": "#ffffff",
+                        "on-surface": "#1b1d0e",
+                        "surface": "#fbfbe2",
+                        "background": "#fbfbe2",
+                        "on-background": "#1b1d0e",
+                        "on-secondary-fixed-variant": "#852221"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "section-gap-lg": "80px",
+                        "gutter": "16px",
+                        "unit": "8px",
+                        "section-gap-sm": "48px",
+                        "container-margin": "24px"
+                    },
+                    "fontFamily": {
+                        "display-lg-mobile": ["EB Garamond"],
+                        "display-lg": ["EB Garamond"],
+                        "headline-sm": ["EB Garamond"],
+                        "headline-md": ["EB Garamond"],
+                        "button": ["Hanken Grotesk"],
+                        "label-md": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "body-lg": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "display-lg-mobile": ["36px", {"lineHeight": "42px", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "500"}],
+                        "headline-sm": ["24px", {"lineHeight": "32px", "fontWeight": "400"}],
+                        "headline-md": ["32px", {"lineHeight": "40px", "fontWeight": "400"}],
+                        "button": ["16px", {"lineHeight": "24px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        
+        .heritage-bg {
+            background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBXkQCdxO3FTsewN48bItqg73WGBIG5Y0zv9CwPj3ecaoSD4BuJZDdxv91Hx6q-sGKzRTKZUOrlOASrcBRGtqLrIMKuslPKm69Zusnd7KWdPMbqlntveviWpGy-HB-5V3s29gp1ZzKsVjsEGF3vsyjk0u8PFsaklTBPCiU2PHYYmlModT5gyJjH0o-HENJ-vU2j4uEdjFoWWjihEX2PtQPnZLNpREa_yhjcTyGBh01Gbrq1y-AT1z3-k46Z2SdSns6j4r3m7BDAkbM');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .premium-card {
+            background: rgba(251, 251, 226, 0.85);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(182, 150, 107, 0.3);
+        }
+
+        .gold-divider {
+            background: linear-gradient(90deg, transparent, #cca72f, transparent);
+        }
+
+        .step-node {
+            position: relative;
+        }
+        .step-node::before {
+            content: '';
+            position: absolute;
+            left: -33px;
+            top: 10px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #2b6954;
+            border: 3px solid #b0f0d6;
+        }
+
+        body {
+            min-height: 100dvh;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md overflow-x-hidden heritage-bg">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 transition-all duration-300">
+<div class="flex justify-between items-center w-full px-6 py-4 max-w-screen-xl mx-auto">
+<div class="flex items-center gap-4">
+<button class="text-primary hover:opacity-80 transition-opacity active:scale-95">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<span class="text-headline-sm font-headline-md text-primary tracking-[0.2em] uppercase">Amanat</span>
+</div>
+<button class="text-primary hover:opacity-80 transition-opacity active:scale-95">
+<span class="material-symbols-outlined" data-icon="music_note">music_note</span>
+</button>
+</div>
+</header>
+<main class="pt-24 pb-24">
+<!-- Hero Section -->
+<section class="relative min-h-[90vh] flex flex-col items-center justify-center text-center px-container-margin" id="Invitation">
+<div class="premium-card p-10 md:p-16 rounded-3xl max-w-2xl mx-auto shadow-2xl border-2 border-primary/10">
+<div class="mb-6">
+<span class="material-symbols-outlined text-primary text-[56px] opacity-80" data-icon="temp_preferences_custom">temp_preferences_custom</span>
+</div>
+<p class="font-label-md text-label-md text-tertiary uppercase tracking-[0.3em] mb-4">Тұсау Кесу Тойы</p>
+<h1 class="font-display-lg-mobile text-display-lg-mobile md:font-display-lg md:text-display-lg text-primary mb-8 leading-tight">
+                Алиханның <br/>
+<span class="italic font-serif">алғашқы қадамы</span>
+</h1>
+<div class="w-24 h-[1px] gold-divider mx-auto mb-10"></div>
+<p class="font-body-lg text-body-lg text-on-surface-variant italic mb-12 leading-relaxed">
+                "Баламыздың табаны жерге тиіп, қадамы нық болсын деген ақ тілекпен ұйымдастырылатын Тұсау кесу рәсіміне қадірлі қонақ болыңыздар."
+            </p>
+<div class="flex flex-col items-center gap-2">
+<div class="px-8 py-6 rounded-2xl bg-surface/50 border border-tertiary-container/30">
+<span class="font-headline-sm text-headline-sm text-primary block mb-1">15 Қыркүйек</span>
+<span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest">Жексенбі • 2024 • 16:00</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Program & Visuals -->
+<section class="py-section-gap-lg px-container-margin max-w-5xl mx-auto" id="Program">
+<div class="grid md:grid-cols-2 gap-12 items-center">
+<div class="relative group">
+<div class="absolute -inset-4 border-2 border-tertiary/20 rounded-full scale-95 group-hover:scale-100 transition-transform duration-700"></div>
+<div class="relative rounded-full aspect-square overflow-hidden shadow-2xl p-3 bg-white">
+<img class="w-full h-full object-cover rounded-full" data-alt="A professional high-end studio portrait of a toddler in traditional Kazakh garments made of white silk and velvet, sitting on a soft cream-colored carpet." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDO2YRInkMKHZfZ-60rqiozppIllxIKLBd2Box44N8veYWlpdWu6gX_FiVCfInyiPq40BXvVfxdb74UpJeiZLGFWWA9mKcuYGjtrmGUhjLBJAe7MobFQOd2tytH91ujbwH2WNrYa1jRuA1rqAiatwzZsWKMqLE8xkvCp00OR3zEpvqul_S18v7iaL3a0S3DMSJK7unr5aoBq9HtiXO3x2g9JnAkmlGvh7NdA68QyqWREv7-PVVaf4-XoZF0min-ZqnbMoG6tEWmC5o"/>
+</div>
+</div>
+<div class="premium-card p-8 md:p-12 rounded-3xl">
+<h2 class="font-headline-md text-headline-md text-primary mb-10 border-b border-primary/10 pb-4 italic">Мереке Бағдарламасы</h2>
+<div class="relative pl-8 space-y-10 border-l border-primary/20">
+<div class="step-node">
+<span class="font-label-md text-label-md text-tertiary block mb-1">16:00</span>
+<h4 class="font-headline-sm text-[20px] text-primary">Қонақтардың жиналуы</h4>
+<p class="font-body-md text-on-surface-variant">Ақ тілектер мен қауышу сәті</p>
+</div>
+<div class="step-node">
+<span class="font-label-md text-label-md text-tertiary block mb-1">17:00</span>
+<h4 class="font-headline-sm text-[20px] text-primary">Тұсау кесу рәсімі</h4>
+<p class="font-body-md text-on-surface-variant">Баламыздың алғашқы қадамы</p>
+</div>
+<div class="step-node">
+<span class="font-label-md text-label-md text-tertiary block mb-1">18:30</span>
+<h4 class="font-headline-sm text-[20px] text-primary">Мерекелік дастархан</h4>
+<p class="font-body-md text-on-surface-variant">Көңілді кеш пен шоу-бағдарлама</p>
+</div>
+</div>
+<button class="mt-12 w-full bg-primary text-on-primary py-4 px-8 font-button text-button rounded-xl shadow-lg hover:bg-primary-container transition-all flex items-center justify-center gap-3">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+                    Мекен-жайды ашу
+                </button>
+</div>
+</div>
+</section>
+<!-- RSVP Section -->
+<section class="py-section-gap-lg px-container-margin relative overflow-hidden" id="RSVP">
+<div class="max-w-3xl mx-auto premium-card p-8 md:p-16 rounded-3xl shadow-2xl relative z-10">
+<div class="text-center mb-12">
+<span class="material-symbols-outlined text-tertiary mb-4" data-icon="history_edu">history_edu</span>
+<h2 class="font-headline-md text-headline-md text-primary mb-4 italic">Құрметті қонақтар</h2>
+<p class="font-body-md text-on-surface-variant">Қатысуыңызды растауыңызды сұраймыз</p>
+</div>
+<form class="space-y-10">
+<div class="relative">
+<label class="block font-label-md text-label-md text-tertiary mb-3 uppercase tracking-widest">Толық аты-жөніңіз</label>
+<input class="w-full bg-transparent border-0 border-b-2 border-primary/20 focus:border-primary focus:ring-0 transition-colors py-3 text-body-lg placeholder:text-outline-variant font-serif" placeholder="Мысалы: Арман Жандосов" type="text"/>
+</div>
+<div class="space-y-4">
+<label class="block font-label-md text-label-md text-tertiary uppercase tracking-widest">Тойға келесіз бе?</label>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<label class="flex items-center gap-3 p-5 border-2 border-primary/10 rounded-2xl cursor-pointer hover:bg-primary/5 transition-all">
+<input class="w-5 h-5 text-primary border-primary/30 focus:ring-primary" name="attending" type="radio"/>
+<span class="font-body-md text-primary font-semibold">Иә, барамын</span>
+</label>
+<label class="flex items-center gap-3 p-5 border-2 border-primary/10 rounded-2xl cursor-pointer hover:bg-primary/5 transition-all">
+<input class="w-5 h-5 text-primary border-primary/30 focus:ring-primary" name="attending" type="radio"/>
+<span class="font-body-md text-primary font-semibold">Өкінішке орай</span>
+</label>
+</div>
+</div>
+<div class="relative">
+<label class="block font-label-md text-label-md text-tertiary mb-3 uppercase tracking-widest">Тілек немесе ескерту</label>
+<textarea class="w-full bg-transparent border-0 border-b-2 border-primary/20 focus:border-primary focus:ring-0 transition-colors py-3 text-body-lg placeholder:text-outline-variant resize-none h-24 font-serif" placeholder="Жүрекжарды тілектеріңіз..."></textarea>
+</div>
+<button class="w-full bg-primary text-on-primary py-5 px-8 font-button text-button rounded-2xl hover:shadow-2xl transition-all uppercase tracking-[0.3em] font-bold" type="submit">
+                    Растауды жіберу
+                </button>
+</form>
+</div>
+</section>
+<!-- Gallery -->
+<section class="py-section-gap-lg px-container-margin" id="Gallery">
+<div class="max-w-6xl mx-auto">
+<h2 class="text-center font-headline-md text-headline-md text-primary mb-12 italic">Мерекелік сәттер</h2>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-6 auto-rows-[240px]">
+<div class="col-span-2 row-span-2 rounded-3xl overflow-hidden shadow-xl border-4 border-white group">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000" data-alt="A cinematic close-up of a child's tiny feet stepping onto a white traditional Kazakh rug." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWf2SjRO5S9bStMcRjN0_DBodJrIN6X0QvGBwHgkbzOH57m4ic2tftPlQqZT2ZqaI6Mmtu2XuDQMDvKA2rYnBvy2HpH1xlI8IqeUo31CKw8emO05tB7OO19349CTkqk28NsDXAtnqGvi1NVoHayDWwwySUOVXtrDX1ikh-fNjbVbwUjhqDMWzf6ZTZp_ZSKckTR2pV0DXMwLepQobDqvGilEMLj6vO3bTXUEOi6j44hg7VRyALUHPDEXExZyrDZl_zPtqdUuf-8E4"/>
+</div>
+<div class="rounded-3xl overflow-hidden shadow-lg bg-white p-2">
+<img class="w-full h-full object-cover rounded-2xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKlFyILPATC7G9j68lLi1LXRYQQNvXfIp1NPqutwd8BKDzvDqNallUtP7I_GhDCZcBTYhhjs50fH59vwJZcAAI9MBbY8O0b38FKYslBDONEUrzJj4HHPeOc57ROk5d48XiE7dtouuAe5-_8LyY0LowPtQCT-KjGR9TLpIbXVuXqf4_e71k7py210sGnf8FYB2jUeb8khjoUiJsH8P2nMQSb1NVDdQZqG3HiTLgqFfSSLhE2YMRHlfADftw-oJOJ3pW5U2wUP6Qemk"/>
+</div>
+<div class="rounded-3xl overflow-hidden shadow-lg bg-white p-2">
+<img class="w-full h-full object-cover rounded-2xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBb_anR8G_lMTWLsgBTccsMuXU4Q8dCVCj1mws4xlB8GH6x6ptegpaIAqoVWlK3f1LjluZA3N3YdQY_iSeJ8jmCuEZz9787VD5GHtyH8V1Gk7eNIXNc8X-Js_vIonfxCEOXvmAbyRnjAu09L7K04vlgjETLRAcExu4oYuBDwzoGW27khs7HuMVjV6s-gzKulty47sCsox1xpHZhuyS5_-XEscJrGZ8TGRqbm9eBH6DpKH0HPmyCukKQ4D7LHd7biuK2wFFfh-_T61w"/>
+</div>
+<div class="col-span-2 rounded-3xl overflow-hidden shadow-lg bg-white p-2">
+<img class="w-full h-full object-cover rounded-2xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzORmK9TrVjyiE7ns0OdYdnYLaqHeBFKksglAKAak5zdfxqzFdrlYO1OntUHcr45Ic7CGFrKDbU53l7m6Ih-b5CznYRPqkL5yOe8z21yXCpVBcsBwirKqCklPVG3GtMlUe_8h_nxwOHOD-QhFEmfE-xL5BioqVxmPyMkKlQQmukeM_Gu10YFxdBS-blrawAAbVWUPFu4N4eXQdHIFvnFOg2Q2UdawEhkAyMXZIUik6v4z6sGzPOjTv7sFK1rQm4-9RRlqRKPJcUv8"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Music Player -->
+<section class="py-section-gap-lg px-container-margin">
+<div class="max-w-md mx-auto premium-card p-8 rounded-[40px] flex items-center gap-6 shadow-xl">
+<button class="w-16 h-16 bg-primary text-on-primary rounded-full flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-transform" id="playBtn">
+<span class="material-symbols-outlined text-[32px]" data-icon="play_arrow">play_arrow</span>
+</button>
+<div class="flex-1">
+<p class="font-headline-sm text-[18px] text-primary">Ерке Сылы</p>
+<p class="font-body-md text-on-surface-variant">Қазақ халық күйі</p>
+</div>
+<div class="flex items-end gap-1 h-8">
+<div class="w-1 bg-tertiary h-1/2 animate-bounce"></div>
+<div class="w-1 bg-tertiary h-full animate-bounce [animation-delay:0.2s]"></div>
+<div class="w-1 bg-tertiary h-3/4 animate-bounce [animation-delay:0.4s]"></div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="py-section-gap-lg px-container-margin text-center">
+<div class="mb-10">
+<span class="text-headline-md font-headline-md text-primary tracking-[0.3em] uppercase">Amanat</span>
+<p class="font-body-md text-on-surface-variant mt-3 italic">Киелі мұраның жалғасы</p>
+</div>
+<div class="flex justify-center gap-8 mb-12">
+<a class="w-12 h-12 rounded-full border border-primary/20 flex items-center justify-center text-primary hover:bg-primary/5" href="#">
+<span class="material-symbols-outlined" data-icon="share">share</span>
+</a>
+<a class="w-12 h-12 rounded-full border border-primary/20 flex items-center justify-center text-primary hover:bg-primary/5" href="#">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span>
+</a>
+</div>
+<p class="text-[12px] font-label-md text-outline-variant uppercase tracking-[0.4em]">2024 • Мұрагердің қадамы құтты болсын</p>
+<div class="h-20 md:hidden"></div>
+</footer>
+</main>
+<!-- Bottom Navigation (Mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 bg-white/95 backdrop-blur-md shadow-[0_-8px_32px_rgba(0,0,0,0.05)] border-t border-primary/5 flex justify-around items-center px-4 py-3 pb-safe">
+<a class="flex flex-col items-center gap-1 text-primary" href="#Invitation">
+<span class="material-symbols-outlined text-[24px]" data-icon="star_rate">star_rate</span>
+<span class="text-[10px] font-label-md uppercase tracking-tighter">Басты</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-outline-variant hover:text-primary transition-colors" href="#Program">
+<span class="material-symbols-outlined text-[24px]" data-icon="event_note">event_note</span>
+<span class="text-[10px] font-label-md uppercase tracking-tighter">Кесте</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-outline-variant hover:text-primary transition-colors" href="#RSVP">
+<span class="material-symbols-outlined text-[24px]" data-icon="check_circle">check_circle</span>
+<span class="text-[10px] font-label-md uppercase tracking-tighter">Растау</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-outline-variant hover:text-primary transition-colors" href="#Gallery">
+<span class="material-symbols-outlined text-[24px]" data-icon="photo_library">photo_library</span>
+<span class="text-[10px] font-label-md uppercase tracking-tighter">Галерея</span>
+</a>
+</nav>
+<script>
+    // Music Button Toggle
+    const playBtn = document.getElementById('playBtn');
+    let isPlaying = false;
+    playBtn.addEventListener('click', () => {
+        isPlaying = !isPlaying;
+        const icon = playBtn.querySelector('.material-symbols-outlined');
+        icon.textContent = isPlaying ? 'pause' : 'play_arrow';
+        playBtn.classList.toggle('bg-tertiary', isPlaying);
+        playBtn.classList.toggle('bg-primary', !isPlaying);
+    });
+
+    // Reveal animations
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.remove('opacity-0', 'translate-y-12');
+                entry.target.classList.add('opacity-100', 'translate-y-0');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('section > div').forEach(el => {
+        el.classList.add('transition-all', 'duration-1000', 'opacity-0', 'translate-y-12');
+        observer.observe(el);
+    });
+</script>
+</body></html>

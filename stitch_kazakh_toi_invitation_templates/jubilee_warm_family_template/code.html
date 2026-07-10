@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+
+<html lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Amanat - Jubilee Celebration</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&amp;family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .grain-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 99;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+        .gold-leaf-border {
+            box-shadow: inset 0 0 0 1px #D4AF37;
+        }
+        .ornament-watermark {
+            opacity: 0.08;
+            filter: sepia(1) saturate(2);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#cca72f",
+                        "tertiary-fixed-dim": "#e9c349",
+                        "on-error-container": "#93000a",
+                        "surface-container-highest": "#e4e4cc",
+                        "secondary": "#a53936",
+                        "surface-variant": "#e4e4cc",
+                        "on-surface-variant": "#404944",
+                        "error-container": "#ffdad6",
+                        "inverse-surface": "#303221",
+                        "inverse-on-surface": "#f2f2d9",
+                        "on-primary-fixed": "#002117",
+                        "on-tertiary-fixed-variant": "#574500",
+                        "inverse-primary": "#95d3ba",
+                        "on-tertiary-fixed": "#241a00",
+                        "surface-container-lowest": "#ffffff",
+                        "outline": "#707974",
+                        "secondary-fixed-dim": "#ffb3ad",
+                        "on-primary-container": "#80bea6",
+                        "primary-fixed-dim": "#95d3ba",
+                        "surface": "#fbfbe2",
+                        "surface-bright": "#fbfbe2",
+                        "tertiary": "#735c00",
+                        "surface-tint": "#2b6954",
+                        "primary": "#003527",
+                        "on-secondary-fixed": "#410004",
+                        "on-surface": "#1b1d0e",
+                        "surface-container": "#efefd7",
+                        "on-secondary-fixed-variant": "#852221",
+                        "on-background": "#1b1d0e",
+                        "on-secondary-container": "#721315",
+                        "primary-fixed": "#b0f0d6",
+                        "background": "#fbfbe2",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#f5f5dc",
+                        "on-tertiary-container": "#4e3d00",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed-variant": "#0b513d",
+                        "surface-dim": "#dbdcc3",
+                        "surface-container-high": "#eaead1",
+                        "secondary-fixed": "#ffdad7",
+                        "secondary-container": "#fe7c74",
+                        "primary-container": "#064e3b",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed": "#ffe088",
+                        "outline-variant": "#bfc9c3",
+                        "error": "#ba1a1a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "unit": "8px",
+                        "container-margin": "24px",
+                        "section-gap-sm": "48px",
+                        "section-gap-lg": "80px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Hanken Grotesk"],
+                        "label-md": ["Hanken Grotesk"],
+                        "headline-md": ["EB Garamond"],
+                        "headline-sm": ["EB Garamond"],
+                        "button": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "display-lg-mobile": ["EB Garamond"],
+                        "display-lg": ["EB Garamond"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-md": ["32px", {"lineHeight": "40px", "fontWeight": "400"}],
+                        "headline-sm": ["24px", {"lineHeight": "32px", "fontWeight": "400"}],
+                        "button": ["16px", {"lineHeight": "24px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "display-lg-mobile": ["36px", {"lineHeight": "42px", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md selection:bg-tertiary-fixed-dim selection:text-on-tertiary-fixed overflow-x-hidden">
+<div class="grain-overlay"></div>
+<!-- Navigation Shell -->
+<header class="bg-surface fixed top-0 w-full z-50 px-6 py-4 max-w-screen-xl mx-auto flex justify-between items-center">
+<button class="material-symbols-outlined text-primary hover:opacity-80 transition-opacity">menu</button>
+<span class="text-headline-md font-headline-md text-primary tracking-widest uppercase">Amanat</span>
+<button class="material-symbols-outlined text-primary hover:opacity-80 transition-opacity">music_note</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-24 pb-32">
+<!-- Hero Section -->
+<section class="px-container-margin mb-section-gap-lg">
+<div class="text-center space-y-4">
+<span class="font-label-md text-label-md text-tertiary uppercase tracking-[0.2em]">Мерейтой • Юбилей</span>
+<h1 class="font-display-lg-mobile text-display-lg-mobile md:font-display-lg md:text-display-lg text-primary italic leading-tight">
+                    Асыл қазынамыз — <br/>Аманжол атамызға 70 жыл
+                </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-lg mx-auto">
+                    Приглашаем вас разделить с нами теплые моменты празднования почетного юбилея нашего главы семьи.
+                </p>
+</div>
+</section>
+<!-- Large Portrait Area -->
+<section class="px-container-margin mb-section-gap-lg relative">
+<div class="max-w-4xl mx-auto aspect-[3/4] md:aspect-[16/9] overflow-hidden rounded-xl gold-leaf-border relative">
+<img class="w-full h-full object-cover" data-alt="A dignified elderly Kazakh man with a warm smile, wearing a traditional embroidered velvet Chapan in deep emerald and gold. He is seated in a sunlit, elegant study filled with heritage books and soft warm shadows. The lighting is high-end editorial style with a soft focus background, emphasizing a mood of wisdom, legacy, and family warmth. Warm beige and golden tones dominate the palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuOmX0hQrTxmq-TkR1xX7eJ1eW98muSgPIwyGNx6qzXL9eG1GbZcJjfDK-TM6OwMqN3jE0kbNZGLmFC9RuDeerHcnOkweayHJdGqx-ICLO0UjGp-lK3CWCvwBUXCdkyn0xVG8V0-lZnb1-yufcNM_sdFS5UdQI5vmWNg95-bhFleazju3aaKZgBh6mcT51_e85Ny1BGxUKaZ_vlrT1J5w7M2rOcdCJ-lfKSVypDqusnhBqN0acPY16I00_MKEoSuh9_-9Y4d3vA9A"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+</div>
+<!-- Traditional Ornament Element -->
+<div class="absolute -bottom-8 left-1/2 -translate-x-1/2 w-24 h-24 ornament-watermark">
+<img alt="Ornament" class="w-full h-full opacity-30" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA3aTlrGf_BKUDSNvrGOdOr71KNaGC57venctAkJLOxCdmfsMaSons4cfzmSAFB9S87zGhTpe_0JkS7NLwEg0TNx6RfSQFN4zgCG4k4Dye439zpOh-ZKV55BxfB4qAuo-Dnrc_pmhxOkQneVn4yYO9FZDFyKuLBpu0OwJAKxAm_QLFv8UOxPwUUtvmx43ofcEDbmeEdeiKd-KV7-2kBaKBDOHn5xaova8lEZ-lu17mrpgEVBOvkv_ltViVaizh2ojMLVP04WMXcU5g"/>
+</div>
+</section>
+<!-- Date & Venue Grid -->
+<section class="px-container-margin mb-section-gap-lg">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter max-w-5xl mx-auto">
+<!-- Date Card -->
+<div class="bg-surface-container-low p-8 rounded-lg gold-leaf-border text-center flex flex-col justify-center space-y-4">
+<span class="material-symbols-outlined text-tertiary text-4xl">calendar_today</span>
+<h3 class="font-headline-sm text-headline-sm text-primary uppercase tracking-wider">Күні • Дата</h3>
+<div class="space-y-1">
+<p class="font-body-lg text-body-lg font-bold">15 СЕНТЯБРЯ, 2024</p>
+<p class="font-body-md text-body-md text-on-surface-variant">Сбор гостей в 17:00</p>
+</div>
+</div>
+<!-- Venue Card -->
+<div class="bg-surface-container-low p-8 rounded-lg gold-leaf-border text-center flex flex-col justify-center space-y-4">
+<span class="material-symbols-outlined text-tertiary text-4xl">location_on</span>
+<h3 class="font-headline-sm text-headline-sm text-primary uppercase tracking-wider">Мекен-жай • Место</h3>
+<div class="space-y-1">
+<p class="font-body-lg text-body-lg font-bold">Ресторан "Алтын Орда"</p>
+<p class="font-body-md text-body-md text-on-surface-variant">г. Алматы, пр. Достык 123</p>
+</div>
+<a class="inline-block mt-2 font-label-md text-label-md text-secondary border-b border-secondary/30 pb-1" href="#">Посмотреть на карте</a>
+</div>
+</div>
+</section>
+<!-- Timeline Section -->
+<section class="px-container-margin mb-section-gap-lg">
+<div class="max-w-2xl mx-auto">
+<h2 class="font-headline-md text-headline-md text-center text-primary mb-10 italic">Программа вечера</h2>
+<div class="space-y-8 relative before:content-[''] before:absolute before:left-[19px] before:top-2 before:bottom-2 before:w-[1px] before:bg-outline-variant">
+<div class="flex gap-6 items-start relative">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center z-10 border border-tertiary/20">
+<span class="text-xs font-bold text-tertiary">17:00</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-primary uppercase">Қонақтардың жиналуы</p>
+<p class="font-body-md text-body-md text-on-surface-variant">Встреча гостей, легкий фуршет и живая музыка</p>
+</div>
+</div>
+<div class="flex gap-6 items-start relative">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center z-10 border border-tertiary/20">
+<span class="text-xs font-bold text-tertiary">18:00</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-primary uppercase">Тойдың басталуы</p>
+<p class="font-body-md text-body-md text-on-surface-variant">Торжественное начало банкета и поздравления</p>
+</div>
+</div>
+<div class="flex gap-6 items-start relative">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center z-10 border border-tertiary/20">
+<span class="text-xs font-bold text-tertiary">20:00</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-primary uppercase">Шоу-бағдарлама</p>
+<p class="font-body-md text-body-md text-on-surface-variant">Выступление артистов и семейные традиции</p>
+</div>
+</div>
+<div class="flex gap-6 items-start relative">
+<div class="w-10 h-10 rounded-full bg-surface-container-high flex items-center justify-center z-10 border border-tertiary/20">
+<span class="text-xs font-bold text-tertiary">22:00</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-primary uppercase">Торт кесу</p>
+<p class="font-body-md text-body-md text-on-surface-variant">Торжественное разрезание праздничного торта</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- RSVP Form -->
+<section class="px-container-margin mb-section-gap-lg">
+<div class="max-w-xl mx-auto bg-surface-container-lowest p-10 rounded-xl gold-leaf-border shadow-sm">
+<h2 class="font-headline-md text-headline-md text-center text-primary mb-2">Подтвердите участие</h2>
+<p class="text-center font-body-md text-body-md text-on-surface-variant mb-8">Просим Вас подтвердить свое присутствие до 1 сентября</p>
+<form class="space-y-8">
+<div class="relative">
+<input class="peer w-full bg-transparent border-0 border-b border-surface-container-highest focus:border-primary focus:ring-0 px-0 py-2 transition-colors" id="name" placeholder=" " type="text"/>
+<label class="absolute left-0 top-2 -translate-y-6 text-label-md font-label-md text-on-surface-variant uppercase scale-75 origin-top-left transition-all peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100 peer-focus:-translate-y-6 peer-focus:scale-75" for="name">Ваше Имя / Атыңыз</label>
+</div>
+<div class="space-y-4">
+<p class="text-label-md font-label-md text-on-surface-variant uppercase">Придете ли Вы?</p>
+<div class="flex gap-6">
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-4 h-4 text-primary border-outline-variant focus:ring-primary" name="attendance" type="radio"/>
+<span class="font-body-md text-body-md group-hover:text-primary transition-colors">Да, буду / Иә, келемін</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-4 h-4 text-primary border-outline-variant focus:ring-primary" name="attendance" type="radio"/>
+<span class="font-body-md text-body-md group-hover:text-primary transition-colors">Не смогу / Өкінішке орай</span>
+</label>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary py-4 rounded font-button text-button uppercase tracking-widest hover:opacity-90 active:scale-[0.98] transition-all" type="submit">Отправить • Жіберу</button>
+</form>
+</div>
+</section>
+<!-- Guest Wishes (Bento Style) -->
+<section class="px-container-margin mb-section-gap-lg">
+<h2 class="font-headline-md text-headline-md text-center text-primary mb-10 italic">Теплые пожелания</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+<div class="bg-surface-container p-6 rounded-lg italic font-body-md text-body-md border-l-4 border-tertiary">
+                    "Аманжол ата, мерейтойыңыз құтты болсын! Сізге зор денсаулық, ұзақ ғұмыр тілейміз. Біздің мақтанышымыз болып жүре беріңіз!"
+                    <p class="mt-4 not-italic font-bold text-primary">— От семьи Нургалиевых</p>
+</div>
+<div class="bg-surface-container p-6 rounded-lg italic font-body-md text-body-md border-l-4 border-tertiary md:mt-8">
+                    "Дорогой Аманжол! 70 лет — это только начало нового этапа. Твоя мудрость — наш ориентир. Пусть каждый день приносит радость."
+                    <p class="mt-4 not-italic font-bold text-primary">— Твои верные друзья</p>
+</div>
+<div class="bg-surface-container p-6 rounded-lg italic font-body-md text-body-md border-l-4 border-tertiary">
+                    "Ата, сізді қатты жақсы көреміз! Бізге берген тәрбиеңіз бен мейіріміңіз үшін рахмет. Ортамызда күліп-ойнап аман жүріңіз!"
+                    <p class="mt-4 not-italic font-bold text-primary">— Немерелеріңізден</p>
+</div>
+</div>
+</section>
+<!-- Gallery Teaser -->
+<section class="px-container-margin mb-section-gap-lg overflow-hidden">
+<div class="flex gap-4 overflow-x-auto pb-8 no-scrollbar -mx-container-margin px-container-margin">
+<div class="min-w-[280px] h-[400px] rounded-xl overflow-hidden shadow-lg flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Vintage black and white photograph from the 1970s showing a young Kazakh couple in traditional minimalist attire, standing in front of a University building, soft focus, historical warm sepia tone." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBJ4jWynvFJo4dM3E3lrYF38Jrr2l1gUMvEW29oqBt-A3z4lIeRcAXIIJc0sD7xJ1Dwnotth7D7NCLmF166rxCLb1--boV0kbcvY21DSb1MGgK7qPI36-c39H3wjW99rtwL1fhKZy5qYAXANo-5rrodl9r7e2M3ZYKu9vytdGpGsL1FoHHXO-INrLnlx2M_OR5157aqaJJ5IJdpELmyQFJwAqIoPwwAUNOiI1jIz7WBRBahKp_ftl9BTqFYfwvqHePdCU49_r9fn8c"/>
+</div>
+<div class="min-w-[280px] h-[400px] rounded-xl overflow-hidden shadow-lg flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A joyful family gathering in a modern bright living room with golden hour sunlight streaming through large windows, several generations of a Kazakh family laughing together, warm ivory and beige aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLAVuInSJmXzTQH7HiXplzH4xOxYvvnDM8QWIOWio3kJJ2D7ewmFeg1CdOd0qsY-carq6p1wWNpuSg5PsmZvNY1wAHM2DC2F1oGfRoP2zRgIkCUGQx2YHXDTeCkcugHD3IZmr2M76HRIrKPc5Ei1IPQGewOo-_Yv99Zj38K1I_Fnxk0cqo9FjVjQlRjD4dChySj3Un02UJQD2UCAmFK-ANa-dYzDS863_zL6Rv3FYxtlo9YEDG-ohF_LvJm-yyzRRz3XP6NLutlds"/>
+</div>
+<div class="min-w-[280px] h-[400px] rounded-xl overflow-hidden shadow-lg flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="Close up of traditional Kazakh tea ceremony details, a silver tray with a Samovar and hand-painted tea bowls (Piala), warm steam rising, elegant soft focus background with luxury textures." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYsQ4eBbml09kOWtCGjz2rXJDVWW3YSvS_6rLKSaGjik_iqlhq7bn7W1pR8pILX8cCvC-FmxlQEZ2goTUfJWyeWw42Vx0lWUY0b_pDDCjMtYqKk5WAz7eSXdB9rBUUTD2aziidApopg4zCxNAoYtg0zfTKvnsfIVLRJdMA7U83--2k00JO1ll3oJkBJzerN26p40iSfviDtgEsUiCtnYlUInWTlIVkMiVyUWULd-F3cErOyqclGUuaRv1Ox1FEfhX_WjhJpmFtqMs"/>
+</div>
+</div>
+</section>
+</main>
+<!-- Floating Action Button -->
+<a class="fixed bottom-24 right-6 bg-[#25D366] text-white w-14 h-14 rounded-full flex items-center justify-center shadow-2xl z-40 transition-transform active:scale-90" href="https://wa.me/#">
+<svg fill="currentColor" height="28" viewbox="0 0 24 24" width="28" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"></path></svg>
+</a>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 bg-surface-container-low flex justify-around items-center px-4 py-2 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+<a class="flex flex-col items-center justify-center text-primary font-bold transition-transform translate-y-[-2px]" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<span class="text-label-md font-label-md">Invitation</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">event_note</span>
+<span class="text-label-md font-label-md">Program</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">edit_calendar</span>
+<span class="text-label-md font-label-md">RSVP</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">photo_library</span>
+<span class="text-label-md font-label-md">Gallery</span>
+</a>
+</nav>
+<script>
+        // Simple micro-interaction for smooth scrolling to form
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Intersection Observer for scroll reveal animations
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                    entry.target.classList.remove('opacity-0', 'translate-y-10');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('section').forEach(section => {
+            section.classList.add('transition-all', 'duration-1000', 'opacity-0', 'translate-y-10');
+            observer.observe(section);
+        });
+    </script>
+</body></html>

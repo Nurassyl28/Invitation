@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="kk"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Amanat - Wedding Invitation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&amp;family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#cca72f",
+                        "tertiary-fixed-dim": "#e9c349",
+                        "on-error-container": "#93000a",
+                        "surface-container-highest": "#e4e4cc",
+                        "secondary": "#a53936",
+                        "surface-variant": "#e4e4cc",
+                        "on-surface-variant": "#404944",
+                        "error-container": "#ffdad6",
+                        "inverse-surface": "#303221",
+                        "inverse-on-surface": "#f2f2d9",
+                        "on-primary-fixed": "#002117",
+                        "on-tertiary-fixed-variant": "#574500",
+                        "inverse-primary": "#95d3ba",
+                        "on-tertiary-fixed": "#241a00",
+                        "surface-container-lowest": "#ffffff",
+                        "outline": "#707974",
+                        "secondary-fixed-dim": "#ffb3ad",
+                        "on-primary-container": "#80bea6",
+                        "primary-fixed-dim": "#95d3ba",
+                        "surface": "#fbfbe2",
+                        "surface-bright": "#fbfbe2",
+                        "tertiary": "#735c00",
+                        "surface-tint": "#2b6954",
+                        "primary": "#003527",
+                        "on-secondary-fixed": "#410004",
+                        "on-surface": "#1b1d0e",
+                        "surface-container": "#efefd7",
+                        "on-secondary-fixed-variant": "#852221",
+                        "on-background": "#1b1d0e",
+                        "on-secondary-container": "#721315",
+                        "primary-fixed": "#b0f0d6",
+                        "background": "#fbfbe2",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#f5f5dc",
+                        "on-tertiary-container": "#4e3d00",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed-variant": "#0b513d",
+                        "surface-dim": "#dbdcc3",
+                        "surface-container-high": "#eaead1",
+                        "secondary-fixed": "#ffdad7",
+                        "secondary-container": "#fe7c74",
+                        "primary-container": "#064e3b",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed": "#ffe088",
+                        "outline-variant": "#bfc9c3",
+                        "error": "#ba1a1a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "unit": "8px",
+                        "container-margin": "24px",
+                        "section-gap-sm": "48px",
+                        "section-gap-lg": "80px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Hanken Grotesk"],
+                        "label-md": ["Hanken Grotesk"],
+                        "headline-md": ["EB Garamond"],
+                        "headline-sm": ["EB Garamond"],
+                        "button": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "display-lg-mobile": ["EB Garamond"],
+                        "display-lg": ["EB Garamond"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-md": ["32px", {"lineHeight": "40px", "fontWeight": "400"}],
+                        "headline-sm": ["24px", {"lineHeight": "32px", "fontWeight": "400"}],
+                        "button": ["16px", {"lineHeight": "24px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "display-lg-mobile": ["36px", {"lineHeight": "42px", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .ornament-mask {
+            mask-image: linear-gradient(to bottom, transparent, black, transparent);
+            -webkit-mask-image: linear-gradient(to bottom, transparent, black, transparent);
+        }
+        .silk-texture {
+            background-image: url("https://www.transparenttextures.com/patterns/silk.png");
+        }
+        .grain-overlay::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url("https://www.transparenttextures.com/patterns/asfalt-dark.png");
+            opacity: 0.05;
+            pointer-events: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-md overflow-x-hidden silk-texture">
+<!-- Top AppBar (JSON Component) -->
+<header class="bg-surface dark:bg-surface-dim docked full-width top-0 z-50 fixed w-full">
+<div class="flex justify-between items-center w-full px-6 py-4 max-w-screen-xl mx-auto">
+<button class="text-primary dark:text-primary-fixed-dim hover:opacity-80 transition-opacity flex items-center justify-center p-2" onclick="toggleDrawer()">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<h1 class="text-headline-md font-headline-md text-primary dark:text-primary-fixed-dim tracking-widest uppercase">Amanat</h1>
+<button class="text-primary dark:text-primary-fixed-dim hover:opacity-80 transition-opacity flex items-center justify-center p-2">
+<span class="material-symbols-outlined" data-icon="music_note">music_note</span>
+</button>
+</div>
+</header>
+<!-- Navigation Drawer (JSON Component) -->
+<nav class="fixed inset-y-0 left-0 z-[60] w-72 flex flex-col py-6 bg-surface dark:bg-surface-dim border-r border-outline-variant shadow-2xl transform -translate-x-full transition-transform duration-300 ease-in-out" id="nav-drawer">
+<div class="px-6 mb-8 flex justify-between items-center">
+<h2 class="text-headline-sm font-headline-sm text-primary">Menu</h2>
+<button class="text-on-surface-variant" onclick="toggleDrawer()">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+<div class="flex flex-col gap-2">
+<a class="text-on-surface-variant hover:bg-surface-container-high rounded-lg mx-2 flex items-center gap-4 px-4 py-3 text-body-lg font-body-lg" href="#hero">
+<span class="material-symbols-outlined" data-icon="favorite">favorite</span> Our Story
+            </a>
+<a class="text-on-surface-variant hover:bg-surface-container-high rounded-lg mx-2 flex items-center gap-4 px-4 py-3 text-body-lg font-body-lg" href="#venue">
+<span class="material-symbols-outlined" data-icon="location_on">location_on</span> The Venue
+            </a>
+<a class="text-on-surface-variant hover:bg-surface-container-high rounded-lg mx-2 flex items-center gap-4 px-4 py-3 text-body-lg font-body-lg" href="#rsvp">
+<span class="material-symbols-outlined" data-icon="edit_calendar">edit_calendar</span> RSVP
+            </a>
+<a class="text-on-surface-variant hover:bg-surface-container-high rounded-lg mx-2 flex items-center gap-4 px-4 py-3 text-body-lg font-body-lg" href="#gallery">
+<span class="material-symbols-outlined" data-icon="photo_library">photo_library</span> Gallery
+            </a>
+<div class="border-t border-outline-variant my-4 mx-4"></div>
+<a class="text-on-surface-variant hover:bg-surface-container-high rounded-lg mx-2 flex items-center gap-4 px-4 py-3 text-body-lg font-body-lg" href="#">
+<span class="material-symbols-outlined" data-icon="share">share</span> Share Invitation
+            </a>
+</div>
+</nav>
+<div class="fixed inset-0 bg-black/50 z-[55] hidden transition-opacity duration-300" id="drawer-overlay" onclick="toggleDrawer()"></div>
+<!-- Main Content Canvas -->
+<main class="pt-20 pb-32 max-w-screen-xl mx-auto px-6">
+<!-- Hero Section -->
+<section class="relative min-h-[751px] flex flex-col items-center justify-center text-center space-y-8 py-section-gap-lg" id="hero">
+<div class="absolute inset-0 z-0 opacity-10 pointer-events-none flex items-center justify-center">
+<div class="w-full h-full max-w-4xl" data-alt="Intricate golden Kazakh traditional 'koshkar muiz' ornament patterns fading into a soft pearl white silk background. The lighting is ethereal and ceremonial, highlighting the delicate textures of high-grammage paper.">
+<img class="w-full h-full object-contain ornament-mask" data-alt="A grand, symmetrical Kazakh traditional ornament in soft gold floating against an ivory silk background. The lighting is diffuse and warm, creating a high-end editorial feel suitable for a premium wedding invitation. The mood is respectful and deeply traditional yet modern." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwNWYJwspIYb2noJU6-JjGm-rw2NQvQV9ktjRQ6Iy9io3G6hPJ58pmQ5T5upfIe64GWFxQ9UmN00hoiA3wCjfPLJ75bJVNDEoByOped9hgIDmAGW6C8UEBZuwNCpRc5T2C43TJBTSJDcIgxqfbpluGwLEpLjHmC4Cus5b3Z3IohO8i5A0ZRFj9ZXFi3IQK9-2wjQ4YuTlLzKiawixfG6AEEiUzbdz_5HeYsosRUXYo_P3KvcAXPqaHh7YXv34H3v54uDLz0JcDfm8"/>
+</div>
+</div>
+<div class="z-10 animate-fade-in space-y-6">
+<p class="text-label-md font-label-md text-tertiary uppercase tracking-[0.3em] mb-4">Үйлену тойына шақыру</p>
+<h1 class="text-display-lg-mobile md:text-display-lg font-display-lg italic text-primary">Daulet &amp; Ayaru</h1>
+<div class="w-16 h-px bg-tertiary mx-auto my-8"></div>
+<p class="text-body-lg font-body-lg text-on-surface-variant max-w-md mx-auto italic">
+                    Сiздердi өмiрiмiздiң ең маңызды күні — шаңырақ көтеру тойымыздың куәсі болуға шақырамыз.
+                </p>
+</div>
+<!-- Animated Scroll Indicator -->
+<div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
+<span class="material-symbols-outlined text-tertiary" data-icon="expand_more">expand_more</span>
+</div>
+</section>
+<!-- Section Divider Ornament -->
+<div class="flex justify-center my-section-gap-sm opacity-60">
+<span class="material-symbols-outlined text-tertiary scale-150" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<!-- Details Grid (Bento Style) -->
+<section class="grid grid-cols-1 md:grid-cols-12 gap-gutter" id="details">
+<!-- Date Card -->
+<div class="md:col-span-7 bg-surface-container-low rounded-xl p-8 border-inset border-tertiary-container/30 relative overflow-hidden group">
+<div class="relative z-10">
+<h3 class="text-label-md font-label-md text-tertiary uppercase mb-6">Дата мен уақыты</h3>
+<div class="flex items-end gap-4 mb-4">
+<span class="text-6xl font-display-lg text-primary">15</span>
+<div class="pb-2">
+<p class="text-headline-sm font-headline-sm text-primary">Тамыз</p>
+<p class="text-label-md font-label-md text-on-surface-variant">2024 жыл</p>
+</div>
+</div>
+<p class="text-body-lg font-body-lg text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary" data-icon="schedule">schedule</span>
+                        Сағат 18:00-де басталады
+                    </p>
+</div>
+<div class="absolute right-[-20px] bottom-[-20px] opacity-10 group-hover:scale-110 transition-transform duration-700">
+<span class="material-symbols-outlined text-[120px]" data-icon="calendar_today">calendar_today</span>
+</div>
+</div>
+<!-- Map/Venue Card -->
+<div class="md:col-span-5 bg-primary-container text-on-primary-container rounded-xl p-8 relative overflow-hidden flex flex-col justify-between min-h-[300px]" id="venue">
+<div>
+<h3 class="text-label-md font-label-md text-on-primary-fixed opacity-80 uppercase mb-6">Мекен-жайы</h3>
+<h2 class="text-headline-md font-headline-md mb-2">"Royal Tulip" Almaty</h2>
+<p class="text-body-md font-body-md opacity-90">М. Оспанов көшесі, 401/2</p>
+</div>
+<a class="mt-8 bg-tertiary-container text-on-tertiary-container py-3 px-6 rounded-lg font-button flex items-center justify-center gap-2 hover:brightness-110 transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+                    Картаны ашу
+                </a>
+</div>
+</section>
+<!-- Wedding Program Section -->
+<section class="py-section-gap-lg" id="program">
+<h2 class="text-headline-md font-headline-md text-primary text-center mb-12">Той бағдарламасы</h2>
+<div class="space-y-0 relative">
+<!-- Center Line -->
+<div class="absolute left-1/2 top-0 bottom-0 w-px bg-tertiary/20 -translate-x-1/2"></div>
+<!-- Event 1 -->
+<div class="relative flex items-center justify-between mb-12 group">
+<div class="w-5/12 text-right pr-8">
+<p class="text-headline-sm font-headline-sm text-primary">18:00</p>
+<p class="text-label-md font-label-md text-tertiary">Қонақтардың жиналуы</p>
+</div>
+<div class="z-10 bg-surface border-2 border-tertiary p-2 rounded-full group-hover:bg-tertiary group-hover:text-white transition-colors duration-300">
+<span class="material-symbols-outlined text-sm" data-icon="groups">groups</span>
+</div>
+<div class="w-5/12 pl-8">
+<p class="text-body-md font-body-md text-on-surface-variant">Gathering of guests and welcome drinks</p>
+</div>
+</div>
+<!-- Event 2 -->
+<div class="relative flex items-center justify-between mb-12 group">
+<div class="w-5/12 text-right pr-8">
+<p class="text-body-md font-body-md text-on-surface-variant">Grand entrance and traditional blessing</p>
+</div>
+<div class="z-10 bg-surface border-2 border-tertiary p-2 rounded-full group-hover:bg-tertiary group-hover:text-white transition-colors duration-300">
+<span class="material-symbols-outlined text-sm" data-icon="celebration">celebration</span>
+</div>
+<div class="w-5/12 pl-8">
+<p class="text-headline-sm font-headline-sm text-primary">19:30</p>
+<p class="text-label-md font-label-md text-tertiary">Тойдың ашылуы</p>
+</div>
+</div>
+<!-- Event 3 -->
+<div class="relative flex items-center justify-between group">
+<div class="w-5/12 text-right pr-8">
+<p class="text-headline-sm font-headline-sm text-primary">21:00</p>
+<p class="text-label-md font-label-md text-tertiary">Жар-жар &amp; Би кеші</p>
+</div>
+<div class="z-10 bg-surface border-2 border-tertiary p-2 rounded-full group-hover:bg-tertiary group-hover:text-white transition-colors duration-300">
+<span class="material-symbols-outlined text-sm" data-icon="music_note">music_note</span>
+</div>
+<div class="w-5/12 pl-8">
+<p class="text-body-md font-body-md text-on-surface-variant">Ceremonial songs and dance party</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Gallery Section -->
+<section class="py-section-gap-lg" id="gallery">
+<div class="flex justify-between items-end mb-8">
+<div>
+<h2 class="text-headline-md font-headline-md text-primary">Фотогалерея</h2>
+<p class="text-body-md text-on-surface-variant italic">Beautiful moments of us</p>
+</div>
+<button class="text-tertiary font-button hover:underline flex items-center gap-1">
+                    Барлығын көру <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="aspect-[3/4] rounded-xl overflow-hidden relative group grain-overlay">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="A romantic high-end editorial wedding photography shot of a Kazakh couple. The man is wearing a sharp deep emerald suit and the woman a modern silk white dress. They are walking through an apple orchard in Almaty during the golden hour. Warm, soft lighting and a premium film grain texture." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAMZySc3J0EhJpedbAPPQTCli30pWY8O5pelTm34G9yjSfJxP-RoOgA2Bqx3zs9b7kUhQricdcQ7OfLNEdT3mwKBxQ6FhhjhDHFVGP_pzypLE7Ud4A5L3pmfN99B-37kGHwhlot48pNZV39BSIA8axD_HPeQHAlTvLP8u_FSBA5F7TNYg22LdZHW9kiPv-5gLAlY3vXgp_10MlWWu6g9rj6IwtAOYt58ecVtPb9NacBjlaWWc5ow_6BihIBNz0OKZI269klJoxN4k"/>
+</div>
+<div class="aspect-[3/4] rounded-xl overflow-hidden relative group mt-8 grain-overlay">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Close-up artistic shot of wedding rings resting on a piece of traditional Kazakh felt fabric with intricate golden embroidery. The lighting is dramatic and warm, highlighting the texture of the gold and the ivory wool. Minimalist and luxurious aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGZ8K56fN19fb2YXbUfpcAgqXT4NC5a3tkeD_fPlyvqS5b4xTXK-nkzq65rw5KaGyujmC3X39bCBFKDuCdbC5N8Y4HxNt_-cXwS2xUItK35ovlgdvpuX7uP2d7ecAzHjiUI4QOUphmx-ZYr61RTjFtxt9a4X7YTlqgNnQEyXDfbgIypKA3Lk7ym80rKsdz77cEvR6cXmt1nRALM5_pm--BnGLH0fUZeoqQvOVYR9MQY8-A3QtmnhYMajkoRPBtkdHEF4jCyGxX9t4"/>
+</div>
+<div class="aspect-[3/4] rounded-xl overflow-hidden relative group grain-overlay">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Wide cinematic shot of the Tian Shan mountains in Almaty at sunset, creating a purple and gold sky. In the foreground, a modern architectural pavilion is decorated for a premium wedding with white flowers and emerald drapery. Soft, atmospheric lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-cuerh_Vp7fAUl4fqrtqRLfwYgpw1kLm4RRxun3kTXywoLeGUO8Wnp3bOvpt21X_7Sz0Dn1DhadIHPMwkajF5e4namkaOTLNj_A-rxilvLTN3e3Eh7jtA05EJad_oAriLVw6OZxcW8-z-KVOdIykGJh8vX2NDFdQgl9Oxc87W4Dt2qsfw4NxdXy7iuAQXFa59e6zNIyI4VBAJ4nkJV8V5EPD3gjE-tkgVBKrw5h2X73BsQKI6ED7ZrcKP6CHBACySIRPaoq24YTI"/>
+</div>
+<div class="aspect-[3/4] rounded-xl overflow-hidden relative group mt-8 grain-overlay">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="A portrait of a happy Kazakh couple laughing together. The aesthetic is clean, light, and airy, using an ivory and warm sand color palette. The photo has a premium tactile feel like high-quality stationery photography." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBx3JETwyhet4tvNU5b0RES-UtHwHLT5YZYeBc4CHOXOjlBKhwW5GdCDI-lTWAjp0TYAZP8Wsw28GfVYGvVw-QIrkBtcUqUgs06VfHp-TnSCMvuM_VQZwPu_h6bGheMXJ6xlNZ9MFxAsSUe0V7zff1REYd0RsxTqtOGK1JZdoeIpg4UTRqCCsl-ULTQk0p7IrVwXKAtJYFOhJYOEUXW3Bdcj6Uef12NgxWWLYVQc67wOt0aJtAwe3OTCqv-nC91tZTN0WIAy7Z7FyQ"/>
+</div>
+</div>
+</section>
+<!-- RSVP Form Section -->
+<section class="py-section-gap-lg bg-white rounded-3xl p-8 md:p-16 shadow-sm border border-tertiary/10 relative overflow-hidden" id="rsvp">
+<div class="absolute top-0 right-0 p-8 opacity-10">
+<span class="material-symbols-outlined text-9xl text-tertiary" data-icon="edit_calendar">edit_calendar</span>
+</div>
+<div class="max-w-xl relative z-10">
+<h2 class="text-headline-md font-headline-md text-primary mb-2">RSVP</h2>
+<p class="text-body-lg font-body-lg text-on-surface-variant mb-12">Тойға келетініңізді 1 тамызға дейін хабарлауыңызды сұраймыз.</p>
+<form class="space-y-10">
+<div class="relative group">
+<input class="peer w-full bg-transparent border-0 border-b border-surface-dim focus:ring-0 focus:border-primary pt-6 pb-2 px-0 transition-all text-body-lg" placeholder=" " type="text"/>
+<label class="absolute left-0 top-0 text-label-md font-label-md text-on-surface-variant uppercase transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-body-lg peer-focus:top-0 peer-focus:text-label-md peer-focus:text-primary">Аты-жөніңіз / Имя Фамилия</label>
+</div>
+<div class="flex flex-wrap gap-8">
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-5 h-5 text-primary focus:ring-primary border-outline-variant" name="attendance" type="radio"/>
+<span class="text-body-md group-hover:text-primary">Келемін / Приду</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-5 h-5 text-primary focus:ring-primary border-outline-variant" name="attendance" type="radio"/>
+<span class="text-body-md group-hover:text-primary">Келе алмаймын / Не смогу</span>
+</label>
+</div>
+<button class="w-full md:w-auto bg-primary text-on-primary font-button px-12 py-4 rounded-lg shadow-xl shadow-primary/10 hover:translate-y-[-2px] transition-all active:scale-95" type="submit">
+                        Жіберу / Отправить
+                    </button>
+</form>
+</div>
+</section>
+</main>
+<!-- Bottom NavBar (JSON Component) -->
+<footer class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 pb-safe bg-surface-container-low dark:bg-surface-container-high shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed-dim font-bold transition-transform hover:text-primary translate-y-[-2px]" href="#hero">
+<span class="material-symbols-outlined" data-icon="auto_awesome">auto_awesome</span>
+<span class="text-label-md font-label-md">Invitation</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline dark:text-outline-variant transition-colors hover:text-primary" href="#program">
+<span class="material-symbols-outlined" data-icon="event_note">event_note</span>
+<span class="text-label-md font-label-md">Program</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline dark:text-outline-variant transition-colors hover:text-primary" href="#rsvp">
+<span class="material-symbols-outlined" data-icon="edit_calendar">edit_calendar</span>
+<span class="text-label-md font-label-md">RSVP</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline dark:text-outline-variant transition-colors hover:text-primary" href="#gallery">
+<span class="material-symbols-outlined" data-icon="photo_library">photo_library</span>
+<span class="text-label-md font-label-md">Gallery</span>
+</a>
+</footer>
+<!-- FAB for WhatsApp Share -->
+<a class="fixed bottom-24 right-6 w-14 h-14 bg-tertiary text-white rounded-full flex items-center justify-center shadow-2xl hover:scale-110 active:scale-90 transition-transform z-[40]" href="https://wa.me/?text=Сiзді%20тойымызға%20шақырамыз!" target="_blank">
+<span class="material-symbols-outlined" data-icon="share">share</span>
+</a>
+<script>
+        function toggleDrawer() {
+            const drawer = document.getElementById('nav-drawer');
+            const overlay = document.getElementById('drawer-overlay');
+            const isOpen = !drawer.classList.contains('-translate-x-full');
+
+            if (isOpen) {
+                drawer.classList.add('-translate-x-full');
+                overlay.classList.add('hidden');
+                document.body.style.overflow = '';
+            } else {
+                drawer.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        // Active state navigation logic
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('footer a');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 120) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('text-primary', 'font-bold', 'translate-y-[-2px]');
+                link.classList.add('text-outline');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('text-primary', 'font-bold', 'translate-y-[-2px]');
+                    link.classList.remove('text-outline');
+                }
+            });
+        });
+    </script>
+</body></html>

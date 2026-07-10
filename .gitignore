@@ -1,0 +1,13 @@
+.DS_Store
+node_modules/
+.next/
+out/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+.vercel/
+data/dev-store.json

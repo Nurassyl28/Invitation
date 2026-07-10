@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="kk"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Amanat - Qyz Uzatu</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&amp;family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#cca72f",
+                        "tertiary-fixed-dim": "#e9c349",
+                        "on-error-container": "#93000a",
+                        "surface-container-highest": "#e4e4cc",
+                        "secondary": "#a53936",
+                        "surface-variant": "#e4e4cc",
+                        "on-surface-variant": "#404944",
+                        "error-container": "#ffdad6",
+                        "inverse-surface": "#303221",
+                        "inverse-on-surface": "#f2f2d9",
+                        "on-primary-fixed": "#002117",
+                        "on-tertiary-fixed-variant": "#574500",
+                        "inverse-primary": "#95d3ba",
+                        "on-tertiary-fixed": "#241a00",
+                        "surface-container-lowest": "#ffffff",
+                        "outline": "#707974",
+                        "secondary-fixed-dim": "#ffb3ad",
+                        "on-primary-container": "#80bea6",
+                        "primary-fixed-dim": "#95d3ba",
+                        "surface": "#fbfbe2",
+                        "surface-bright": "#fbfbe2",
+                        "tertiary": "#735c00",
+                        "surface-tint": "#2b6954",
+                        "primary": "#003527",
+                        "on-secondary-fixed": "#410004",
+                        "on-surface": "#1b1d0e",
+                        "surface-container": "#efefd7",
+                        "on-secondary-fixed-variant": "#852221",
+                        "on-background": "#1b1d0e",
+                        "on-secondary-container": "#721315",
+                        "primary-fixed": "#b0f0d6",
+                        "background": "#fbfbe2",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#f5f5dc",
+                        "on-tertiary-container": "#4e3d00",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed-variant": "#0b513d",
+                        "surface-dim": "#dbdcc3",
+                        "surface-container-high": "#eaead1",
+                        "secondary-fixed": "#ffdad7",
+                        "secondary-container": "#fe7c74",
+                        "primary-container": "#064e3b",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed": "#ffe088",
+                        "outline-variant": "#bfc9c3",
+                        "error": "#ba1a1a",
+                        "burgundy": "#5a0b0d",
+                        "gold-metallic": "#d4af37"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "unit": "8px",
+                        "container-margin": "24px",
+                        "section-gap-sm": "48px",
+                        "section-gap-lg": "80px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Hanken Grotesk"],
+                        "label-md": ["Hanken Grotesk"],
+                        "headline-md": ["EB Garamond"],
+                        "headline-sm": ["EB Garamond"],
+                        "button": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "display-lg-mobile": ["EB Garamond"],
+                        "display-lg": ["EB Garamond"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-md": ["32px", {"lineHeight": "40px", "fontWeight": "400"}],
+                        "headline-sm": ["24px", {"lineHeight": "32px", "fontWeight": "400"}],
+                        "button": ["16px", {"lineHeight": "24px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "display-lg-mobile": ["36px", {"lineHeight": "42px", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .ornament-border {
+            border: 8px solid transparent;
+            border-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0 C 25 0, 30 5, 30 10 C 30 15, 25 20, 20 20 C 15 20, 10 15, 10 10 C 10 5, 15 0, 20 0 M20 40 C 15 40, 10 35, 10 30 C 10 25, 15 20, 20 20 C 25 20, 30 25, 30 30 C 30 35, 25 40, 20 40' fill='%23d4af37'/%3E%3C/svg%3E") 30 stretch;
+        }
+
+        .uzhyk-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5 L35 15 L45 20 L35 25 L30 35 L25 25 L15 20 L25 15 Z' fill='%23d4af37' opacity='0.1'/%3E%3C/svg%3E");
+        }
+
+        .gold-border-inset {
+            box-shadow: inset 0 0 0 2px #d4af37;
+        }
+
+        .velvet-gradient {
+            background: linear-gradient(135deg, #5a0b0d 0%, #3a0608 100%);
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .animate-float { animation: float 6s ease-in-out infinite; }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .hero-text-shadow {
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+    </style>
+<style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-tertiary-container selection:text-on-tertiary-container uzhyk-pattern">
+<!-- Top App Bar -->
+<header class="bg-burgundy fixed top-0 w-full z-50 flex justify-between items-center px-6 py-4 max-w-screen-xl mx-auto shadow-xl border-b-2 border-gold-metallic">
+<button class="text-gold-metallic hover:opacity-80 transition-opacity active:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<h1 class="text-headline-md font-headline-md text-gold-metallic tracking-widest italic">Amanat</h1>
+<button class="text-gold-metallic hover:opacity-80 transition-opacity active:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined" data-icon="music_note">music_note</span>
+</button>
+</header>
+<main class="pt-16 pb-24">
+<!-- Hero Section -->
+<section class="relative h-[850px] flex flex-col items-center justify-center text-center px-6 overflow-hidden" id="hero">
+<div class="absolute inset-0 z-0">
+<div class="w-full h-full bg-cover bg-center brightness-[0.9]" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAOy2XFrS8ZnTU17TXFcAeLVr_y1KBGQgX1gAe89ty7r9qOapE5fKsZUb3LCW6ihSnB2wFQn-yIZ1W7TXVD8SJdX0VBOh-YqGjqOQbw2kkogChKoTTJOqx-OdwcBe61rgBw0Aer5t9yKIZDhIiywje7uoCZQ_LuWDJi10_xaZvncWhIiQ1IT2cecn4NBPVL36wJEgAQ-__zik8x9U8owJasWwavNcUBE-kT4iQaQvFCT8sqrjQXa6Ma1GQrS-pTcLoH1FVlY2cCF4k')"></div>
+<div class="absolute inset-0 bg-black/30"></div>
+</div>
+<div class="relative z-10 space-y-6 max-w-sm p-8 border-2 border-gold-metallic bg-burgundy/40 backdrop-blur-sm">
+<p class="font-label-md text-label-md text-gold-metallic tracking-[0.3em] uppercase mb-2 hero-text-shadow">Қыз Ұзату • Проводы Невесты</p>
+<h2 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-white italic hero-text-shadow">Amina</h2>
+<div class="w-24 h-px bg-gold-metallic mx-auto my-4 shadow-sm"></div>
+<p class="font-body-lg text-body-lg text-white/90 max-w-md mx-auto leading-relaxed hero-text-shadow">Ұзатылғалы отырған аяулы қызымыздың салтанатты кешіне шақырамыз.</p>
+</div>
+<div class="absolute bottom-12 left-1/2 -translate-x-1/2 animate-bounce">
+<span class="material-symbols-outlined text-gold-metallic text-4xl" data-icon="expand_more">expand_more</span>
+</div>
+</section>
+<!-- Names & Invitation -->
+<section class="section-gap-lg px-container-margin text-center">
+<div class="max-w-2xl mx-auto py-16 px-6 border-4 border-double border-gold-metallic relative bg-white shadow-2xl">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-white p-3 rounded-full border-2 border-gold-metallic">
+<span class="material-symbols-outlined text-burgundy text-5xl" data-icon="favorite" style="font-variation-settings: 'FILL' 1;">favorite</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-burgundy mb-8 tracking-wide">Құрметті ағайын-жұрт, достар!</h3>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-10 leading-relaxed px-4">
+                Сіздерді аяулы қызымыз Аминаның ұзату тойына арналған салтанатты ақ дастарханымыздың қадірлі қонағы болуға шақырамыз. 
+                Бұл кеш — біз үшін қимастық пен қуанышқа толы қасиетті аманат сәті.
+            </p>
+<div class="flex flex-col items-center gap-3">
+<p class="font-label-md text-label-md text-secondary uppercase tracking-[0.2em] font-bold">Шақырушылар:</p>
+<p class="font-headline-sm text-headline-sm text-burgundy border-b-2 border-gold-metallic pb-2 px-8">Болат &amp; Гүлмира</p>
+</div>
+</div>
+</section>
+<!-- Date & Time -->
+<section class="bg-burgundy py-20 px-container-margin border-y-4 border-gold-metallic relative overflow-hidden">
+<div class="absolute inset-0 opacity-10 uzhyk-pattern"></div>
+<div class="max-w-screen-xl mx-auto grid md:grid-cols-3 gap-12 items-center text-center relative z-10">
+<div class="space-y-3">
+<p class="font-label-md text-label-md text-gold-metallic/80 uppercase tracking-widest">Ай / Месяц</p>
+<p class="font-headline-md text-headline-md text-white">Тамыз / Август</p>
+</div>
+<div class="relative py-12">
+<div class="absolute inset-0 flex items-center justify-center opacity-20">
+<span class="material-symbols-outlined text-[180px] text-gold-metallic" data-icon="calendar_today">calendar_today</span>
+</div>
+<p class="font-display-lg text-[64px] text-gold-metallic relative z-10 drop-shadow-lg">24</p>
+<p class="font-label-md text-label-md text-white/90 uppercase tracking-[0.3em] font-bold">Сенбі / Суббота</p>
+</div>
+<div class="space-y-3">
+<p class="font-label-md text-label-md text-gold-metallic/80 uppercase tracking-widest">Уақыты / Время</p>
+<p class="font-headline-md text-headline-md text-white">18:00</p>
+</div>
+</div>
+</section>
+<!-- Program Section -->
+<section class="section-gap-lg px-container-margin max-w-screen-xl mx-auto" id="program">
+<div class="flex items-center justify-center gap-4 mb-12">
+<div class="h-px w-16 bg-gold-metallic"></div>
+<h3 class="font-headline-md text-headline-md text-burgundy text-center uppercase tracking-widest">Той Бағдарламасы</h3>
+<div class="h-px w-16 bg-gold-metallic"></div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<div class="md:col-span-2 bg-burgundy p-10 border-2 border-gold-metallic flex flex-col justify-between group hover:shadow-2xl transition-all duration-500 relative">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-gold-metallic text-8xl" data-icon="restaurant">restaurant</span>
+</div>
+<span class="material-symbols-outlined text-gold-metallic text-5xl mb-6" data-icon="restaurant">restaurant</span>
+<div class="relative z-10">
+<p class="font-label-md text-label-md text-gold-metallic uppercase mb-3 tracking-widest">18:00</p>
+<h4 class="font-headline-sm text-headline-sm text-white mb-4">Қонақтардың жиналуы</h4>
+<p class="font-body-md text-body-md text-white/80 leading-relaxed">Сбор гостей и праздничный фуршет под звуки живой музыки.</p>
+</div>
+</div>
+<div class="bg-white p-10 flex flex-col items-center justify-center text-center border-2 border-burgundy shadow-lg">
+<span class="material-symbols-outlined text-burgundy text-5xl mb-6" data-icon="auto_awesome">auto_awesome</span>
+<p class="font-label-md text-label-md text-secondary uppercase mb-2 font-bold">19:00</p>
+<h4 class="font-headline-sm text-headline-sm text-burgundy">Беташар</h4>
+</div>
+<div class="bg-white p-10 border-2 border-burgundy flex flex-col items-center justify-center text-center shadow-lg">
+<span class="material-symbols-outlined text-burgundy text-5xl mb-6" data-icon="celebration">celebration</span>
+<p class="font-label-md text-label-md text-secondary uppercase mb-2 font-bold">20:00</p>
+<h4 class="font-headline-sm text-headline-sm text-burgundy">Той басы</h4>
+</div>
+<div class="bg-burgundy p-10 flex flex-col justify-center text-center md:col-span-1 border-2 border-gold-metallic">
+<p class="font-label-md text-label-md text-gold-metallic uppercase mb-3 tracking-widest">23:00</p>
+<h4 class="font-headline-sm text-headline-sm text-white">Қыз ұзату</h4>
+<p class="font-body-md text-body-md text-white/70 mt-4 leading-relaxed italic">Салтанатты қоштасу рәсімі.</p>
+</div>
+<div class="md:col-span-3 h-80 relative overflow-hidden border-2 border-gold-metallic">
+<div class="w-full h-full bg-cover bg-center brightness-90" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBKYOFMNzT8IQdEOYTr0Tz33zAUFJeE3g8lkMbK96jg2vWfUC9r8ADVwxORaKUK-H9meYLYDHkNjKPAt7IU5bicrbJ_FRwcQOwXspSHditYSDpLj4H68uU8leVc1thSz1QODvEaH9ju2Cs4hVLvFImhTcf1KCMcjOkkeQ8RBoJ-NZxD8BCsIJ5FZMfOu-OccOTlwv0P8gljDXO3rVqqwtM1Njv9av-wDMQyRuV_-R-6-bZoaO_MXvGpfizVwWhTRrQFKHZOp9w3xdQ')"></div>
+</div>
+</div>
+</section>
+<!-- Photo Gallery -->
+<section class="section-gap-lg" id="gallery">
+<div class="px-container-margin mb-10 flex justify-between items-end">
+<div>
+<h3 class="font-headline-md text-headline-md text-burgundy">Естелік Сәттер</h3>
+<p class="font-body-md text-body-md text-on-surface-variant italic">Gallery of precious memories</p>
+</div>
+<button class="font-button text-button text-burgundy flex items-center gap-2 border-b border-burgundy pb-1">
+                Барлығын көру <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<div class="flex overflow-x-auto gap-6 px-container-margin no-scrollbar py-6">
+<div class="flex-shrink-0 w-80 h-[480px] border-4 border-gold-metallic shadow-xl overflow-hidden">
+<div class="w-full h-full bg-cover bg-center hover:scale-110 transition-transform duration-1000" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAh7G70tZMXDPfEm5xqzJm2DT5r5Q07KFE7Ljv7izzDuCIR2s0iTY4xxlUiiFsnzOPTPiKXISWYSTR7yNfhAKJBCz0gb29yGNfS_eHKBd0UTuZNWGFLifwK37ZzC7Yre1tDVhK50zrNsBkPv8D6gXBSiNIwLecjFnvuvbVGDgLDzYJb44yQdPzpPGccpjXVBR6MRUKiPeQe76vjUftFL1Fs4oSGv-OzjVdJawR7uoaFKwrAW6PvVHW6aNJgnS7ifn4E8hTeBPnaMQU')"></div>
+</div>
+<div class="flex-shrink-0 w-80 h-[480px] border-4 border-gold-metallic shadow-xl overflow-hidden">
+<div class="w-full h-full bg-cover bg-center hover:scale-110 transition-transform duration-1000" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAEkDdd3tVhwN5pGQ8VLLlA_AxXhX2mgzCcHvutebCNlpY4nTcLwpx3jdbH9j-siDQLhZT5clW9zedOJ08XNRVS20d4OB2jXULPlluMXPhJfiW_RUOLh9WNJ3wcpr3JsCDkzlYQj3vqRzNWKSiQ5ffBPAewrna9DBJX3vl8jUKtZw-ml9IVYzhvPtwPLssLaYJlv5UMo8D3Iw4OvMzFo4W4exT-5wS2OJ2KFcnnIChzmqY-3FhCrgMPcZMBMClCGmuEeRNLHGoZOvE')"></div>
+</div>
+<div class="flex-shrink-0 w-80 h-[480px] border-4 border-gold-metallic shadow-xl overflow-hidden">
+<div class="w-full h-full bg-cover bg-center hover:scale-110 transition-transform duration-1000" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCmW6bO9UWFcqn7Bz0eT4x6W3alKo_TEy6ivYiv8a2BQiT5ivEuSsH-W0THqkOpCKOBE5ttnrhu2kragJ1qWTxxkRfjs5ZDC64kGsjZvU9Wr5c6WK8SRBrgRsUGiVrWnf6ZU4QXBbERSL9MKTuUDMlx1ahxEJ-35E8kyvtT7fd2lnIe4NE3fXSjJkPSywcManE2UIZOcF5CHMXlZAFE_lEwyoHRsEesaO0kF746zXM2YeN7onrZI_lMqdZ8FtnToPP9SxMC97HJYPY')"></div>
+</div>
+</div>
+</section>
+<!-- RSVP Form -->
+<section class="section-gap-lg px-container-margin" id="rsvp">
+<div class="max-w-xl mx-auto bg-white p-12 border-8 border-burgundy relative shadow-2xl">
+<div class="absolute -top-10 left-1/2 -translate-x-1/2 w-20 h-20 bg-gold-metallic rounded-full flex items-center justify-center text-burgundy shadow-xl border-4 border-white">
+<span class="material-symbols-outlined text-4xl" data-icon="edit_calendar">edit_calendar</span>
+</div>
+<div class="text-center mb-10 mt-4">
+<h3 class="font-headline-md text-headline-md text-burgundy uppercase tracking-widest">Растау / RSVP</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2 italic">Өтініш, келетініңізді 10 тамызға дейін хабарлаңыз.</p>
+</div>
+<form class="space-y-8">
+<div class="relative">
+<label class="font-label-md text-label-md text-burgundy uppercase tracking-wider font-bold mb-2 block">Аты-жөніңіз / Ваше Имя</label>
+<input class="w-full border-0 border-b-2 border-gold-metallic bg-transparent focus:ring-0 focus:border-burgundy px-0 py-3 placeholder:text-outline-variant font-body-lg transition-colors" placeholder="Толық атыңызды жазыңыз" type="text"/>
+</div>
+<div class="grid grid-cols-2 gap-6">
+<button class="w-full py-4 border-2 border-burgundy font-button text-button text-burgundy hover:bg-burgundy hover:text-white transition-all uppercase tracking-widest font-bold" type="button">
+                        Келемін
+                    </button>
+<button class="w-full py-4 border-2 border-outline-variant font-button text-button text-outline-variant hover:bg-surface-container transition-all uppercase tracking-widest opacity-60" type="button">
+                        Келе алмаймын
+                    </button>
+</div>
+<div>
+<label class="font-label-md text-label-md text-burgundy uppercase tracking-wider font-bold mb-2 block">Қонақтар саны</label>
+<select class="w-full border-0 border-b-2 border-gold-metallic bg-transparent focus:ring-0 focus:border-burgundy px-0 py-3 font-body-lg">
+<option>1 адам</option>
+<option>2 адам</option>
+<option>Отбасымен / С семьей</option>
+</select>
+</div>
+<button class="w-full bg-burgundy text-white font-button text-button py-5 shadow-lg border-2 border-gold-metallic uppercase tracking-[0.2em] hover:brightness-125 transition-all active:scale-[0.98]">
+                    Жіберу / Отправить
+                </button>
+</form>
+</div>
+</section>
+<!-- Map Section -->
+<section class="section-gap-lg px-container-margin max-w-screen-xl mx-auto" id="map">
+<div class="grid md:grid-cols-2 gap-0 overflow-hidden shadow-2xl border-4 border-gold-metallic">
+<div class="p-12 flex flex-col justify-center bg-burgundy text-white relative">
+<div class="absolute inset-0 opacity-5 uzhyk-pattern"></div>
+<span class="material-symbols-outlined text-gold-metallic text-5xl mb-6 relative z-10" data-icon="location_on">location_on</span>
+<h3 class="font-headline-md text-headline-md text-gold-metallic mb-6 relative z-10">Мекен-жайымыз</h3>
+<p class="font-headline-sm text-headline-sm mb-4 relative z-10">"Altyn Orda" мейрамханасы</p>
+<p class="font-body-md text-body-md text-white/80 mb-10 relative z-10 leading-relaxed">Алматы қаласы, әл-Фараби даңғылы, 140</p>
+<a class="inline-flex items-center gap-3 text-gold-metallic font-button text-button border-2 border-gold-metallic px-6 py-3 w-fit hover:bg-gold-metallic hover:text-burgundy transition-all relative z-10 uppercase tracking-widest" href="#">
+                    Картадан ашу <span class="material-symbols-outlined text-xl" data-icon="open_in_new">open_in_new</span>
+</a>
+</div>
+<div class="h-96 md:h-auto min-h-[400px]">
+<div class="w-full h-full bg-cover bg-center grayscale-[20%] sepia-[20%]" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCRB2Bb_RchH1sx1E37olEOt7WcmNVM8zTdp0moWd1W1UnXuU0at4sQI41YQSpJrpiKzoI2ZLGbSEHE0UuJBD6Lkc7_QaaQgT3pfxe1lFlpEVgcj09Hm5hGYKEXj6si5KUF7iv_UpJyNL5XMyRZIWMSDG7GFaqL6PwBrgtQMPYLgCKoV4jkhULC7rJZ5nS0JPek_ksBzlpJwdV1f8rFaft9CkPAKve8sD0SXHOiUxUj4lKWwZDo3QlfOoFeFrYbxRDL5S9Mk9Ika-o')"></div>
+</div>
+</div>
+</section>
+<!-- Music Player Widget -->
+<div class="fixed bottom-28 right-6 z-40">
+<div class="bg-burgundy text-white p-4 rounded-full shadow-2xl flex items-center gap-4 animate-float border-2 border-gold-metallic">
+<button class="w-12 h-12 bg-gold-metallic text-burgundy rounded-full flex items-center justify-center hover:scale-110 transition-transform">
+<span class="material-symbols-outlined" data-icon="play_arrow" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+<div class="pr-4 hidden md:block border-l border-white/20 pl-4">
+<p class="text-[10px] uppercase tracking-widest text-gold-metallic">Ойналуда</p>
+<p class="text-sm font-bold whitespace-nowrap">Қарақат Әбілдина - Аманат</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-4 pb-safe bg-burgundy border-t-2 border-gold-metallic shadow-2xl">
+<a class="flex flex-col items-center justify-center text-gold-metallic font-bold scale-110 transition-transform" href="#hero">
+<span class="material-symbols-outlined" data-icon="auto_awesome" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<span class="text-[10px] uppercase tracking-tighter mt-1">Invitation</span>
+</a>
+<a class="flex flex-col items-center justify-center text-white/60 hover:text-gold-metallic transition-all" href="#program">
+<span class="material-symbols-outlined" data-icon="event_note">event_note</span>
+<span class="text-[10px] uppercase tracking-tighter mt-1">Program</span>
+</a>
+<a class="flex flex-col items-center justify-center text-white/60 hover:text-gold-metallic transition-all" href="#rsvp">
+<span class="material-symbols-outlined" data-icon="edit_calendar">edit_calendar</span>
+<span class="text-[10px] uppercase tracking-tighter mt-1">RSVP</span>
+</a>
+<a class="flex flex-col items-center justify-center text-white/60 hover:text-gold-metallic transition-all" href="#gallery">
+<span class="material-symbols-outlined" data-icon="photo_library">photo_library</span>
+<span class="text-[10px] uppercase tracking-tighter mt-1">Gallery</span>
+</a>
+</nav>
+<!-- Decorative Edge Patterns -->
+<div class="fixed top-24 left-0 w-full h-2 bg-gold-metallic z-40 opacity-50 hidden md:block"></div>
+<div class="fixed top-24 left-8 h-screen w-0.5 bg-gold-metallic z-40 opacity-20 hidden md:block"></div>
+<div class="fixed top-24 right-8 h-screen w-0.5 bg-gold-metallic z-40 opacity-20 hidden md:block"></div>
+<script>
+    document.querySelectorAll('nav a').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            
+            window.scrollTo({
+                top: targetElement.offsetTop - 80,
+                behavior: 'smooth'
+            });
+
+            document.querySelectorAll('nav a').forEach(a => {
+                a.classList.remove('text-gold-metallic', 'font-bold', 'scale-110');
+                a.classList.add('text-white/60');
+                const icon = a.querySelector('.material-symbols-outlined');
+                if(icon) icon.style.fontVariationSettings = "'FILL' 0";
+            });
+            this.classList.add('text-gold-metallic', 'font-bold', 'scale-110');
+            this.classList.remove('text-white/60');
+            const activeIcon = this.querySelector('.material-symbols-outlined');
+            if(activeIcon) activeIcon.style.fontVariationSettings = "'FILL' 1";
+        });
+    });
+
+    const rsvpForm = document.querySelector('form');
+    rsvpForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const btn = rsvpForm.querySelector('button[type="submit"]');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = 'Жіберілді / Отправлено';
+        btn.classList.add('bg-tertiary-container', 'text-on-tertiary-container');
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.classList.remove('bg-tertiary-container', 'text-on-tertiary-container');
+        }, 3000);
+    });
+</script>
+</body></html>

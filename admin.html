@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Админ-панель — Toi Invite</title>
+    <meta name="description" content="Админ-панель для оплат, шаблонов, пользователей и приглашений." />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <a class="brand" href="index.html" aria-label="Toi Invite">
+          <span class="brand-mark">TI</span>
+          <span class="brand-text">
+            <strong>Toi Invite</strong>
+            <small>Admin</small>
+          </span>
+        </a>
+        <nav class="nav" aria-label="Основная навигация">
+          <a href="templates.html">Шаблоны</a>
+          <a href="builder.html">Конструктор</a>
+          <a href="dashboard.html">Кабинет</a>
+          <a class="nav-cta" href="login.html">Выйти</a>
+        </nav>
+      </header>
+
+      <section class="page-hero admin-hero">
+        <div>
+          <span class="eyebrow">Админ-панель</span>
+          <h1>Операционный центр продукта.</h1>
+          <p>
+            Здесь админ подтверждает Kaspi-чеки, управляет шаблонами, пользователями,
+            публикациями и партнёрскими аккаунтами.
+          </p>
+        </div>
+        <div class="pill-row">
+          <span class="pill">5 pending payments</span>
+          <span class="pill">103 templates planned</span>
+          <span class="pill">12 active invites</span>
+        </div>
+      </section>
+
+      <section class="admin-grid">
+        <aside class="app-sidebar">
+          <div class="brand-text">
+            <strong>Разделы</strong>
+            <small>Управление платформой</small>
+          </div>
+          <div class="sidebar-nav">
+            <a class="is-active" href="#payments">Оплаты</a>
+            <a href="#templates-admin">Шаблоны</a>
+            <a href="#users">Пользователи</a>
+            <a href="#partners">Партнёры</a>
+            <a href="#blog">Блог</a>
+          </div>
+        </aside>
+
+        <main class="app-main">
+          <section class="stats-grid">
+            <article class="stat-card"><span class="eyebrow">MRR</span><strong>189k ₸</strong><p>плановая выручка месяца</p></article>
+            <article class="stat-card"><span class="eyebrow">Оплаты</span><strong>5</strong><p>чеков ждут решения</p></article>
+            <article class="stat-card"><span class="eyebrow">Шаблоны</span><strong>24</strong><p>готовы к публикации</p></article>
+            <article class="stat-card"><span class="eyebrow">RSVP</span><strong>312</strong><p>ответов гостей собрано</p></article>
+          </section>
+
+          <section class="table-card" id="payments">
+            <div class="card-head">
+              <div>
+                <span class="eyebrow">Kaspi manual flow</span>
+                <h2>Платежи на проверке</h2>
+              </div>
+              <a class="button button-primary" href="#payments">Обновить</a>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Приглашение</th>
+                  <th>Клиент</th>
+                  <th>Сумма</th>
+                  <th>Статус</th>
+                  <th>Действие</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>arman-aruzhan</td>
+                  <td>Арман</td>
+                  <td>4 990 ₸</td>
+                  <td><span class="status warning">Проверка</span></td>
+                  <td><button class="small-action" type="button">Approve</button></td>
+                </tr>
+                <tr>
+                  <td>qyz-uzatu-aida</td>
+                  <td>Аида</td>
+                  <td>6 990 ₸</td>
+                  <td><span class="status pending">Новый</span></td>
+                  <td><button class="small-action" type="button">Review</button></td>
+                </tr>
+                <tr>
+                  <td>besik-toi-ayan</td>
+                  <td>Нуржан</td>
+                  <td>2 990 ₸</td>
+                  <td><span class="status success">Одобрен</span></td>
+                  <td><button class="small-action" type="button">Open</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+
+          <section class="panel-row">
+            <article class="table-card" id="templates-admin">
+              <span class="eyebrow">Шаблоны</span>
+              <h2>Модерация каталога</h2>
+              <table>
+                <thead><tr><th>Название</th><th>Категория</th><th>Тариф</th></tr></thead>
+                <tbody>
+                  <tr><td>Velvet Arch</td><td>Свадьба</td><td>Premium</td></tr>
+                  <tr><td>Royal Silk</td><td>Қыз ұзату</td><td>VIP</td></tr>
+                  <tr><td>Warm Story</td><td>Бесік той</td><td>Standard</td></tr>
+                </tbody>
+              </table>
+            </article>
+
+            <article class="form-card" id="users">
+              <span class="eyebrow">Пользователи</span>
+              <h2>Быстрое создание партнёра</h2>
+              <div class="form-grid">
+                <div class="field"><label for="partner-name">Название</label><input id="partner-name" type="text" value="Alem Event" /></div>
+                <div class="field"><label for="partner-plan">План</label><select id="partner-plan"><option>Agency</option><option>White Label</option></select></div>
+                <div class="field full"><label for="partner-note">Заметка</label><textarea id="partner-note">Партнёр делает приглашения для клиентов через общий каталог.</textarea></div>
+              </div>
+              <div class="hero-actions" style="margin-top: 16px;">
+                <a class="button button-primary" href="#partners">Создать партнёра</a>
+              </div>
+            </article>
+          </section>
+        </main>
+      </section>
+    </div>
+  </body>
+</html>

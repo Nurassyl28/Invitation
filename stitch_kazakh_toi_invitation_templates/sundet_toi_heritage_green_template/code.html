@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Amanat - Sundet Toi Heritage</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&amp;family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .ornament-mask {
+            mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M50 0C22.4 0 0 22.4 0 50s22.4 50 50 50 50-22.4 50-50S77.6 0 50 0zm0 90C27.9 90 10 72.1 10 50S27.9 10 50 10s40 17.9 40 40-17.9 40-40 40z"/><path d="M50 20c-16.5 0-30 13.5-30 30s13.5 30 30 30 30-13.5 30-30-13.5-30-30-30zm0 50c-11 0-20-9-20-20s9-20 20-20 20 9 20 20-9 20-20 20z"/></svg>');
+            mask-repeat: no-repeat;
+            mask-position: center;
+        }
+        .grain-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 99;
+            opacity: 0.03;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary-container": "#cca72f",
+                      "tertiary-fixed-dim": "#e9c349",
+                      "on-error-container": "#93000a",
+                      "surface-container-highest": "#e4e4cc",
+                      "secondary": "#a53936",
+                      "surface-variant": "#e4e4cc",
+                      "on-surface-variant": "#404944",
+                      "error-container": "#ffdad6",
+                      "inverse-surface": "#303221",
+                      "inverse-on-surface": "#f2f2d9",
+                      "on-primary-fixed": "#002117",
+                      "on-tertiary-fixed-variant": "#574500",
+                      "inverse-primary": "#95d3ba",
+                      "on-tertiary-fixed": "#241a00",
+                      "surface-container-lowest": "#ffffff",
+                      "outline": "#707974",
+                      "secondary-fixed-dim": "#ffb3ad",
+                      "on-primary-container": "#80bea6",
+                      "primary-fixed-dim": "#95d3ba",
+                      "surface": "#fbfbe2",
+                      "surface-bright": "#fbfbe2",
+                      "tertiary": "#735c00",
+                      "surface-tint": "#2b6954",
+                      "primary": "#003527",
+                      "on-secondary-fixed": "#410004",
+                      "on-surface": "#1b1d0e",
+                      "surface-container": "#efefd7",
+                      "on-secondary-fixed-variant": "#852221",
+                      "on-background": "#1b1d0e",
+                      "on-secondary-container": "#721315",
+                      "primary-fixed": "#b0f0d6",
+                      "background": "#fbfbe2",
+                      "on-primary": "#ffffff",
+                      "on-error": "#ffffff",
+                      "surface-container-low": "#f5f5dc",
+                      "on-tertiary-container": "#4e3d00",
+                      "on-secondary": "#ffffff",
+                      "on-primary-fixed-variant": "#0b513d",
+                      "surface-dim": "#dbdcc3",
+                      "surface-container-high": "#eaead1",
+                      "secondary-fixed": "#ffdad7",
+                      "secondary-container": "#fe7c74",
+                      "primary-container": "#064e3b",
+                      "on-tertiary": "#ffffff",
+                      "tertiary-fixed": "#ffe088",
+                      "outline-variant": "#bfc9c3",
+                      "error": "#ba1a1a"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "unit": "8px",
+                      "container-margin": "24px",
+                      "section-gap-sm": "48px",
+                      "section-gap-lg": "80px",
+                      "gutter": "16px"
+              },
+              "fontFamily": {
+                      "body-lg": ["Hanken Grotesk"],
+                      "label-md": ["Hanken Grotesk"],
+                      "headline-md": ["EB Garamond"],
+                      "headline-sm": ["EB Garamond"],
+                      "button": ["Hanken Grotesk"],
+                      "body-md": ["Hanken Grotesk"],
+                      "display-lg-mobile": ["EB Garamond"],
+                      "display-lg": ["EB Garamond"]
+              },
+              "fontSize": {
+                      "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                      "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "headline-md": ["32px", {"lineHeight": "40px", "fontWeight": "400"}],
+                      "headline-sm": ["24px", {"lineHeight": "32px", "fontWeight": "400"}],
+                      "button": ["16px", {"lineHeight": "24px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                      "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "display-lg-mobile": ["36px", {"lineHeight": "42px", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                      "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "500"}]
+              }
+            },
+          },
+        }
+      </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background font-body-md overflow-x-hidden">
+<div class="grain-overlay"></div>
+<!-- Navigation Shell -->
+<header class="bg-surface sticky top-0 z-50 transition-all duration-300">
+<div class="flex justify-between items-center w-full px-6 py-4 max-w-screen-xl mx-auto">
+<button class="hover:opacity-80 transition-opacity active:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined text-primary">menu</span>
+</button>
+<h1 class="text-headline-md font-headline-md text-primary tracking-widest uppercase">Amanat</h1>
+<button class="hover:opacity-80 transition-opacity active:scale-95 transition-transform duration-200">
+<span class="material-symbols-outlined text-primary">music_note</span>
+</button>
+</div>
+</header>
+<main>
+<!-- Hero Section -->
+<section class="relative min-h-[795px] flex flex-col items-center justify-center text-center px-container-margin overflow-hidden" id="hero">
+
+<div class="z-10 max-w-2xl">
+<span class="text-label-md font-label-md uppercase tracking-[0.2em] text-tertiary mb-4 block">Toi Jýryn</span>
+<h2 class="text-display-lg-mobile md:text-display-lg font-display-lg text-primary mb-6">Sundet Toi</h2>
+<div class="flex items-center justify-center gap-4 mb-8">
+<div class="h-[1px] w-12 bg-tertiary"></div>
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<div class="h-[1px] w-12 bg-tertiary"></div>
+</div>
+<p class="text-body-lg font-body-lg italic text-on-surface-variant max-w-md mx-auto mb-12">
+                    Tradition is the sacred trust of our ancestors. Join us as we celebrate a significant milestone in our family's legacy.
+                </p>
+<div class="flex flex-col items-center gap-4">
+<button class="bg-primary text-on-primary font-button text-button px-10 py-4 rounded-none hover:opacity-90 transition-all border border-primary relative overflow-hidden group">
+<span class="relative z-10">RSVP TO ATTEND</span>
+<div class="absolute inset-0 bg-tertiary transform translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+</button>
+</div>
+</div>
+<!-- Traditional Ornament Breaker -->
+<div class="absolute bottom-10 left-1/2 -translate-x-1/2 opacity-20">
+<span class="material-symbols-outlined text-[64px] text-tertiary">flare</span>
+</div>
+</section>
+<!-- Date & Legacy Section -->
+<section class="py-section-gap-lg bg-surface-container-low px-container-margin relative" id="date">
+<div class="max-w-screen-xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+<div class="order-2 md:order-1">
+<div class="aspect-[3/4] relative overflow-hidden border-[1px] border-tertiary/30 p-2">
+<img class="w-full h-full object-cover" data-alt="A warm, cinematic photograph of a young Kazakh boy in traditional emerald green and gold velvet attire, standing proudly in an ivory-toned ceremonial hall. The lighting is soft and golden, highlighting the intricate gold embroidery on his vest. The background is a blurred elegant ballroom with hints of traditional koshkar muiz patterns on the wall." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYVIPBsQJ-1PkgkpJigrPly9ZWLChl4vpINqAGsl6zlkFpDkFJ07IAIwEdAeBPdQZhYnCd5nNSoY5rs3yUoth-covrzIGq1O9GwJ2XsnNcWoTMlJ9n89h9UN6na2OBehNNov0JNaXGV3uvvCkU5q7350t4pyPIXnL0X0T0J8HiPU6trvInQZ3CKus8MWU8kJhHvtH-f5WrCGf7oFlWViUAIpewGRjRAPBy2cQCUVzueBwfGTa4oxSBgsuq6FTUHwlmQdCL2PNODUg"/>
+<div class="absolute inset-0 ring-1 ring-inset ring-tertiary/20 m-6"></div>
+</div>
+</div>
+<div class="order-1 md:order-2 flex flex-col gap-8">
+<div class="border-l-2 border-tertiary pl-6">
+<h3 class="text-headline-sm font-headline-sm text-primary mb-2 uppercase tracking-wide">The Sacred Date</h3>
+<p class="text-display-lg-mobile font-display-lg-mobile text-primary">15 October 2024</p>
+</div>
+<div class="space-y-6">
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-tertiary mt-1">event_note</span>
+<div>
+<p class="text-label-md font-label-md text-tertiary uppercase">Ceremony &amp; Gathering</p>
+<p class="text-body-lg font-body-lg">Saturday at 17:00</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<span class="material-symbols-outlined text-tertiary mt-1">location_on</span>
+<div>
+<p class="text-label-md font-label-md text-tertiary uppercase">Venue</p>
+<p class="text-body-lg font-body-lg">Grand Heritage Ballroom, Almaty</p>
+</div>
+</div>
+</div>
+<p class="text-body-md font-body-md text-on-surface-variant italic leading-relaxed">
+                        "Мұрамыз — біздің байлығымыз." (Our legacy is our wealth). We invite you to be part of this honorable Kazakh tradition, witnessing the growth of our son into his future responsibilities.
+                    </p>
+</div>
+</div>
+</section>
+<!-- Program Section (Bento Inspired) -->
+<section class="py-section-gap-lg px-container-margin" id="program">
+<div class="max-w-screen-xl mx-auto">
+<div class="text-center mb-16">
+<h3 class="text-headline-md font-headline-md text-primary mb-2">The Celebration Program</h3>
+<p class="text-label-md font-label-md text-tertiary uppercase tracking-widest">Toi Baǵdarlamasy</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<!-- Item 1 -->
+<div class="bg-white border-inset border-[1px] border-tertiary/20 p-8 flex flex-col justify-between min-h-[280px] hover:shadow-lg transition-shadow duration-500">
+<div class="flex justify-between items-start">
+<span class="text-headline-sm font-headline-sm text-tertiary">17:00</span>
+<span class="material-symbols-outlined text-primary opacity-30">meeting_room</span>
+</div>
+<div>
+<h4 class="text-headline-sm font-headline-sm text-primary mb-2">Reception</h4>
+<p class="text-body-md font-body-md text-on-surface-variant">Qonaqtardy qarsy alý. Welcome tea and traditional Kazakh refreshments.</p>
+</div>
+</div>
+<!-- Item 2 - Large Feature -->
+<div class="md:col-span-2 bg-primary text-on-primary p-8 flex flex-col justify-between min-h-[280px] relative overflow-hidden">
+<div class="absolute top-0 right-0 p-8 opacity-10">
+<span class="material-symbols-outlined text-[120px]">groups</span>
+</div>
+<div class="flex justify-between items-start relative z-10">
+<span class="text-headline-sm font-headline-sm text-tertiary-fixed-dim">18:30</span>
+</div>
+<div class="relative z-10">
+<h4 class="text-headline-sm font-headline-sm mb-2">Grand Ceremony</h4>
+<p class="text-body-lg font-body-lg opacity-80">Batyrdyń kıiz úıge kirýi. The grand entrance and the traditional "Shashu" ritual as our hero enters the hall.</p>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="bg-surface-container-high p-8 flex flex-col justify-between min-h-[280px]">
+<div class="flex justify-between items-start">
+<span class="text-headline-sm font-headline-sm text-tertiary">20:00</span>
+<span class="material-symbols-outlined text-primary opacity-30">restaurant</span>
+</div>
+<div>
+<h4 class="text-headline-sm font-headline-sm text-primary mb-2">Gala Dinner</h4>
+<p class="text-body-md font-body-md text-on-surface-variant">Merekeli dastarhan. A feast of tradition with national delicacies and music.</p>
+</div>
+</div>
+<!-- Item 4 -->
+<div class="bg-white border-[1px] border-tertiary/20 p-8 flex flex-col justify-between min-h-[280px]">
+<div class="flex justify-between items-start">
+<span class="text-headline-sm font-headline-sm text-tertiary">21:30</span>
+<span class="material-symbols-outlined text-primary opacity-30">celebration</span>
+</div>
+<div>
+<h4 class="text-headline-sm font-headline-sm text-primary mb-2">Concert Program</h4>
+<p class="text-body-md font-body-md text-on-surface-variant">The soul of the steppe through Dombra performances and modern tributes.</p>
+</div>
+</div>
+<!-- Item 5 -->
+<div class="bg-white border-[1px] border-tertiary/20 p-8 flex flex-col justify-between min-h-[280px]">
+<div class="flex justify-between items-start">
+<span class="text-headline-sm font-headline-sm text-tertiary">23:00</span>
+<span class="material-symbols-outlined text-primary opacity-30">history_edu</span>
+</div>
+<div>
+<h4 class="text-headline-sm font-headline-sm text-primary mb-2">Blessings</h4>
+<p class="text-body-md font-body-md text-on-surface-variant">Bata berý. Final words from the elders and distribution of ceremonial gifts (Toibastar).</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- RSVP Section -->
+<section class="py-section-gap-lg bg-surface px-container-margin relative" id="rsvp">
+<div class="max-w-xl mx-auto text-center">
+<div class="mb-12">
+<h3 class="text-headline-md font-headline-md text-primary mb-4">Confirm Your Presence</h3>
+<p class="text-body-lg font-body-lg text-on-surface-variant">We look forward to celebrating this legacy with you. Kindly RSVP by October 1st.</p>
+</div>
+<form class="space-y-8 text-left bg-white p-8 md:p-12 shadow-sm border-[1px] border-tertiary/10">
+<div class="space-y-1">
+<label class="text-label-md font-label-md text-tertiary uppercase">Full Name / Аты-жөні</label>
+<input class="w-full bg-transparent border-0 border-b border-surface-container-highest focus:ring-0 focus:border-primary transition-colors py-3 px-0 font-body-lg" placeholder="Your name here" type="text"/>
+</div>
+<div class="space-y-4">
+<label class="text-label-md font-label-md text-tertiary uppercase">Will you attend?</label>
+<div class="flex gap-6">
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-5 h-5 text-primary focus:ring-primary border-outline-variant" name="attendance" type="radio"/>
+<span class="font-body-md text-on-surface">Yes, with honor</span>
+</label>
+<label class="flex items-center gap-3 cursor-pointer group">
+<input class="w-5 h-5 text-primary focus:ring-primary border-outline-variant" name="attendance" type="radio"/>
+<span class="font-body-md text-on-surface">Unable to attend</span>
+</label>
+</div>
+</div>
+<div class="space-y-1">
+<label class="text-label-md font-label-md text-tertiary uppercase">Number of Guests</label>
+<select class="w-full bg-transparent border-0 border-b border-surface-container-highest focus:ring-0 focus:border-primary transition-colors py-3 px-0 font-body-lg">
+<option>1 Guest</option>
+<option>2 Guests</option>
+<option>Family (3+)</option>
+</select>
+</div>
+<button class="w-full bg-primary text-on-primary font-button py-4 mt-8 hover:bg-opacity-95 transition-all uppercase tracking-widest" type="submit">
+                        Submit Confirmation
+                    </button>
+</form>
+</div>
+<!-- Floating Ornament decoration -->
+<div class="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 opacity-10 pointer-events-none hidden md:block">
+<span class="material-symbols-outlined text-[300px] text-tertiary">star_rate</span>
+</div>
+</section>
+<!-- Gallery Section -->
+<section class="py-section-gap-lg px-container-margin bg-white overflow-hidden" id="gallery">
+<div class="max-w-screen-xl mx-auto">
+<div class="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+<div>
+<h3 class="text-headline-md font-headline-md text-primary mb-2">Our Moments</h3>
+<p class="text-label-md font-label-md text-tertiary uppercase">The Path to Today</p>
+</div>
+<div class="h-[1px] flex-grow mx-8 bg-tertiary/20 hidden md:block"></div>
+<button class="text-primary font-button text-button border-b border-primary pb-1 flex items-center gap-2">
+                        View Full Gallery <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
+<div class="col-span-2 aspect-video overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-700 hover:scale-105" data-alt="A high-end editorial shot of a traditional Kazakh dombra musical instrument leaning against an ivory textured wall. Soft morning light creates gentle shadows. The instrument is made of rich, dark wood with delicate mother-of-pearl inlays. The atmosphere is quiet, respectful, and culturally deep." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBajjpYo40UNlPNDwJtte_5dMKQfwfVS0P1E1G8H03zmvIhMltbyBP8vui9AnbWu54lOL2j1th55hLSwkjRnd6412p0KmJxGIZTHUQwsONap-8hjv9BFzfeskv98JYAmSktkqdL0B7aWSfMeLkAhzCuMIq7ZFeOpDewQ06R41-pG2RXKFri5V7wOXl0sgHVtedzSxTqCm_o1lOG7epJxrtkQcef9hKI52bNU2FpN-hvV_k-w-vA3tHnEwuxWQTkq3lNG7iytPxW4Mk"/>
+</div>
+<div class="aspect-square overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-700 hover:scale-105" data-alt="Detailed close-up of a traditional Kazakh emerald green velvet vest with intricate gold thread embroidery in the shape of a koshkar muiz ornament. The fabric has a premium tactile texture, catching the light elegantly. The gold stitching is thick and luxurious, suggesting handcrafted quality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCrrd5nXfKDizwrLBkt_VTJq3_H4Pz6qBJPxYZ1i31B5czPrbgmDSm9c0LBGmdCSUYJsiRkum_sJa5tNqPmPziSolCvx9tqe4Sega6typcVXRQy14G19bkxJPYsQ62Oe0B9UFbawcgiShuaO5XdFW-vtJVf5faLFVEWJfLDJyQcnJ4FefmzCK0zjDH-tObRTNn_8NSE-vibo1oTuFDj01s7cucGVcmsScGO_qbZrloFpVv4dkUnDxAAginEpHuxyqxWRHq9sEpLjdI"/>
+</div>
+<div class="aspect-square overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-700 hover:scale-105" data-alt="A candid black and white portrait of a Kazakh elder with deep, wise eyes, smiling warmly as he prepares a ceremonial blessing. He wears a traditional skullcap with subtle patterns. The background is softly out of focus, emphasizing the heritage and the bridge between generations." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1m4kjsgmAgZfOiEp5GNTF7eyV2Jw8-K_yGpwBy2Jfukx67l0gCqQ966gHmFV6_h-eaCUsRIdOMWsfrc06OplGfzIfL77ujo-IxOXYm3HajfQYAPBUAucUcsqIMZYxLF9cahm-Pg5h9a2ftXLSROTsPE7lLCWF6EJcAygHODnUAuO-86zDO-gMB8yQlrCB9yYqm56IRP8G4tftV0UvlZ1b6zysSbphCS2HDTiwWDoYK5wbXREFjOOc6qgLr25Dap-zvxIquqrEV6w"/>
+</div>
+<div class="aspect-square overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-700 hover:scale-105" data-alt="A still life arrangement of traditional Kazakh 'Baursak' (fried dough) served in a silver bowl with a gold rim. Beside it, a small porcelain cup of tea. The setting is on an ivory linen tablecloth. The mood is hospitable, warm, and inviting, reflecting the concept of 'Qonaqjaylylyq'." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEOiEI9c4iN_80t7v5YClL52wFZU-ClQhJinh1mLIthzSh0H3oeoLzid1182IbChQG3rA7SCVjN27y0sneV3bcHRX9pkmUnedjIiLQd6N8VXCk5IkM3jCI45Xl36XTBdgCCBtKreYW_ozJPXY-gw_RFupVAv4RWNTaknmT2dWxScG4NYCQ41ei4x7OPBx9SbhunGHKwvoUAYmH04niXVYBVpRNv_FlXNXTA_7jPgBaGrSmOj0RfVXNmbIytL-0ad4Ph9NLcykpB2U"/>
+</div>
+<div class="col-span-2 md:col-span-1 aspect-square md:aspect-auto overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-700 hover:scale-105" data-alt="A vast landscape of the Kazakh steppe at sunset. The sky is a blend of deep amber and violet. In the distance, the silhouette of a modern yurt and mountains. The image represents the roots and the vast expanse of heritage that the ceremony honors. Cinematic and wide-angle." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrboarFARiZsSXanYLQ4yzp5XE9bC4eLLyVo7ViUUiZ_bzFypRSKM7yPJn-5FJsrjNuHFmWzU7iRc7VjFnEarnPKP3R3m96ZWQ8VtglQQMuA5s7e_cgkjALB8rFrrtK9JCpb583KEv5x2T2grVk0IicrJr6Y_4rfNpFLABp0aUqXbNo6h6G8vB6An7LmLKLimdWQU0IQWOR3Drgr_2q4HRTkEp-KCPm1orN11s788IeqW_tK2qtFmLoqlpmi5pc8x_M_BY811f5cM"/>
+</div>
+<div class="col-span-2 aspect-[2/1] md:aspect-auto overflow-hidden">
+<img class="w-full h-full object-cover transition-transform duration-700 hover:scale-105" data-alt="A beautifully set gala dinner table in an upscale Almaty ballroom. The theme is emerald and gold. Fine china with golden patterns, emerald green silk napkins with ivory rings, and centerpieces of white peonies and gold-dipped leaves. Soft candlelighting creates a magical and prestigious atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYPco6yyt-EH8_8N1xlklzjBB034NUaBQLaDJpI3j8DGPU3HsSA2utd9H_4qwQXHDihCVCoo_-2YM3_AsZtaMMXhmz2Hdk5gR8U1I-UgNNhYSQDcDmxy95NxnhYV9JprpZtV8A_omMdl6nkW0iflyzYOOeDWwVooLbG1kC2WxWzC1ZPfdJ3kQ1016XjonRNFG9EIIxZuPnpcG0caeaPYlKENgn5xfu7qjc4c-l7yEPLv73eaM3Ln7l9Or5_F3CdGLNU83HfWhRgmw"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Map Section -->
+<section class="py-section-gap-lg px-container-margin bg-surface-container-low" id="map">
+<div class="max-w-screen-xl mx-auto">
+<div class="grid md:grid-cols-3 gap-8 items-stretch">
+<div class="md:col-span-1 flex flex-col justify-center">
+<h3 class="text-headline-sm font-headline-sm text-primary mb-6">Location</h3>
+<p class="text-body-lg font-body-lg mb-2">Grand Heritage Ballroom</p>
+<p class="text-body-md font-body-md text-on-surface-variant mb-8">Al-Farabi Avenue 77, Almaty, Kazakhstan</p>
+<div class="flex flex-col gap-4">
+<a class="inline-flex items-center gap-3 text-primary font-button group" href="#">
+<span class="w-10 h-10 flex items-center justify-center bg-primary text-on-primary rounded-none group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[18px]">directions</span>
+</span>
+                                Open in Google Maps
+                            </a>
+</div>
+</div>
+<div class="md:col-span-2 h-[400px] bg-outline-variant relative">
+<div class="w-full h-full grayscale hover:grayscale-0 transition-all duration-700" data-location="Almaty" style="">
+<img class="w-full h-full object-cover" data-alt="A stylized, high-contrast map of central Almaty focusing on Al-Farabi avenue area. The map uses a palette of ivory and emerald green. Elegant thin lines define the streets. A golden pin with a koshkar muiz ornament marks the 'Grand Heritage Ballroom' location. Professional cartographic design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAd484qOTDeJxQ7kNzP61Dh6RouPGQaOboRrUTzWFVEmk3ZRM90NLy_41Kz85WF4Zc6VwaCuCcfL_AzBYBrHpT5UHXdC6RqrJybqgkcyZbyeyrSi2cb0eeKqwg8lpIbVYLzZDcUZ9bMHNwB_bXFJt-b4F_soLG2BvO1Aa32yIhSd7ioumOoVurws0IkrfB9JMGDw85ssgwkf8i-wx2pcurvRiGx2zxejQnpAqd_9N8WwUVx1N55-VSHpZt8jNlMaoCQPGA3Yd2SjnU"/>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Final Footer -->
+<footer class="py-section-gap-sm px-container-margin bg-primary text-on-primary text-center">
+<div class="max-w-2xl mx-auto flex flex-col items-center gap-8">
+<div class="flex items-center gap-4">
+<div class="h-[1px] w-12 bg-tertiary-fixed-dim"></div>
+<span class="material-symbols-outlined text-tertiary-fixed-dim" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<div class="h-[1px] w-12 bg-tertiary-fixed-dim"></div>
+</div>
+<h2 class="text-headline-md font-headline-md italic">With love, the Family.</h2>
+<p class="text-label-md font-label-md tracking-widest opacity-60 uppercase">Amanat © 2024</p>
+<div class="flex gap-6 mt-4">
+<span class="material-symbols-outlined opacity-50 cursor-pointer hover:opacity-100 transition-opacity">share</span>
+<span class="material-symbols-outlined opacity-50 cursor-pointer hover:opacity-100 transition-opacity">mail</span>
+<span class="material-symbols-outlined opacity-50 cursor-pointer hover:opacity-100 transition-opacity">phone</span>
+</div>
+</div>
+</footer>
+</main>
+<!-- Bottom Navigation Shell -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 pb-safe bg-surface-container-low shadow-[0_-4px_20px_rgba(0,0,0,0.05)] md:hidden">
+<a class="flex flex-col items-center justify-center text-primary font-bold transition-transform active:translate-y-[-2px]" href="#hero">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<span class="text-label-md font-label-md">Invitation</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline transition-colors hover:text-primary" href="#program">
+<span class="material-symbols-outlined">event_note</span>
+<span class="text-label-md font-label-md">Program</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline transition-colors hover:text-primary" href="#rsvp">
+<span class="material-symbols-outlined">edit_calendar</span>
+<span class="text-label-md font-label-md">RSVP</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline transition-colors hover:text-primary" href="#gallery">
+<span class="material-symbols-outlined">photo_library</span>
+<span class="text-label-md font-label-md">Gallery</span>
+</a>
+</nav>
+<!-- Navigation Drawer (Hidden by default) -->
+<div class="fixed inset-y-0 left-0 z-[60] w-72 bg-surface flex-col py-6 shadow-2xl border-r border-outline-variant transform -translate-x-full transition-transform duration-300 hidden md:flex" id="side-drawer">
+<div class="px-6 mb-8 flex justify-between items-center">
+<h2 class="text-headline-sm font-headline-sm text-primary uppercase">Menu</h2>
+<button class="material-symbols-outlined text-on-surface-variant" onclick="toggleDrawer()">close</button>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-4 px-6 py-4 text-on-surface-variant hover:bg-surface-container-high rounded-lg mx-2 transition-colors" href="#">
+<span class="material-symbols-outlined">favorite</span>
+<span class="text-body-lg font-body-lg">Our Story</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-4 text-on-surface-variant hover:bg-surface-container-high rounded-lg mx-2 transition-colors" href="#map">
+<span class="material-symbols-outlined">location_on</span>
+<span class="text-body-lg font-body-lg">The Venue</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-4 text-on-surface-variant hover:bg-surface-container-high rounded-lg mx-2 transition-colors" href="#">
+<span class="material-symbols-outlined">card_giftcard</span>
+<span class="text-body-lg font-body-lg">Gift Registry</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-4 text-on-surface-variant hover:bg-surface-container-high rounded-lg mx-2 transition-colors" href="#">
+<span class="material-symbols-outlined">mail</span>
+<span class="text-body-lg font-body-lg">Contact Us</span>
+</a>
+<a class="flex items-center gap-4 px-6 py-4 bg-primary-container text-on-primary-container rounded-lg mx-2 opacity-90" href="#">
+<span class="material-symbols-outlined">share</span>
+<span class="text-body-lg font-body-lg">Share Invitation</span>
+</a>
+</nav>
+</div>
+<script>
+        // Micro-interaction for form submission
+        document.querySelector('form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerText;
+            btn.innerText = 'Confirming...';
+            btn.classList.add('opacity-50');
+            
+            setTimeout(() => {
+                btn.innerText = 'Raqmet! Confirmed';
+                btn.classList.remove('opacity-50');
+                btn.classList.add('bg-tertiary');
+            }, 1500);
+        });
+
+        // Simple Drawer Toggle Logic
+        function toggleDrawer() {
+            const drawer = document.getElementById('side-drawer');
+            if (drawer.classList.contains('-translate-x-full')) {
+                drawer.classList.remove('-translate-x-full');
+            } else {
+                drawer.classList.add('-translate-x-full');
+            }
+        }
+
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('shadow-sm', 'bg-opacity-95', 'backdrop-blur-md');
+            } else {
+                header.classList.remove('shadow-sm', 'bg-opacity-95', 'backdrop-blur-md');
+            }
+        });
+    </script>
+</body></html>

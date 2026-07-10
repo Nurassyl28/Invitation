@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Toi Invite — профессиональные онлайн-приглашения</title>
+    <meta
+      name="description"
+      content="Платформа для создания красивых онлайн-приглашений на той, свадьбы и семейные события. Шаблоны, RSVP, музыка, карта и личный кабинет."
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script defer src="app.js"></script>
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="topbar">
+        <a class="brand" href="#home" aria-label="Toi Invite">
+          <span class="brand-mark">TI</span>
+          <span class="brand-text">
+            <strong>Toi Invite</strong>
+            <small>Онлайн-приглашения</small>
+          </span>
+        </a>
+
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="mobile-nav">
+          Меню
+        </button>
+
+        <nav class="nav" aria-label="Основная навигация">
+          <a href="templates.html">Шаблоны</a>
+          <a href="#features">Возможности</a>
+          <a href="#pricing">Цены</a>
+          <a href="#faq">FAQ</a>
+          <a href="dashboard.html">Кабинет</a>
+          <a class="nav-cta" href="builder.html">Создать приглашение</a>
+        </nav>
+      </header>
+
+      <nav class="mobile-nav" id="mobile-nav" hidden aria-label="Мобильная навигация">
+        <a href="templates.html">Шаблоны</a>
+        <a href="#features">Возможности</a>
+        <a href="#pricing">Цены</a>
+        <a href="#faq">FAQ</a>
+        <a href="dashboard.html">Кабинет</a>
+        <a href="builder.html">Создать приглашение</a>
+      </nav>
+
+      <main id="home">
+        <section class="hero">
+          <div class="hero-copy">
+            <span class="eyebrow">Профессиональная SaaS-платформа для тоя и семейных событий</span>
+            <h1>Красивые онлайн-приглашения, которые выглядят как премиальный сайт.</h1>
+            <p class="hero-text">
+              Создавайте мобильные приглашения со своим стилем, фото, музыкой, картой и RSVP.
+              Отправляйте гостям одну ссылку в WhatsApp, Telegram или Instagram.
+            </p>
+
+            <div class="hero-actions" id="start">
+              <a class="button button-primary" href="templates.html">Посмотреть шаблоны</a>
+              <a class="button button-secondary" href="#pricing">Изучить тарифы</a>
+              <a class="button button-secondary" href="builder.html">Открыть конструктор</a>
+            </div>
+
+            <div class="hero-metrics" aria-label="Показатели продукта">
+              <article>
+                <strong>6+</strong>
+                <span>категорий событий</span>
+              </article>
+              <article>
+                <strong>RSVP</strong>
+                <span>ответы гостей в одном месте</span>
+              </article>
+              <article>
+                <strong>1 ссылка</strong>
+                <span>для публикации и отправки</span>
+              </article>
+            </div>
+          </div>
+
+          <div class="hero-panel">
+            <div class="glass-card invitation-preview">
+              <div class="preview-label">Публичное приглашение</div>
+              <div class="preview-header">
+                <p class="preview-kicker">Свадьба</p>
+                <h2>Арман и Аружан</h2>
+                <p class="preview-date">12 сентября 2026 • 18:30</p>
+              </div>
+
+              <div class="preview-photo">
+                <div class="photo-glow"></div>
+                <div class="photo-frame">
+                  <div class="photo-initials">AA</div>
+                  <p>Премиальный mobile-first preview</p>
+                </div>
+              </div>
+
+              <div class="preview-grid">
+                <div>
+                  <span>Локация</span>
+                  <strong>Royal Hall, Алматы</strong>
+                </div>
+                <div>
+                  <span>RSVP</span>
+                  <strong>Подтверждение участия</strong>
+                </div>
+              </div>
+
+              <div class="preview-footer">
+                <button type="button">Открыть</button>
+                <button type="button" class="ghost">Поделиться</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="strip">
+          <div>
+            <span>Свадьба</span>
+            <span>Қыз ұзату</span>
+            <span>Бесік той</span>
+            <span>Тұсаукесер</span>
+            <span>Сүндет той</span>
+            <span>Юбилей</span>
+          </div>
+        </section>
+
+        <section class="section" id="templates">
+          <div class="section-heading">
+            <span class="eyebrow">Каталог</span>
+            <h2>Шаблоны для разных событий и настроений</h2>
+            <p>
+              Фильтры помогают быстро выбрать нужный стиль: классический, современный,
+              торжественный или минималистичный.
+            </p>
+          </div>
+
+          <div class="filters" role="tablist" aria-label="Фильтр шаблонов">
+            <button class="filter is-active" data-filter="all" type="button">Все</button>
+            <button class="filter" data-filter="wedding" type="button">Свадьба</button>
+            <button class="filter" data-filter="family" type="button">Семейные</button>
+            <button class="filter" data-filter="birthday" type="button">День рождения</button>
+            <button class="filter" data-filter="premium" type="button">Premium</button>
+          </div>
+
+          <div class="template-grid" id="template-grid">
+            <article class="template-card" data-tags="wedding premium">
+              <div class="template-art art-1"></div>
+              <div class="template-content">
+                <div class="template-meta">
+                  <span>Свадьба</span>
+                  <span>Premium</span>
+                </div>
+                <h3>Velvet Arch</h3>
+                <p>Элегантный шаблон с акцентом на фотографию и торжественную подачу.</p>
+                <div class="template-actions">
+                  <a href="invite.html">Preview</a>
+                  <a href="builder.html" class="secondary">Use template</a>
+                </div>
+              </div>
+            </article>
+
+            <article class="template-card" data-tags="family">
+              <div class="template-art art-2"></div>
+              <div class="template-content">
+                <div class="template-meta">
+                  <span>Бесік той</span>
+                  <span>Standard</span>
+                </div>
+                <h3>Warm Story</h3>
+                <p>Мягкий свет, орнамент и аккуратный блок с программой мероприятия.</p>
+                <div class="template-actions">
+                  <a href="invite.html">Preview</a>
+                  <a href="builder.html" class="secondary">Use template</a>
+                </div>
+              </div>
+            </article>
+
+            <article class="template-card" data-tags="birthday">
+              <div class="template-art art-3"></div>
+              <div class="template-content">
+                <div class="template-meta">
+                  <span>Юбилей</span>
+                  <span>Free</span>
+                </div>
+                <h3>Golden Night</h3>
+                <p>Тёплый праздничный шаблон с countdown, адресом и кнопкой RSVP.</p>
+                <div class="template-actions">
+                  <a href="invite.html">Preview</a>
+                  <a href="builder.html" class="secondary">Use template</a>
+                </div>
+              </div>
+            </article>
+
+            <article class="template-card" data-tags="wedding family premium">
+              <div class="template-art art-4"></div>
+              <div class="template-content">
+                <div class="template-meta">
+                  <span>Қыз ұзату</span>
+                  <span>VIP</span>
+                </div>
+                <h3>Royal Silk</h3>
+                <p>Статный, светлый и дорогой визуальный язык для торжественных событий.</p>
+                <div class="template-actions">
+                  <a href="invite.html">Preview</a>
+                  <a href="builder.html" class="secondary">Use template</a>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section features" id="features">
+          <div class="section-heading">
+            <span class="eyebrow">Возможности</span>
+            <h2>Платформа, а не просто лендинг</h2>
+            <p>
+              Это основа для продукта, где есть клиент, гость, админ и партнёр.
+            </p>
+          </div>
+
+          <div class="feature-grid">
+            <article>
+              <h3>Редактор приглашения</h3>
+              <p>Имена, дата, время, локация, музыка, фото, программа и custom slug.</p>
+            </article>
+            <article>
+              <h3>RSVP и гости</h3>
+              <p>Ответы гостей, комментарии, статусы и список подтверждений.</p>
+            </article>
+            <article>
+              <h3>Оплата и статус</h3>
+              <p>Мануальная проверка платежа на старте и готовая структура для автоматизации.</p>
+            </article>
+            <article>
+              <h3>Партнёрский режим</h3>
+              <p>White-label и кабинет для организаторов, агентств и декораторов.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section workflow">
+          <div class="section-heading">
+            <span class="eyebrow">Сценарий</span>
+            <h2>Как это работает</h2>
+          </div>
+
+          <div class="steps">
+            <article><span>1</span><h3>Выбираете шаблон</h3><p>Под нужный тип события и стиль.</p></article>
+            <article><span>2</span><h3>Заполняете данные</h3><p>Фото, текст, адрес, музыка и программа.</p></article>
+            <article><span>3</span><h3>Публикуете ссылку</h3><p>Готовая страница открывается на телефоне.</p></article>
+            <article><span>4</span><h3>Собираете RSVP</h3><p>Гости подтверждают участие в одном месте.</p></article>
+          </div>
+        </section>
+
+        <section class="section pricing" id="pricing">
+          <div class="section-heading">
+            <span class="eyebrow">Цены</span>
+            <h2>Прозрачные тарифы для семей и организаторов</h2>
+            <p>Стартовый набор уже заложен, а архитектура готова к расширению.</p>
+          </div>
+
+          <div class="pricing-grid">
+            <article class="price-card">
+              <h3>Free</h3>
+              <strong>0 ₸</strong>
+              <ul>
+                <li>Базовые шаблоны</li>
+                <li>До 20 RSVP</li>
+                <li>Водяной знак</li>
+              </ul>
+            </article>
+            <article class="price-card featured">
+              <h3>Standard</h3>
+              <strong>2 990 ₸</strong>
+              <ul>
+                <li>Все стандартные шаблоны</li>
+                <li>Музыка и custom link</li>
+                <li>Безлимит гостей</li>
+              </ul>
+            </article>
+            <article class="price-card">
+              <h3>Premium</h3>
+              <strong>4 990 ₸</strong>
+              <ul>
+                <li>Анимированные шаблоны</li>
+                <li>Расширенный дизайн</li>
+                <li>Приоритетная подача</li>
+              </ul>
+            </article>
+          </div>
+        </section>
+
+        <section class="section faq" id="faq">
+          <div class="section-heading">
+            <span class="eyebrow">FAQ</span>
+            <h2>Вопросы, которые нужно закрыть на старте</h2>
+          </div>
+
+          <div class="faq-list">
+            <details open>
+              <summary>Это будет просто лендинг или полноценная платформа?</summary>
+              <p>Полноценная платформа с шаблонами, редактором, RSVP, оплатой и кабинетом.</p>
+            </details>
+            <details>
+              <summary>Можно ли позже добавить автоматические платежи?</summary>
+              <p>Да. Сейчас закладывается ручной Kaspi-flow, потом подключается онлайн-оплата.</p>
+            </details>
+            <details>
+              <summary>Будут ли казахский и русский языки?</summary>
+              <p>Да. Базовая архитектура уже предусматривает двуязычный интерфейс и контент.</p>
+            </details>
+          </div>
+        </section>
+
+        <section class="section cta-panel">
+          <div>
+            <span class="eyebrow">Следующий шаг</span>
+            <h2>Сейчас правильный момент собрать первую рабочую версию.</h2>
+            <p>
+              Дальше я могу перевести этот каркас в полноценное приложение: страницы,
+              кабинет, редактор и backend-логику.
+            </p>
+          </div>
+          <a class="button button-primary" href="#home">Вернуться наверх</a>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <p>Toi Invite. Оригинальная платформа для онлайн-приглашений.</p>
+        <p>Сделано как старт для полноценного продукта.</p>
+      </footer>
+    </div>
+  </body>
+</html>

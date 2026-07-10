@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="ru"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Amanat - Qyz Uzatu</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&amp;family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#cca72f",
+                        "tertiary-fixed-dim": "#e9c349",
+                        "on-error-container": "#93000a",
+                        "surface-container-highest": "#e4e4cc",
+                        "secondary": "#a53936",
+                        "surface-variant": "#e4e4cc",
+                        "on-surface-variant": "#404944",
+                        "error-container": "#ffdad6",
+                        "inverse-surface": "#303221",
+                        "inverse-on-surface": "#f2f2d9",
+                        "on-primary-fixed": "#002117",
+                        "on-tertiary-fixed-variant": "#574500",
+                        "inverse-primary": "#95d3ba",
+                        "on-tertiary-fixed": "#241a00",
+                        "surface-container-lowest": "#ffffff",
+                        "outline": "#707974",
+                        "secondary-fixed-dim": "#ffb3ad",
+                        "on-primary-container": "#80bea6",
+                        "primary-fixed-dim": "#95d3ba",
+                        "surface": "#fbfbe2",
+                        "surface-bright": "#fbfbe2",
+                        "tertiary": "#735c00",
+                        "surface-tint": "#2b6954",
+                        "primary": "#003527",
+                        "on-secondary-fixed": "#410004",
+                        "on-surface": "#1b1d0e",
+                        "surface-container": "#efefd7",
+                        "on-secondary-fixed-variant": "#852221",
+                        "on-background": "#1b1d0e",
+                        "on-secondary-container": "#721315",
+                        "primary-fixed": "#b0f0d6",
+                        "background": "#fbfbe2",
+                        "on-primary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "surface-container-low": "#f5f5dc",
+                        "on-tertiary-container": "#4e3d00",
+                        "on-secondary": "#ffffff",
+                        "on-primary-fixed-variant": "#0b513d",
+                        "surface-dim": "#dbdcc3",
+                        "surface-container-high": "#eaead1",
+                        "secondary-fixed": "#ffdad7",
+                        "secondary-container": "#fe7c74",
+                        "primary-container": "#064e3b",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed": "#ffe088",
+                        "outline-variant": "#bfc9c3",
+                        "error": "#ba1a1a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "unit": "8px",
+                        "container-margin": "24px",
+                        "section-gap-sm": "48px",
+                        "section-gap-lg": "80px",
+                        "gutter": "16px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Hanken Grotesk"],
+                        "label-md": ["Hanken Grotesk"],
+                        "headline-md": ["EB Garamond"],
+                        "headline-sm": ["EB Garamond"],
+                        "button": ["Hanken Grotesk"],
+                        "body-md": ["Hanken Grotesk"],
+                        "display-lg-mobile": ["EB Garamond"],
+                        "display-lg": ["EB Garamond"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                        "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "headline-md": ["32px", {"lineHeight": "40px", "fontWeight": "400"}],
+                        "headline-sm": ["24px", {"lineHeight": "32px", "fontWeight": "400"}],
+                        "button": ["16px", {"lineHeight": "24px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                        "display-lg-mobile": ["36px", {"lineHeight": "42px", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+                        "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .silk-overlay {
+            background: linear-gradient(135deg, rgba(251,251,226,0.1) 0%, rgba(212,175,55,0.05) 50%, rgba(251,251,226,0.1) 100%);
+            background-size: 200% 200%;
+            animation: silk-flow 15s ease-infinite;
+        }
+        @keyframes silk-flow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .ornament-mask {
+            mask-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 10 C30 10 10 30 10 50 C10 70 30 90 50 90 C70 90 90 70 90 50 C90 30 70 10 50 10 M50 20 C65 20 80 35 80 50 C80 65 65 80 50 80 C35 80 20 65 20 50 C20 35 35 20 50 20' fill='black'/%3E%3C/svg%3E");
+            mask-size: contain;
+            mask-repeat: no-repeat;
+            mask-position: center;
+        }
+        .grain {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 99;
+            opacity: 0.03;
+            background-image: url("https://www.transparenttextures.com/patterns/stardust.png");
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface selection:bg-primary-fixed selection:text-on-primary-fixed overflow-x-hidden font-body-md">
+<div class="grain"></div>
+<!-- Top App Bar -->
+<header class="fixed top-0 left-0 w-full z-50 bg-surface/80 backdrop-blur-md">
+<nav class="flex justify-between items-center w-full px-6 py-4 max-w-screen-xl mx-auto">
+<button aria-label="Menu" class="p-2 hover:opacity-80 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined text-primary">menu</span>
+</button>
+<h1 class="text-headline-md font-headline-md text-primary tracking-widest">Amanat</h1>
+<button aria-label="Music" class="p-2 hover:opacity-80 transition-opacity active:scale-95 duration-200">
+<span class="material-symbols-outlined text-primary">music_note</span>
+</button>
+</nav>
+</header>
+<main class="relative pt-20">
+<!-- Hero Section -->
+<section class="relative h-screen flex flex-col items-center justify-center text-center px-container-margin overflow-hidden">
+<div class="absolute inset-0 z-0 overflow-hidden">
+<div class="absolute inset-0 bg-primary/10 z-10"></div>
+<img class="w-full h-full object-cover" data-alt="A cinematic, high-fashion editorial portrait of a young Kazakh woman in a modern white and rose-gold Qyz Uzatu dress. The lighting is soft and ethereal, mimicking natural morning light through silk curtains. The background is a minimalist, ivory-toned interior with subtle golden architectural details. The aesthetic is calm, premium, and deeply feminine, capturing the essence of a sacred legacy." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBy9K2WvyuTwjPlNMLBUvtvSAVfKWoTHF-x1V99yuW7uihDiiWnL1ITD0djksuwAzWPLXTR4YOyJlqOvhogClNdUamLxxaXFbc0bUkI_aOFCKzO0rXKZpy5f5AefMs4XuOo8jiW4aiJTevktCUCx-IC6Kb1h1QxHz5TvAazf7Ft2mgtpyZgevi8wkp98w0BgJMvI-chaH6inAFBemahtKZcIJpvXL8_HkrX-w7O5PgCkFbjUjWhx10Ad7lFm3LQx9KlgMtA0vFcTg"/>
+</div>
+<div class="relative z-20 silk-overlay p-8 border border-outline-variant/30 backdrop-blur-sm max-w-lg">
+<p class="font-label-md text-label-md uppercase tracking-[0.3em] text-primary mb-4">Қыз Ұзату • Проводы Невесты</p>
+<h2 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-primary mb-6 leading-tight">Айлин</h2>
+<div class="w-12 h-[1px] bg-tertiary-container mx-auto mb-6"></div>
+<p class="font-headline-sm text-headline-sm text-on-surface-variant italic">24.08.2024</p>
+</div>
+<!-- Scroll Indicator -->
+<div class="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce flex flex-col items-center opacity-40">
+<span class="material-symbols-outlined text-primary">expand_more</span>
+</div>
+</section>
+<!-- Invitation Context -->
+<section class="py-section-gap-lg px-container-margin max-w-screen-md mx-auto text-center">
+<div class="mb-12">
+<span class="material-symbols-outlined text-tertiary-fixed-dim text-4xl mb-4">favorite</span>
+<h3 class="font-headline-md text-headline-md text-primary mb-8">Құрметті ағайын-туыс, бауырлар, құда-жекжат және достар!</h3>
+<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+                    Сіздерді аяулы қызымыз Айлиннің ұзату тойына арналған салтанатты кешіміздің қадірлі қонағы болуға шақырамыз.
+                    <br/><br/>
+                    Приглашаем вас стать свидетелями трогательного момента — проводов нашей дорогой дочери Айлин в новую жизнь.
+                </p>
+</div>
+<div class="flex justify-center items-center space-x-4 opacity-30">
+<div class="h-[1px] w-20 bg-primary"></div>
+<span class="material-symbols-outlined text-sm">spa</span>
+<div class="h-[1px] w-20 bg-primary"></div>
+</div>
+</section>
+<!-- Date & Venue Bento -->
+<section class="py-section-gap-lg px-container-margin bg-surface-container-low/50">
+<div class="max-w-screen-xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-gutter">
+<!-- Date Card -->
+<div class="md:col-span-1 bg-surface p-10 border-l border-t border-outline-variant/20 shadow-sm flex flex-col justify-center items-center text-center">
+<span class="font-label-md text-label-md text-primary uppercase tracking-widest mb-6">Дата • Күні</span>
+<div class="font-display-lg text-display-lg text-primary mb-2">24</div>
+<div class="font-headline-sm text-headline-sm text-on-surface-variant border-y border-outline-variant/30 py-2 w-full">Тамыз • Август</div>
+<div class="font-headline-sm text-headline-sm text-tertiary mt-2">Сенбі • Суббота</div>
+</div>
+<!-- Map/Venue Card -->
+<div class="md:col-span-2 relative min-h-[400px] overflow-hidden group">
+<img class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A high-end restaurant ballroom in Almaty, Kazakhstan, specifically designed for luxury events. The interior features ivory marble floors, rose-gold chandeliers, and tall windows. Soft, warm evening light fills the space, creating an atmosphere of refined elegance. No people are visible, focusing on the architectural beauty and sophisticated ambiance." data-location="Almaty" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDai-NijkqvzZcA49zPmT1BuF_2t2NRs0DMkoxR-EGXghAvuVCFkiT0t1gS1i1VWjSWP8m8irtPqtUhL_PXKmyjicRrR_BXmYem6ji1rxzYs9aR5zeXmngVpz2yBvIk7stEVyn0rqk5G0pohZt-SRPx6Ks5z8SkFFZGgqp4PInFUFaj6RsjqBjB8daBfZEpM5oQXExYoEZAQYV50U-4qMAI6ti05NuCXGzQiG7ZF_gaDx37eJzBoONbjZRUxKW1OPYvgbK8YfHi22Y"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 via-transparent to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-10 text-on-primary">
+<span class="font-label-md text-label-md uppercase tracking-widest opacity-80">Место • Мекен-жайы</span>
+<h4 class="font-headline-md text-headline-md mb-2">Grand Ballroom Almaty</h4>
+<p class="font-body-md text-body-md opacity-90">пр. Аль-Фараби, 77/7</p>
+<a class="mt-6 inline-flex items-center space-x-2 font-button text-button border-b border-white/50 pb-1 hover:border-white transition-colors" href="#">
+<span>Открыть карту</span>
+<span class="material-symbols-outlined text-sm">open_in_new</span>
+</a>
+</div>
+</div>
+</div>
+</section>
+<!-- Timeline Section -->
+<section class="py-section-gap-lg px-container-margin max-w-screen-lg mx-auto">
+<div class="text-center mb-16">
+<h3 class="font-headline-md text-headline-md text-primary mb-4">Той Бағдарламасы</h3>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-[0.2em]">Программа Вечера</p>
+</div>
+<div class="relative">
+<!-- Timeline Line -->
+<div class="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-[1px] bg-outline-variant/50 hidden md:block"></div>
+<div class="space-y-12">
+<!-- Item 1 -->
+<div class="flex flex-col md:flex-row items-center justify-between group">
+<div class="w-full md:w-[45%] text-center md:text-right">
+<h5 class="font-headline-sm text-headline-sm text-primary">Қонақтардың жиналуы</h5>
+<p class="text-on-surface-variant font-body-md">Сбор гостей и приветственный коктейль</p>
+</div>
+<div class="z-10 bg-surface border border-outline-variant w-12 h-12 rounded-full flex items-center justify-center my-4 md:my-0">
+<span class="font-label-md text-label-md text-tertiary">18:00</span>
+</div>
+<div class="hidden md:block w-[45%]"></div>
+</div>
+<!-- Item 2 -->
+<div class="flex flex-col md:flex-row items-center justify-between group">
+<div class="hidden md:block w-[45%]"></div>
+<div class="z-10 bg-surface border border-outline-variant w-12 h-12 rounded-full flex items-center justify-center my-4 md:my-0">
+<span class="font-label-md text-label-md text-tertiary">19:00</span>
+</div>
+<div class="w-full md:w-[45%] text-center md:text-left">
+<h5 class="font-headline-sm text-headline-sm text-primary">Тойдың басталуы</h5>
+<p class="text-on-surface-variant font-body-md">Официальное начало торжества</p>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="flex flex-col md:flex-row items-center justify-between group">
+<div class="w-full md:w-[45%] text-center md:text-right">
+<h5 class="font-headline-sm text-headline-sm text-primary">Салтанатты кешкі ас</h5>
+<p class="text-on-surface-variant font-body-md">Гала-ужин и праздничная программа</p>
+</div>
+<div class="z-10 bg-surface border border-outline-variant w-12 h-12 rounded-full flex items-center justify-center my-4 md:my-0">
+<span class="font-label-md text-label-md text-tertiary">20:30</span>
+</div>
+<div class="hidden md:block w-[45%]"></div>
+</div>
+<!-- Item 4 -->
+<div class="flex flex-col md:flex-row items-center justify-between group">
+<div class="hidden md:block w-[45%]"></div>
+<div class="z-10 bg-surface border border-outline-variant w-12 h-12 rounded-full flex items-center justify-center my-4 md:my-0">
+<span class="font-label-md text-label-md text-tertiary">23:30</span>
+</div>
+<div class="w-full md:w-[45%] text-center md:text-left">
+<h5 class="font-headline-sm text-headline-sm text-primary">Сынсу және Ұзату</h5>
+<p class="text-on-surface-variant font-body-md">Традиционный обряд прощания</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- RSVP Section -->
+<section class="py-section-gap-lg px-container-margin bg-surface-container-high/30">
+<div class="max-w-xl mx-auto bg-surface p-8 md:p-16 border border-outline-variant/30 shadow-2xl relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-symbols-outlined text-6xl">edit_calendar</span>
+</div>
+<div class="text-center mb-10">
+<h3 class="font-headline-md text-headline-md text-primary mb-4">Жауап беруіңізді сұраймыз</h3>
+<p class="font-body-md text-on-surface-variant">Просим подтвердить ваше присутствие до 10 августа</p>
+</div>
+<form class="space-y-8" onsubmit="event.preventDefault(); alert('Спасибо! Ваш ответ принят.');">
+<div class="space-y-1">
+<label class="block font-label-md text-label-md text-on-surface-variant uppercase">Аты-жөніңіз / Ваше Имя</label>
+<input class="w-full bg-transparent border-0 border-b border-outline-variant focus:ring-0 focus:border-primary transition-colors py-3 px-0 placeholder:text-outline/50" placeholder="Введите имя..." type="text"/>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<button class="w-full py-4 border border-primary text-primary font-button text-button hover:bg-primary hover:text-on-primary transition-all duration-300" type="button">Келемін</button>
+<button class="w-full py-4 border border-outline-variant text-on-surface-variant font-button text-button hover:bg-surface-container-highest transition-all duration-300" type="button">Келе алмаймын</button>
+</div>
+<div class="space-y-4">
+<p class="font-label-md text-label-md text-on-surface-variant uppercase text-center">Количество гостей</p>
+<div class="flex justify-center space-x-4">
+<button class="w-12 h-12 flex items-center justify-center border border-outline-variant rounded-full hover:border-primary" type="button">1</button>
+<button class="w-12 h-12 flex items-center justify-center border border-primary bg-primary text-on-primary rounded-full" type="button">2</button>
+<button class="w-12 h-12 flex items-center justify-center border border-outline-variant rounded-full hover:border-primary" type="button">3+</button>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary py-5 font-button text-button shadow-lg shadow-primary/20 hover:opacity-90 active:scale-95 transition-all" type="submit">
+                        Жіберу / Отправить
+                    </button>
+</form>
+</div>
+</section>
+<!-- Gallery Section -->
+<section class="py-section-gap-lg px-container-margin">
+<div class="text-center mb-16">
+<h3 class="font-headline-md text-headline-md text-primary mb-2">Фотогалерея</h3>
+<div class="flex justify-center mb-8">
+<div class="h-[1px] w-12 bg-tertiary-container"></div>
+</div>
+</div>
+<div class="columns-1 md:columns-3 gap-4 space-y-4 max-w-screen-xl mx-auto">
+<div class="break-inside-avoid relative overflow-hidden rounded-lg group">
+<img class="w-full hover:scale-105 transition-transform duration-500" data-alt="A soft, close-up shot of the bride's hands holding a silk veil with rose-gold embroidery. The lighting is diffused and warm, emphasizing the texture of the fabric. The overall mood is intimate and gentle, reflecting a refined neo-traditional Kazakh wedding aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZRb0FoH4RTyoTrWiQYO6KDLTNwNmGi9nOd_7nTxc8YfMlREL_ImM0ixnw3Q8VSYpKalQnjAYNY2TaO5K8bBAmRC0c8-5pSS6hUMKbmeauloAM0otod7w-mMA8UhPWyGlqX8KYffoNevPF_dgFAp9cZJk2YMDqYSPaDdqp4OOTpPwU5Izjk98jTOyRQkOgaZ3S7yMQopCxIiw-QzYm2bYZZ_fzCaa1-MYIt8s-w-OlZmWzs-itRVweCpqidEA5uLQ7jxiU-DOG3PA"/>
+</div>
+<div class="break-inside-avoid relative overflow-hidden rounded-lg group">
+<img class="w-full hover:scale-105 transition-transform duration-500" data-alt="A minimalist architectural shot of a traditional Kazakh yurt dome from inside, but rendered with modern high-end materials like white wood and gold leaf. The geometric patterns create a sense of harmony and heritage. Light-mode aesthetic with creamy whites and soft shadows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3renpOk9Li82n2K0_UtyA0kFMfjrGMOi-1d5dpsWSbflPzf6_xJbptZHd2fxTrFfjV4NXeDiF6N8L851DM47Twc9Z7Vc3t3_vkEkTXckzVqX6CmL89FtNq97hBmsXPRghbDSZo_68oegdIcTs28Q7c9kFSavuvR99UQdtt9wp_0MIrnywBMeW9j5XmnBgZEUPa4x3gYMpGbJHmaQojVENbTZ1L7lHyRQr9KFSH2LmBMglWWZ671NoMlweJegPchSNpqWOtQxtLPo"/>
+</div>
+<div class="break-inside-avoid relative overflow-hidden rounded-lg group">
+<img class="w-full hover:scale-105 transition-transform duration-500" data-alt="A beautiful, desaturated portrait of the bride and her parents in a candid, joyful moment. They are dressed in coordinated elegant ivory and beige attire. The setting is a bright, sun-drenched garden with soft-focus greenery in the background. Calm and respectful atmosphere." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCduigI4e9CgWv59xIdAPQUSOG5ZoWYEMM9QqS7dnBqoo_HTqFs81xdKyoJriC3gADZUN_cJwtxqhsCWo5qKbaulZt6VitDQH5L7kGMXAUtEGGWg8fKCbWKVmVGuQeJ7vnw7cZRoWfHifyPJZ8dDRpbKT_pluerqwzG9oyeSxa-rSgegKIz1aJDbVwEp4iTJCmq4uvYo6iy0lMHPEN_VWaPM2z-ZHs9Pj1BML3ml2Igo4jNW8UOnkR9zIr9jZLbiyCok30q5rU1-xk"/>
+</div>
+<div class="break-inside-avoid relative overflow-hidden rounded-lg group">
+<img class="w-full hover:scale-105 transition-transform duration-500" data-alt="A macro shot of traditional Kazakh jewelry made of silver and rose-gold. The intricate details of the craftsmanship are highlighted by sharp focus and soft ambient lighting. The pieces are laid on a textured pearl-colored silk fabric." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjJJObfGSzuikqErkvUFIPSllafmRjn19D-zkHdRtuYZnY6us1gxZE0d6glUDfIgNqSo2lzXvTZn-qxtacJHU3JJ4lMHmqpjHilQdwtH1yBZJkgY9ZC9m9LqF4P1r4yIGJp6MIOlGgMGFxk6UWuLKheUkjsLk-U8-PNKRLTdHfvrfy65woaOvW4fqkFhSWGhXOchvK7QDHv7WYlVbCJo6kiDyPcqiHamJYIgRBZ3xmYbdngzB0CTmb3-efHH_IR9MyTE9kvm-Z6Hg"/>
+</div>
+</div>
+</section>
+<!-- WhatsApp Floating Action -->
+<a aria-label="Contact via WhatsApp" class="fixed bottom-24 right-6 z-[60] bg-[#25D366] text-white p-4 rounded-full shadow-xl flex items-center justify-center hover:scale-110 active:scale-90 transition-transform group" href="https://wa.me/70000000000">
+<span class="material-symbols-outlined text-3xl">chat</span>
+<span class="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-300 group-hover:ml-2 whitespace-nowrap font-button text-sm uppercase">Вопрос?</span>
+</a>
+<!-- Footer -->
+<footer class="py-12 bg-surface-dim text-center px-container-margin border-t border-outline-variant/30">
+<p class="font-headline-sm text-headline-sm text-primary mb-2">Аман-сау болыңыздар!</p>
+<p class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest">До встречи на празднике</p>
+<div class="mt-8 opacity-20 flex justify-center space-x-6">
+<span class="material-symbols-outlined">spa</span>
+<span class="material-symbols-outlined">favorite</span>
+<span class="material-symbols-outlined">spa</span>
+</div>
+</footer>
+</main>
+<!-- Navigation Shell -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 py-2 pb-safe bg-surface-container-low shadow-[0_-4px_20px_rgba(0,0,0,0.05)] md:hidden">
+<a class="flex flex-col items-center justify-center text-primary font-bold transition-transform active:translate-y-[-2px]" href="#">
+<span class="material-symbols-outlined">auto_awesome</span>
+<span class="text-label-md font-label-md">Invitation</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">event_note</span>
+<span class="text-label-md font-label-md">Program</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">edit_calendar</span>
+<span class="text-label-md font-label-md">RSVP</span>
+</a>
+<a class="flex flex-col items-center justify-center text-outline hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">photo_library</span>
+<span class="text-label-md font-label-md">Gallery</span>
+</a>
+</nav>
+<script>
+        // Simple Intersection Observer for scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('opacity-100', 'translate-y-0');
+                    entry.target.classList.remove('opacity-0', 'translate-y-10');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('section').forEach(section => {
+            section.classList.add('transition-all', 'duration-1000', 'opacity-0', 'translate-y-10');
+            observer.observe(section);
+        });
+
+        // Instant load for hero
+        const hero = document.querySelector('section');
+        hero.classList.remove('opacity-0', 'translate-y-10');
+        hero.classList.add('opacity-100', 'translate-y-0');
+    </script>
+</body></html>
