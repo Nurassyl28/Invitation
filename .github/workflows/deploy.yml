@@ -1,0 +1,64 @@
+name: Deploy (Vercel)
+
+# Runs after code lands on main. Deploys to Vercel production.
+# Dormant until you add these repo secrets (Settings → Secrets → Actions):
+#   VERCEL_TOKEN       – https://vercel.com/account/tokens
+#   VERCEL_ORG_ID      – from `.vercel/project.json` after `vercel link`
+#   VERCEL_PROJECT_ID  – from `.vercel/project.json` after `vercel link`
+# Without VERCEL_TOKEN the deploy steps are skipped (the job still passes green).
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Vercel production deploy
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+    steps:
+      - name: Check for Vercel credentials
+        id: guard
+        run: |
+          if [ -n "$VERCEL_TOKEN" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::VERCEL_TOKEN secret not set — skipping deploy. Add repo secrets to enable."
+          fi
+
+      - name: Checkout
+        if: steps.guard.outputs.enabled == 'true'
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        if: steps.guard.outputs.enabled == 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install Vercel CLI
+        if: steps.guard.outputs.enabled == 'true'
+        run: npm install --global vercel@latest
+
+      - name: Pull Vercel environment
+        if: steps.guard.outputs.enabled == 'true'
+        run: vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
+
+      - name: Build project artifacts
+        if: steps.guard.outputs.enabled == 'true'
+        run: vercel build --prod --token="$VERCEL_TOKEN"
+
+      - name: Deploy to production
+        if: steps.guard.outputs.enabled == 'true'
+        run: vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN"

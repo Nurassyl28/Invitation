@@ -28,17 +28,8 @@ export const templates: Template[] = [
     category: "Свадьба",
     tariff: "Premium",
     color: "teal",
-    tags: ["wedding", "emerald", "envelope", "wax-seal", "classic"],
-    description: "Элегантный свадебный шаблон в тёмно-зелёном цвете: конверт, сургучная печать, классическая каллиграфия, программа, пожелания и RSVP.",
-  },
-  {
-    id: "wedding-soft-arch",
-    title: "Soft Arch Wedding",
-    category: "Свадьба",
-    tariff: "Premium",
-    color: "gold",
-    tags: ["wedding", "beige", "arch", "minimal", "dress-code"],
-    description: "Светлый свадебный шаблон в beige palette: арки, мягкие тени, программа дня, dress code, карта и mobile-first layout.",
+    tags: ["wedding", "emerald", "envelope", "wax-seal", "interactive", "animated"],
+    description: "Свадебный шаблон в изумрудно-зелёном цвете: обложка с восковой печатью, анимация открытия конверта по клику, имена, программа, пожелания, countdown и RSVP.",
   },
   {
     id: "qyz-uzatu-anel",
@@ -46,8 +37,8 @@ export const templates: Template[] = [
     category: "Қыз ұзату",
     tariff: "Premium",
     color: "wine",
-    tags: ["qyz-uzatu", "saukele", "koshkar-muiz", "photo", "countdown"],
-    description: "Фото-ориентированный қыз ұзату шаблон: бордовый фон, алтын ою, сәукеле атмосферасы, countdown, күнтізбе, dress code и RSVP.",
+    tags: ["qyz-uzatu", "saukele", "koshkar-muiz", "photo", "countdown", "animated"],
+    description: "Қыз ұзату шаблон с бордовым ою-орнаментом, летящими ласточками, живым countdown и плавными scroll-анимациями. Фон — казахский арочный узор, фото невесты в национальном костюме.",
   },
 ];
 

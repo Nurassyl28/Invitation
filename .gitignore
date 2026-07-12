@@ -11,3 +11,15 @@ coverage/
 !.env.example
 .vercel/
 data/dev-store.json
+
+# Local design source assets (AI reference sheets / raw crops).
+# The app uses the processed copies in public/images/ instead.
+/back1.jpg
+/back2.png
+/back3.jpg
+/wi.png
+/img.jpg
+/faother.jpg
+/waks .jpg
+/s_ukele_integrated_heritage_logo.png
+/621c741d-aade-4fa9-a7d5-9b5cfbb19d24.png

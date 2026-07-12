@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { EB_Garamond, Hanken_Grotesk } from "next/font/google";
+import { EB_Garamond, Hanken_Grotesk, Cormorant } from "next/font/google";
 import type { ReactNode } from "react";
 import "./globals.css";
 
@@ -17,6 +17,14 @@ const hankenGrotesk = Hanken_Grotesk({
   display: "swap",
 });
 
+const cormorant = Cormorant({
+  subsets: ["latin", "cyrillic"],
+  weight: ["400", "500", "600"],
+  style: ["normal", "italic"],
+  variable: "--font-script",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Toi",
   description: "Платформа премиальных онлайн-приглашений для тоя и семейных событий.",
@@ -29,7 +37,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru">
-      <body className={`${ebGaramond.variable} ${hankenGrotesk.variable}`}>{children}</body>
+      <body className={`${ebGaramond.variable} ${hankenGrotesk.variable} ${cormorant.variable}`}>{children}</body>
     </html>
   );
 }
