@@ -2,6 +2,8 @@ import { Calendar, Camera, Heart, MapPin, MessageCircle, Music2, Send, Sparkles 
 import type { CSSProperties } from "react";
 import { QyzUzatuInvite } from "@/components/qyz-uzatu-invite";
 import { EmeraldEnvelopeInvite } from "@/components/emerald-envelope-invite";
+import { EmeraldCardInvite } from "@/components/emerald-card-invite";
+import { EditorialWeddingInvite } from "@/components/editorial-wedding-invite";
 
 export type PublicInviteView = {
   slug: string;
@@ -95,6 +97,14 @@ export function InvitationRenderer({ invite }: { invite: PublicInviteView }) {
 
   if (invite.templateId === "wedding-emerald-envelope") {
     return <EmeraldEnvelopeInvite invite={invite} />;
+  }
+
+  if (invite.templateId === "wedding-emerald-card") {
+    return <EmeraldCardInvite invite={invite} />;
+  }
+
+  if (invite.templateId === "wedding-editorial-istara") {
+    return <EditorialWeddingInvite invite={invite} />;
   }
 
   if (invite.templateId === "wedding-classic-gold") {

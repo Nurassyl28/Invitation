@@ -23,7 +23,7 @@ export default async function DemoInvitePage({ params }: { params: Promise<{ tem
     notFound();
   }
 
-  const hasFixedTemplateNav = ["qyz-uzatu-anel", "wedding-emerald-envelope", "wedding-soft-arch"].includes(demo.templateId ?? "");
+  const hasFixedTemplateNav = ["qyz-uzatu-anel", "wedding-emerald-envelope", "wedding-classic-gold", "wedding-emerald-card", "wedding-editorial-istara"].includes(demo.templateId ?? "");
 
   return (
     <>

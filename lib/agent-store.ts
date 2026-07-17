@@ -42,6 +42,7 @@ export type AgentConversationState =
   | "collecting_language"
   | "choosing_tariff"
   | "choosing_template"
+  | "collecting_slug"
   | "collecting_contact"
   | "confirming"
   | "waiting_payment"
@@ -596,7 +597,7 @@ function uniqueSlug(store: AgentStore, baseSlug: string, currentInvitationId?: s
   return slug;
 }
 
-function createSlug(value: string) {
+export function createSlug(value: string) {
   const transliterated = value
     .toLowerCase()
     .split("")

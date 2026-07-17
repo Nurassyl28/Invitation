@@ -1,7 +1,9 @@
 import Link from "next/link";
 import { Check, RefreshCw } from "lucide-react";
+import { headers } from "next/headers";
+import { notFound } from "next/navigation";
 import { SiteNav } from "@/components/site-nav";
-import { StatusBadge } from "@/components/status-badge";
+import type { PaymentStatus } from "@/lib/data";
 import { payments, templates } from "@/lib/data";
 import { readAgentStore } from "@/lib/agent-store";
 
@@ -11,9 +13,27 @@ export const metadata = {
 
 export const dynamic = "force-dynamic";
 
-export default async function AdminPage() {
+const paymentStatusLabels: Record<PaymentStatus, string> = {
+  approved: "Одобрено",
+  pending: "Ожидает",
+  review: "Проверка",
+};
+
+type AdminPageProps = {
+  searchParams: Promise<{ token?: string | string[] }>;
+};
+
+export default async function AdminPage({ searchParams }: AdminPageProps) {
+  const params = await searchParams;
+  const token = firstParam(params.token);
+
+  if (!(await hasAdminAccess(token))) {
+    notFound();
+  }
+
   const store = await readAgentStore();
   const latestOrders = store.orders.slice(0, 8);
+  const adminHref = token ? `/admin?token=${encodeURIComponent(token)}` : "/admin";
 
   return (
     <div className="shell">
@@ -23,7 +43,7 @@ export default async function AdminPage() {
           <div>
             <span className="eyebrow">Админ-панель</span>
             <h1>Операции платформы</h1>
-            <p className="page-lede">Проверка оплат, управление шаблонами, пользователями и партнёрскими кабинетами.</p>
+            <p className="page-lede">Скрытая служебная зона для OpenClaw-заказов, оплат, шаблонов и опубликованных ссылок.</p>
           </div>
           <button className="button primary" type="button">
             <RefreshCw size={16} />
@@ -33,10 +53,8 @@ export default async function AdminPage() {
 
         <section className="admin-grid">
           <aside className="sidebar">
-            <Link className="button primary" href="/admin">Оплаты</Link>
-            <Link className="button secondary" href="/templates">Шаблоны</Link>
-            <Link className="button secondary" href="/dashboard">Пользователи</Link>
-            <Link className="button secondary" href="/builder">Создать invite</Link>
+            <Link className="button primary" href={adminHref}>Оплаты</Link>
+            <Link className="button secondary" href="/demo">Демо</Link>
           </aside>
 
           <div className="app-main">
@@ -89,7 +107,11 @@ export default async function AdminPage() {
                       <td>{payment.invite}</td>
                       <td>{payment.client}</td>
                       <td>{payment.amount}</td>
-                      <td><StatusBadge status={payment.status} /></td>
+                      <td>
+                        <span className={`status ${payment.status}`}>
+                          {paymentStatusLabels[payment.status]}
+                        </span>
+                      </td>
                       <td>
                         <button className="small-action" type="button">
                           <Check size={14} />
@@ -128,4 +150,24 @@ export default async function AdminPage() {
       </main>
     </div>
   );
+}
+
+async function hasAdminAccess(queryToken?: string) {
+  const expectedToken = process.env.ADMIN_TOKEN ?? (process.env.NODE_ENV === "production" ? "" : "dev-admin-token");
+
+  if (!expectedToken) {
+    return false;
+  }
+
+  const headerList = await headers();
+  const authHeader = headerList.get("authorization");
+  const bearerToken = authHeader?.startsWith("Bearer ") ? authHeader.slice("Bearer ".length).trim() : "";
+  const headerToken = headerList.get("x-admin-token")?.trim();
+  const providedToken = queryToken || headerToken || bearerToken;
+
+  return providedToken === expectedToken;
+}
+
+function firstParam(value: string | string[] | undefined) {
+  return Array.isArray(value) ? value[0] : value;
 }

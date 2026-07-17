@@ -17,9 +17,9 @@ export default function DemoTemplatesPage() {
         <section className="page-head">
           <div>
             <span className="eyebrow">Preview library</span>
-            <h1>Демо приглашения для клиентов</h1>
+            <h1>Все шаблоны</h1>
             <p className="page-lede">
-              Эти ссылки можно отправлять клиентам в WhatsApp перед сбором данных.
+              Все демо-шаблоны в одном месте. Ссылки можно отправлять клиентам в WhatsApp.
             </p>
           </div>
           <a className="button primary" href="https://wa.me/?text=Посмотрите%20демо%20шаблоны%20приглашений">

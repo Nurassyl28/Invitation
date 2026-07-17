@@ -7,6 +7,7 @@ import {
   AgentStore,
   AgentTariff,
   AgentTemplate,
+  createSlug,
   createOrderFromPayload,
   createOrUpdateDraftInvitation,
   getTariffPrice,
@@ -206,6 +207,18 @@ function handleMessage(store: AgentStore, payload: OpenClawMessagePayload): Open
       }
 
       order.templateId = template.id;
+      conversation.state = "collecting_slug";
+      touchOrder(order);
+
+      return reply(conversation, order, linkNameQuestion(order), ["Без разницы", "arman-aruzhan", "aidos-madina"]);
+    }
+
+    case "collecting_slug": {
+      const customSlug = parseCustomSlug(text);
+      if (customSlug) {
+        order.slug = customSlug;
+      }
+
       conversation.state = order.fields.contactPhone || phone ? "confirming" : "collecting_contact";
       order.fields = mergeInvitationFields(order.fields, { contactPhone: order.fields.contactPhone ?? phone });
       touchOrder(order);
@@ -214,7 +227,7 @@ function handleMessage(store: AgentStore, payload: OpenClawMessagePayload): Open
         return reply(conversation, order, "Напишите контактный номер организатора.");
       }
 
-      return reply(conversation, order, confirmationText(order, template), ["ОК", "Исправить", "Админ"]);
+      return reply(conversation, order, confirmationText(order, selectedTemplate(store, order)), ["ОК", "Исправить", "Админ"]);
     }
 
     case "collecting_contact":
@@ -227,6 +240,7 @@ function handleMessage(store: AgentStore, payload: OpenClawMessagePayload): Open
       if (isYes(text)) {
         const invitation = createOrUpdateDraftInvitation(store, order.id, order.templateId);
         const invitationText = formatInvitationText(order, selectedTemplate(store, order));
+        const inviteUrl = `${publicBaseUrl()}/invite/${invitation.slug}`;
         order.status = "waiting_payment";
         conversation.state = "waiting_payment";
         touchOrder(order);
@@ -234,7 +248,7 @@ function handleMessage(store: AgentStore, payload: OpenClawMessagePayload): Open
 
         return {
           ok: true,
-          reply: `${invitationText}\n\nСтоимость: ${formatPrice(order.price)}.\nДля запуска отправьте оплату Kaspi и пришлите чек сюда.`,
+          reply: `${invitationText}\n\nСсылка: ${inviteUrl}\nСтоимость: ${formatPrice(order.price)}.\nДля запуска отправьте оплату Kaspi и пришлите чек сюда.`,
           invitation_text: invitationText,
           state: conversation.state,
           order_id: order.id,
@@ -330,10 +344,22 @@ function templateQuestion(store: AgentStore, order: AgentOrder) {
     return "Сейчас шаблоны очищены и пересобираются. Я могу принять данные клиента, но готовую ссылку лучше выдавать после добавления нового шаблона.";
   }
 
-  return `Выберите шаблон:\n${templates.map((template, index) => `${index + 1}. ${template.name} (${template.style})`).join("\n")}`;
+  return `Выберите шаблон:\n${templates.map((template, index) => `${index + 1}. ${template.name} (${template.style})\n${publicBaseUrl()}/demo/${template.id}`).join("\n\n")}`;
+}
+
+function linkNameQuestion(order: AgentOrder) {
+  const fallback = createSlug(order.fields.hostNames || order.toiType);
+  return [
+    "Как назвать ссылку приглашения?",
+    `Например: ${fallback}`,
+    `Итог будет примерно так: ${publicBaseUrl()}/invite/${fallback}`,
+    "",
+    "Если не важно, напишите: без разницы.",
+  ].join("\n");
 }
 
 function confirmationText(order: AgentOrder, template?: AgentTemplate) {
+  const slug = order.slug ? createSlug(order.slug) : createSlug(order.fields.hostNames || order.toiType);
   return [
     "Проверьте данные:",
     `Той: ${order.toiType}`,
@@ -345,6 +371,7 @@ function confirmationText(order: AgentOrder, template?: AgentTemplate) {
     `Язык: ${order.language}`,
     `Тариф: ${order.tariff} (${formatPrice(order.price)})`,
     `Шаблон: ${template?.name ?? order.templateId ?? "-"}`,
+    `Ссылка: ${publicBaseUrl()}/invite/${slug}`,
     "",
     "Если всё правильно, напишите ОК.",
   ].join("\n");
@@ -420,6 +447,16 @@ function parseTemplate(store: AgentStore, order: AgentOrder, text: string) {
   return templates.find((template) => normalizeForMatch(template.name).includes(normalized) || normalized.includes(normalizeForMatch(template.name)));
 }
 
+function parseCustomSlug(text: string) {
+  const normalized = normalizeForMatch(text);
+
+  if (!normalized || normalized === "-" || normalized.includes("без") || normalized.includes("не важно") || normalized.includes("люб")) {
+    return undefined;
+  }
+
+  return createSlug(text);
+}
+
 function templatesForOrder(store: AgentStore, order: AgentOrder) {
   const normalizedToi = normalizeForMatch(order.toiType);
   const matched = store.templates.filter((template) => template.isActive && normalizeForMatch(template.toiType) === normalizedToi);
@@ -463,6 +500,10 @@ function isLink(value: string) {
 function isYes(value: string) {
   const normalized = normalizeForMatch(value);
   return ["ок", "ok", "yes", "да", "иә", "иа", "дұрыс", "дурыс"].includes(normalized);
+}
+
+function publicBaseUrl() {
+  return (process.env.PUBLIC_BASE_URL || process.env.NEXT_PUBLIC_SITE_URL || "https://dellover.live").replace(/\/+$/, "");
 }
 
 function wantsAdmin(value: string) {

@@ -40,6 +40,33 @@ export const templates: Template[] = [
     tags: ["qyz-uzatu", "saukele", "koshkar-muiz", "photo", "countdown", "animated"],
     description: "Қыз ұзату шаблон с бордовым ою-орнаментом, летящими ласточками, живым countdown и плавными scroll-анимациями. Фон — казахский арочный узор, фото невесты в национальном костюме.",
   },
+  {
+    id: "wedding-classic-gold",
+    title: "Amanat Classic Gold",
+    category: "Свадьба",
+    tariff: "Premium",
+    color: "gold",
+    tags: ["wedding", "gold", "koshkar-muiz", "amanat", "classic", "kz-ru"],
+    description: "Классический казахский свадебный шаблон Amanat: қошқар мүйіз ою, алтын жиек, ivory фон, двуязычные тексты (kz/ru), программа вечера, галерея и RSVP.",
+  },
+  {
+    id: "wedding-emerald-card",
+    title: "Emerald Card",
+    category: "Свадьба",
+    tariff: "Standard",
+    color: "teal",
+    tags: ["wedding", "emerald", "gold", "minimal", "card", "rsvp"],
+    description: "Лаконичный свадебный шаблон: изумрудно-зелёный градиент, золотая рамка и акценты, крупный serif, карточки даты/времени/зала, программа и золотая кнопка RSVP.",
+  },
+  {
+    id: "wedding-editorial-istara",
+    title: "Editorial Wedding",
+    category: "Свадьба",
+    tariff: "Premium",
+    color: "gold",
+    tags: ["wedding", "editorial", "beige", "luxury", "rsvp", "animated"],
+    description: "Премиальный свадебный шаблон в editorial стиле: большой имиджевый hero, тёплая beige palette, детали вечера, программа, пожелания и RSVP.",
+  },
 ];
 
 export const invitation = {
