@@ -60,12 +60,12 @@ export const templates: Template[] = [
   },
   {
     id: "wedding-editorial-istara",
-    title: "Editorial Wedding",
+    title: "Garden Gate Wedding",
     category: "Свадьба",
     tariff: "Premium",
     color: "gold",
-    tags: ["wedding", "editorial", "beige", "luxury", "rsvp", "animated"],
-    description: "Премиальный свадебный шаблон в editorial стиле: большой имиджевый hero, тёплая beige palette, детали вечера, программа, пожелания и RSVP.",
+    tags: ["wedding", "garden", "gate", "sage", "botanical", "rsvp", "animated"],
+    description: "Интерактивный свадебный шаблон: первый экран с декоративными воротами, открытие по клику, бумажная карточка в sage/ivory стиле, программа, локация и RSVP.",
   },
 ];
 
