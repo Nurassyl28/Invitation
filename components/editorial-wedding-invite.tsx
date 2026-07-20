@@ -4,7 +4,7 @@ import { Calendar, Heart, MapPin, MessageCircle, Music2, Send, Sparkles } from "
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import type { PublicInviteView } from "@/components/invitation-renderer";
 
-const OPEN_DURATION = 1650;
+const OPEN_DURATION = 1900;
 
 const monthNamesRu = [
   "января",
@@ -80,21 +80,29 @@ function useReveal(active: boolean) {
   return rootRef;
 }
 
-function GateHalf({ side }: { side: "left" | "right" }) {
+function GatePanel({ side }: { side: "left" | "right" }) {
   return (
-    <svg className="ew-gate-art" viewBox="0 0 180 430" aria-hidden="true">
-      <g transform={side === "right" ? "translate(180 0) scale(-1 1)" : undefined}>
-        <path className="ew-gate-line strong" d="M170 388V156C156 94 120 54 90 31C60 54 24 94 10 156V388" />
-        <path className="ew-gate-line" d="M21 388V170C40 124 64 89 90 64C116 89 140 124 159 170V388" />
-        <path className="ew-gate-line" d="M90 64V388" />
-        <path className="ew-gate-line" d="M34 177V388M58 128V388M122 128V388M146 177V388" />
-        <path className="ew-gate-line" d="M17 235H166M17 333H166" />
-        <path className="ew-gate-line ornate" d="M26 150C45 136 58 115 60 90C71 104 82 113 99 116C83 128 74 144 72 166C61 153 47 148 26 150Z" />
-        <path className="ew-gate-line ornate" d="M92 30C100 54 120 67 147 65C129 82 122 103 128 128C110 113 91 105 70 113C87 94 93 70 92 30Z" />
-        <path className="ew-gate-line ornate" d="M30 293C53 266 83 266 100 293C73 282 51 290 38 314C37 305 35 299 30 293Z" />
-        <path className="ew-gate-line ornate" d="M154 292C132 267 103 269 87 296C111 284 134 291 147 314C147 305 150 298 154 292Z" />
-        <path className="ew-gate-line" d="M24 388C49 362 74 362 90 388C106 362 131 362 156 388" />
-        <circle className="ew-gate-dot" cx="90" cy="211" r="5" />
+    <svg className="ew-gate-panel" viewBox="0 0 240 520" preserveAspectRatio="none" aria-hidden="true">
+      <g transform={side === "right" ? "translate(240 0) scale(-1 1)" : undefined}>
+        <rect className="ew-gp-fill" x="0" y="0" width="240" height="520" />
+        <path className="ew-gp-arch-fill" d="M18 486V176C27 108 78 55 120 30C162 55 213 108 222 176V486Z" />
+        <path className="ew-gp-frame" d="M18 486V176C27 108 78 55 120 30C162 55 213 108 222 176V486Z" />
+        <path className="ew-gp-frame soft" d="M43 486V182C52 126 88 84 120 64C152 84 188 126 197 182V486Z" />
+        <path className="ew-gp-post" d="M20 148V504M220 148V504" />
+        <path className="ew-gp-line" d="M48 190V504M76 142V504M104 94V504M132 94V504M160 142V504M188 190V504" />
+        <path className="ew-gp-line strong" d="M30 252H210M30 354H210M30 468H210" />
+        <path className="ew-gp-line" d="M38 420C66 386 96 386 120 420C144 386 174 386 202 420" />
+        <path className="ew-gp-scroll" d="M52 208C72 172 102 166 121 190C95 185 76 197 67 222C64 216 59 211 52 208Z" />
+        <path className="ew-gp-scroll" d="M188 208C168 172 138 166 119 190C145 185 164 197 173 222C176 216 181 211 188 208Z" />
+        <path className="ew-gp-scroll" d="M48 312C76 276 109 281 124 313C96 297 72 306 59 338C57 327 53 318 48 312Z" />
+        <path className="ew-gp-scroll" d="M192 312C164 276 131 281 116 313C144 297 168 306 181 338C183 327 187 318 192 312Z" />
+        <path className="ew-gp-scroll crown" d="M120 32C126 70 154 86 191 80C166 103 158 133 169 168C143 146 119 136 88 150C113 121 123 84 120 32Z" />
+        <path className="ew-gp-line strong" d="M72 98C88 72 105 55 120 47C135 55 152 72 168 98" />
+        <circle className="ew-gp-dot" cx="120" cy="252" r="5" />
+        <circle className="ew-gp-dot" cx="120" cy="354" r="4" />
+        <circle className="ew-gp-dot" cx="120" cy="468" r="4" />
+        <path className="ew-gp-finial" d="M14 148C20 125 31 112 47 107C41 124 32 137 14 148ZM226 148C220 125 209 112 193 107C199 124 208 137 226 148Z" />
+        <rect className="ew-gp-seam" x="230" y="20" width="6" height="482" rx="3" />
       </g>
     </svg>
   );
@@ -161,7 +169,11 @@ export function EditorialWeddingInvite({ invite }: { invite: PublicInviteView })
   const month = eventDate ? monthNamesRu[eventDate.getMonth()] : "июля";
   const weekday = eventDate ? weekdaysRu[eventDate.getDay()] : "пятница";
   const year = eventDate ? eventDate.getFullYear() : 2026;
-  const shareText = encodeURIComponent(`Свадебное приглашение: ${invite.names} — ${invite.venue}`);
+  const publicUrl = invite.slug.startsWith("demo-")
+    ? "https://dellover.live/demo/wedding-editorial-istara"
+    : `https://dellover.live/invite/${invite.slug}`;
+  const shareText = encodeURIComponent(`Свадебное приглашение: ${invite.names} — ${invite.venue}. ${publicUrl}`);
+  const telegramHref = `https://t.me/share/url?url=${encodeURIComponent(publicUrl)}&text=${shareText}`;
   const gallery = invite.galleryUrls?.filter(Boolean) ?? [];
 
   useEffect(() => {
@@ -194,7 +206,8 @@ export function EditorialWeddingInvite({ invite }: { invite: PublicInviteView })
             <div className="ew-corner ew-corner-br" />
 
             <div className="ew-gate-paper">
-              <div className="ew-gate-preview">
+              {/* Invitation revealed behind the gates */}
+              <div className="ew-gate-reveal" aria-hidden="true">
                 <DoveIcon side="left" />
                 <DoveIcon side="right" />
                 <BowIcon />
@@ -203,16 +216,16 @@ export function EditorialWeddingInvite({ invite }: { invite: PublicInviteView })
                 <p>{day} {month} {year}</p>
               </div>
 
-              <div className="ew-gate-leaf ew-gate-leaf-left">
-                <GateHalf side="left" />
+              {/* Two solid ornate gates that swing open */}
+              <div className="ew-gate-leaf ew-gate-leaf-left" aria-hidden="true">
+                <GatePanel side="left" />
               </div>
-              <div className="ew-gate-leaf ew-gate-leaf-right">
-                <GateHalf side="right" />
+              <div className="ew-gate-leaf ew-gate-leaf-right" aria-hidden="true">
+                <GatePanel side="right" />
               </div>
 
               <button className="ew-gate-button" type="button" onClick={handleOpen} aria-label="Открыть приглашение">
-                <span className="ew-play" aria-hidden="true" />
-                Нажмите
+                <span className="ew-gate-button-ring">Нажмите</span>
               </button>
             </div>
           </div>
@@ -350,11 +363,21 @@ export function EditorialWeddingInvite({ invite }: { invite: PublicInviteView })
           </section>
         ) : null}
 
-        <footer className="ew-footer" id="share">
-          <Heart size={18} />
-          <strong>{invite.names}</strong>
-          <p>Сізді асыға күтеміз</p>
-          <a href={`https://wa.me/?text=${shareText}`}>Поделиться</a>
+        <footer className="ew-footer" id="share" data-reveal>
+          <div className="ew-footer-card">
+            <div className="ew-footer-envelope" aria-hidden="true">
+              <span />
+              <i />
+            </div>
+            <Heart size={18} />
+            <span className="ew-footer-kicker">До встречи на торжестве</span>
+            <strong>{invite.names}</strong>
+            <p>Сізді асыға күтеміз. Бұл күннің ең әдемі бөлігі — жақын адамдарымыздың жанымызда болуы.</p>
+            <div className="ew-share-actions">
+              <a href={`https://wa.me/?text=${shareText}`}>WhatsApp</a>
+              <a href={telegramHref}>Telegram</a>
+            </div>
+          </div>
         </footer>
       </div>
     </main>
