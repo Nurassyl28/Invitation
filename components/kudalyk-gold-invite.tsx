@@ -1,6 +1,6 @@
 "use client";
 
-import { CalendarDays, Clock3, MapPin, Menu, Music2, Shirt, Users, MessageCircle } from "lucide-react";
+import { CalendarDays, Clock3, MapPin, Menu, MessageCircle, Music2, Shirt } from "lucide-react";
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import type { PublicInviteView } from "@/components/invitation-renderer";
 
@@ -247,24 +247,24 @@ export function KudalykGoldInvite({ invite }: { invite: PublicInviteView }) {
           <h2>ТОЙ АҚПАРАТЫ</h2>
           <Divider />
           <div className="kg-info-grid">
-            <article>
+            <article className="kg-info-date">
               <CalendarDays size={30} />
               <span>КҮНІ</span>
               <p>{day} {month} {year} жыл</p>
               <small>{weekday}</small>
             </article>
-            <article>
+            <article className="kg-info-time">
               <Clock3 size={30} />
               <span>УАҚЫТЫ</span>
               <p>{invite.time}</p>
             </article>
-            <article>
+            <article className="kg-info-place">
               <MapPin size={32} />
               <span>ӨТЕТІН ОРНЫ</span>
               <p>{invite.address}</p>
               <small>{invite.venue}</small>
             </article>
-            <article>
+            <article className="kg-info-dress">
               <Shirt size={30} />
               <span>КИІМ ҮЛГІСІ</span>
               <p>{invite.dressCode || "Дәстүрлі / ұлттық киімде келулеріңізді сұраймыз"}</p>

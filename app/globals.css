@@ -6511,6 +6511,8 @@ button {
   --kg-green: #52653e;
   --kg-green-deep: #35452c;
   --kg-border: rgba(188, 137, 53, 0.22);
+  width: 100%;
+  max-width: 100%;
   min-height: 100vh;
   display: grid;
   justify-items: center;
@@ -6519,11 +6521,24 @@ button {
     radial-gradient(circle at 50% 0%, rgba(223, 196, 141, 0.18), transparent 34%),
     linear-gradient(180deg, #f3eadc, #fffaf0);
   font-family: var(--font-hanken-grotesk), "Trebuchet MS", sans-serif;
+  overflow-x: hidden;
+}
+
+.kg *,
+.kg *::before,
+.kg *::after {
+  box-sizing: border-box;
+}
+
+.kg img,
+.kg svg {
+  max-width: 100%;
 }
 
 .kg-card {
   position: relative;
-  width: min(430px, 100%);
+  width: min(430px, 100vw);
+  max-width: 100%;
   min-height: 100vh;
   overflow: hidden;
   border-radius: 0 0 28px 28px;
@@ -6614,7 +6629,8 @@ button {
   display: grid;
   justify-items: center;
   min-height: 285px;
-  padding: 8px 22px 0;
+  padding: 8px clamp(14px, 5vw, 22px) 0;
+  overflow: hidden;
   text-align: center;
 }
 
@@ -6658,13 +6674,16 @@ button {
 }
 
 .kg-hero h1 {
+  max-width: 100%;
   margin: 4px 0 6px;
   color: var(--kg-gold);
   font-family: var(--font-eb-garamond), Georgia, serif;
-  font-size: clamp(2.55rem, 13vw, 3.7rem);
+  font-size: clamp(2.25rem, 10.8vw, 3.25rem);
   font-weight: 700;
-  line-height: 0.9;
-  letter-spacing: 0.025em;
+  line-height: 0.94;
+  letter-spacing: 0.01em;
+  overflow-wrap: anywhere;
+  text-align: center;
 }
 
 .kg-intro {
@@ -6845,10 +6864,12 @@ button {
 
 .kg-families {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 42px minmax(0, 1fr);
-  gap: 8px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
   align-items: center;
-  padding: 22px 16px 18px;
+  justify-items: center;
+  padding: 24px 18px 18px;
+  overflow: hidden;
 }
 
 .kg-families::before {
@@ -6886,6 +6907,9 @@ button {
   z-index: 2;
   display: grid;
   justify-items: center;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
   text-align: center;
 }
 
@@ -6903,9 +6927,11 @@ button {
 }
 
 .kg-families p {
+  max-width: 100%;
   margin: 0;
   font-size: 0.92rem;
   line-height: 1.35;
+  overflow-wrap: break-word;
 }
 
 .kg-families small {
@@ -6915,32 +6941,39 @@ button {
 }
 
 .kg-families strong {
+  display: block;
+  max-width: 100%;
   color: var(--kg-gold);
   font-family: var(--font-script), var(--font-eb-garamond), Georgia, serif;
-  font-size: clamp(2.45rem, 11vw, 3.35rem);
+  font-size: clamp(2.2rem, 11.5vw, 3.15rem);
   font-style: italic;
   font-weight: 400;
   line-height: 0.9;
+  overflow-wrap: anywhere;
 }
 
 .kg-family-line {
   position: relative;
   z-index: 2;
-  display: grid;
+  display: flex;
+  align-items: center;
   justify-items: center;
-  gap: 8px;
+  gap: 10px;
+  width: min(190px, 72%);
   color: var(--kg-gold);
 }
 
 .kg-family-line span {
-  width: 1px;
-  height: 42px;
-  background: linear-gradient(transparent, var(--kg-gold-soft), transparent);
+  flex: 1;
+  width: auto;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--kg-gold-soft), transparent);
 }
 
 .kg-orna-icon {
-  width: 38px;
-  height: 38px;
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
   fill: none;
   stroke: currentColor;
   stroke-linejoin: round;
@@ -6952,13 +6985,13 @@ button {
 .kg-gallery,
 .kg-rsvp,
 .kg-footer {
-  padding: 12px 16px 0;
+  padding: 12px clamp(14px, 4.5vw, 18px) 0;
   text-align: center;
 }
 
 .kg-info-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0;
   overflow: hidden;
   margin-top: 10px;
@@ -6973,13 +7006,29 @@ button {
   align-content: start;
   justify-items: center;
   gap: 5px;
-  min-height: 116px;
-  padding: 16px 8px 12px;
+  min-width: 0;
+  min-height: 112px;
+  padding: 15px 12px 13px;
   border-right: 1px solid rgba(188, 137, 53, 0.14);
+  border-bottom: 1px solid rgba(188, 137, 53, 0.14);
 }
 
+.kg-info-grid article:nth-child(2),
 .kg-info-grid article:last-child {
   border-right: 0;
+}
+
+.kg-info-place,
+.kg-info-dress {
+  grid-column: 1 / -1;
+}
+
+.kg-info-place {
+  border-right: 0;
+}
+
+.kg-info-dress {
+  border-bottom: 0;
 }
 
 .kg-info-grid svg {
@@ -6996,9 +7045,11 @@ button {
 
 .kg-info-grid p,
 .kg-info-grid small {
+  max-width: 100%;
   margin: 0;
-  font-size: 0.76rem;
-  line-height: 1.25;
+  font-size: 0.82rem;
+  line-height: 1.35;
+  overflow-wrap: break-word;
 }
 
 .kg-info-grid small {
@@ -7012,7 +7063,7 @@ button {
 .kg-count-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
+  gap: clamp(7px, 2.4vw, 12px);
   margin-top: 12px;
 }
 
@@ -7021,8 +7072,9 @@ button {
   display: grid;
   justify-items: center;
   gap: 3px;
+  min-width: 0;
   min-height: 68px;
-  padding: 10px 4px 8px;
+  padding: 10px 3px 8px;
   border-radius: 10px;
   color: #fffdf8;
   background:
@@ -7038,23 +7090,24 @@ button {
   content: "•";
   position: absolute;
   top: 50%;
-  right: -10px;
+  right: calc(clamp(7px, 2.4vw, 12px) * -0.72);
   color: var(--kg-gold);
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   transform: translateY(-50%);
 }
 
 .kg-count-grid strong {
   font-family: var(--font-eb-garamond), Georgia, serif;
-  font-size: 2rem;
+  font-size: clamp(1.5rem, 7.4vw, 2rem);
   font-weight: 500;
   line-height: 1;
 }
 
 .kg-count-grid span {
   font-family: var(--font-eb-garamond), Georgia, serif;
-  font-size: 0.82rem;
+  font-size: clamp(0.66rem, 3vw, 0.82rem);
   font-weight: 600;
+  white-space: normal;
 }
 
 .kg-gallery {
@@ -7064,8 +7117,8 @@ button {
 .kg-gallery > div {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 9px;
-  margin: 14px 24px 0;
+  gap: clamp(6px, 2vw, 9px);
+  margin: 14px 22px 0;
 }
 
 .kg-gallery img {
