@@ -15,6 +15,7 @@ export type PaymentStatus = "approved" | "pending" | "review";
 export const categories = [
   "Свадьба",
   "Қыз ұзату",
+  "Құдалық",
   "Бесік той",
   "Тұсаукесер",
   "Сүндет той",
@@ -66,6 +67,15 @@ export const templates: Template[] = [
     color: "gold",
     tags: ["wedding", "garden", "gate", "sage", "botanical", "rsvp", "animated"],
     description: "Интерактивный свадебный шаблон: первый экран с декоративными воротами, открытие по клику, бумажная карточка в sage/ivory стиле, программа, локация и RSVP.",
+  },
+  {
+    id: "kudalyk-gold-mobile",
+    title: "Qudalyk Gold Mobile",
+    category: "Құдалық",
+    tariff: "Premium",
+    color: "gold",
+    tags: ["kudalyk", "gold", "ivory", "mobile", "countdown", "rsvp", "kazakh"],
+    description: "Мобильный шаблон для құдалық: ivory/gold палитра, гүлдер, той ақпараттары, countdown, галерея және WhatsApp арқылы қатысуды растау.",
   },
 ];
 

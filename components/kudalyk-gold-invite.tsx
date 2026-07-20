@@ -1,0 +1,325 @@
+"use client";
+
+import { CalendarDays, Clock3, MapPin, Menu, Music2, Shirt, Users, MessageCircle } from "lucide-react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import type { PublicInviteView } from "@/components/invitation-renderer";
+
+const fallbackGallery = [
+  "/images/kazakh-ornament-yurt.jpg",
+  "/images/gold-fern-ornament.png",
+  "/images/qyz-hero.jpg",
+  "/images/ill-rings.png",
+];
+
+const monthsKz = [
+  "қаңтар",
+  "ақпан",
+  "наурыз",
+  "сәуір",
+  "мамыр",
+  "маусым",
+  "шілде",
+  "тамыз",
+  "қыркүйек",
+  "қазан",
+  "қараша",
+  "желтоқсан",
+];
+
+const weekdaysKz = [
+  "Жексенбі",
+  "Дүйсенбі",
+  "Сейсенбі",
+  "Сәрсенбі",
+  "Бейсенбі",
+  "Жұма",
+  "Сенбі",
+];
+
+function parseDate(value: string): Date | undefined {
+  const iso = value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (iso) return new Date(Number(iso[1]), Number(iso[2]) - 1, Number(iso[3]), 0, 0, 0);
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? undefined : parsed;
+}
+
+function splitNames(value: string) {
+  const parts = value.split(/\s*[&+]\s*|\s+(?:и|және|мен)\s+/i).map((part) => part.trim()).filter(Boolean);
+  return {
+    bride: parts[0] || value || "Айдана",
+    groom: parts[1] || "Нұрсұлтан",
+  };
+}
+
+function splitParents(value?: string) {
+  if (!value) {
+    return {
+      brideParents: ["Асанова Болатбек", "Асанова Гүлнар"],
+      groomParents: ["Төлегенов Серік", "Төлегенова Райхан"],
+    };
+  }
+
+  const groups = value.split(/\s*;\s*/).map((part) => part.trim()).filter(Boolean);
+  return {
+    brideParents: (groups[0] || value).replace(/^қыз жақ[:\s-]*/i, "").split(/\s*,\s*/).filter(Boolean).slice(0, 2),
+    groomParents: (groups[1] || "").replace(/^ұл жақ[:\s-]*/i, "").split(/\s*,\s*/).filter(Boolean).slice(0, 2),
+  };
+}
+
+function pad(value: number) {
+  return String(Math.max(0, value)).padStart(2, "0");
+}
+
+function useCountdown(target?: Date) {
+  const [now, setNow] = useState<number | null>(null);
+
+  useEffect(() => {
+    setNow(Date.now());
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  if (!target || now === null) return { days: "00", hours: "00", minutes: "00", seconds: "00" };
+
+  const total = Math.max(0, Math.floor((target.getTime() - now) / 1000));
+  return {
+    days: pad(Math.floor(total / 86400)),
+    hours: pad(Math.floor((total % 86400) / 3600)),
+    minutes: pad(Math.floor((total % 3600) / 60)),
+    seconds: pad(total % 60),
+  };
+}
+
+function useReveal() {
+  const rootRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const root = rootRef.current;
+    if (!root) return;
+
+    const targets = Array.from(root.querySelectorAll<HTMLElement>("[data-kg-reveal]"));
+
+    if (!("IntersectionObserver" in window) || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      targets.forEach((item) => item.classList.add("is-visible"));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      }),
+      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
+    );
+
+    targets.forEach((item) => observer.observe(item));
+    return () => observer.disconnect();
+  }, []);
+
+  return rootRef;
+}
+
+function TopFlourish() {
+  return (
+    <svg className="kg-top-flourish" viewBox="0 0 210 72" aria-hidden="true">
+      <path d="M105 6c11 20 23 29 44 33c-19 3-33 11-44 27c-11-16-25-24-44-27c21-4 33-13 44-33Z" />
+      <path d="M105 17c6 11 13 17 25 21c-12 4-19 10-25 20c-6-10-13-16-25-20c12-4 19-10 25-21Z" />
+      <path d="M77 40C50 14 27 18 14 45c28-9 49-10 63-5Zm56 0c27-26 50-22 63 5c-28-9-49-10-63-5Z" />
+      <path d="M77 40c-15 17-35 22-60 15m116-15c15 17 35 22 60 15" />
+    </svg>
+  );
+}
+
+function Divider() {
+  return (
+    <div className="kg-divider" aria-hidden="true">
+      <span />
+      <i>♥</i>
+      <span />
+    </div>
+  );
+}
+
+function RingsIllustration() {
+  return (
+    <div className="kg-rings" aria-hidden="true">
+      <div className="kg-bowl kg-bowl-left">
+        <i />
+      </div>
+      <div className="kg-bowl kg-bowl-right">
+        <i />
+      </div>
+      <div className="kg-pillow">
+        <span />
+      </div>
+    </div>
+  );
+}
+
+function SideFlowers({ side }: { side: "left" | "right" }) {
+  return (
+    <div className={`kg-flowers kg-flowers-${side}`} aria-hidden="true">
+      <span className="kg-flower big" />
+      <span className="kg-flower small" />
+      <span className="kg-leaf leaf-one" />
+      <span className="kg-leaf leaf-two" />
+      <span className="kg-leaf leaf-three" />
+      <span className="kg-stem" />
+    </div>
+  );
+}
+
+function OrnaIcon() {
+  return (
+    <svg className="kg-orna-icon" viewBox="0 0 74 74" aria-hidden="true">
+      <path d="M37 6c5 13 13 21 31 31c-18 10-26 18-31 31c-5-13-13-21-31-31C24 27 32 19 37 6Z" />
+      <path d="M37 19c4 8 10 13 20 18c-10 5-16 10-20 18c-4-8-10-13-20-18c10-5 16-10 20-18Z" />
+      <path d="M25 37c7-9 17-9 24 0c-7 9-17 9-24 0Z" />
+    </svg>
+  );
+}
+
+export function KudalykGoldInvite({ invite }: { invite: PublicInviteView }) {
+  const rootRef = useReveal();
+  const eventDate = useMemo(() => parseDate(invite.date), [invite.date]);
+  const countdown = useCountdown(eventDate);
+  const names = splitNames(invite.names);
+  const parents = splitParents(invite.parentsNames);
+  const gallery = (invite.galleryUrls?.filter(Boolean).length ? invite.galleryUrls.filter(Boolean) : fallbackGallery).slice(0, 4);
+  const day = eventDate ? eventDate.getDate() : 25;
+  const month = eventDate ? monthsKz[eventDate.getMonth()] : "мамыр";
+  const year = eventDate ? eventDate.getFullYear() : 2026;
+  const weekday = eventDate ? weekdaysKz[eventDate.getDay()] : "Жексенбі";
+  const whatsapp = invite.whatsappPhone || invite.contactPhone || "";
+  const whatsappHref = whatsapp
+    ? `https://wa.me/${whatsapp.replace(/\D/g, "")}?text=${encodeURIComponent(`Қатысамын: ${invite.names}`)}`
+    : `https://wa.me/?text=${encodeURIComponent(`Қатысамын: ${invite.names}`)}`;
+
+  return (
+    <main className="kg" ref={rootRef}>
+      <section className="kg-card">
+        <header className="kg-nav" data-kg-reveal>
+          <button type="button" aria-label="Меню">
+            <Menu size={28} />
+          </button>
+          <button type="button" aria-label="Музыка">
+            <Music2 size={24} />
+          </button>
+        </header>
+
+        <section className="kg-hero" data-kg-reveal>
+          <TopFlourish />
+          <SideFlowers side="left" />
+          <SideFlowers side="right" />
+          <p className="kg-kicker">ҚҰДАЛЫҚ ТОЙЫНА</p>
+          <h1>ШАҚЫРАМЫЗ!</h1>
+          <Divider />
+          <p className="kg-intro">{invite.text}</p>
+          <RingsIllustration />
+        </section>
+
+        <section className="kg-families" data-kg-reveal>
+          <div className="kg-heart-badge" aria-hidden="true">♡</div>
+          <article>
+            <span>ҚЫЗ ЖАҚ</span>
+            <Divider />
+            {parents.brideParents.map((parent) => <p key={parent}>{parent}</p>)}
+            <small>Қызымыз</small>
+            <strong>{names.bride}</strong>
+          </article>
+          <div className="kg-family-line">
+            <span />
+            <OrnaIcon />
+            <span />
+          </div>
+          <article>
+            <span>ҰЛ ЖАҚ</span>
+            <Divider />
+            {parents.groomParents.map((parent) => <p key={parent}>{parent}</p>)}
+            <small>Ұлымыз</small>
+            <strong>{names.groom}</strong>
+          </article>
+        </section>
+
+        <section className="kg-info" data-kg-reveal>
+          <h2>ТОЙ АҚПАРАТЫ</h2>
+          <Divider />
+          <div className="kg-info-grid">
+            <article>
+              <CalendarDays size={30} />
+              <span>КҮНІ</span>
+              <p>{day} {month} {year} жыл</p>
+              <small>{weekday}</small>
+            </article>
+            <article>
+              <Clock3 size={30} />
+              <span>УАҚЫТЫ</span>
+              <p>{invite.time}</p>
+            </article>
+            <article>
+              <MapPin size={32} />
+              <span>ӨТЕТІН ОРНЫ</span>
+              <p>{invite.address}</p>
+              <small>{invite.venue}</small>
+            </article>
+            <article>
+              <Shirt size={30} />
+              <span>КИІМ ҮЛГІСІ</span>
+              <p>{invite.dressCode || "Дәстүрлі / ұлттық киімде келулеріңізді сұраймыз"}</p>
+            </article>
+          </div>
+        </section>
+
+        <section className="kg-countdown" data-kg-reveal>
+          <h2>ТОЙҒА ДЕЙІН</h2>
+          <Divider />
+          <div className="kg-count-grid">
+            {[
+              ["КҮН", countdown.days],
+              ["САҒАТ", countdown.hours],
+              ["МИНУТ", countdown.minutes],
+              ["СЕКУНД", countdown.seconds],
+            ].map(([label, value], index) => (
+              <article key={label} style={{ "--i": index } as CSSProperties}>
+                <strong>{value}</strong>
+                <span>{label}</span>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section className="kg-gallery" data-kg-reveal>
+          <h2>ҚҰДАЛЫҚ СӘТТЕРІ</h2>
+          <Divider />
+          <button className="kg-gallery-arrow left" type="button" aria-label="Алдыңғы">‹</button>
+          <div>
+            {gallery.map((src, index) => (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={src} alt={`Құдалық сәттері ${index + 1}`} key={src} />
+            ))}
+          </div>
+          <button className="kg-gallery-arrow right" type="button" aria-label="Келесі">›</button>
+        </section>
+
+        {invite.rsvpEnabled ? (
+          <section className="kg-rsvp" data-kg-reveal>
+            <h2>ҚАТЫСУЫҢЫЗДЫ РАСТАҢЫЗ</h2>
+            <Divider />
+            <a href={whatsappHref}>
+              <MessageCircle size={24} />
+              ҚАТЫСАТЫНЫҢЫЗДЫ ХАБАРЛАҢЫЗ
+            </a>
+            <p>Сіздің жауаптарыңыз біз үшін маңызды ♥</p>
+          </section>
+        ) : null}
+
+        <footer className="kg-footer" data-kg-reveal>
+          <p>АҚ ДАСТАРХАНЫМЫЗДАН АУЫЗ ТИГЕНДЕРІҢІЗГЕ МЫҢ АЛҒЫС!</p>
+          <Divider />
+        </footer>
+      </section>
+    </main>
+  );
+}

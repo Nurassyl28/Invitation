@@ -52,6 +52,18 @@ const demos: Record<string, Partial<PublicInviteView> & { category: string }> = 
     text: "Мы приглашаем вас разделить с нами радостный день, в который мы станем семьёй. Нам будет особенно приятно видеть вас рядом в этот важный момент.",
     program: ["16:30 - Сбор гостей", "17:00 - Церемония", "18:00 - Банкет", "22:30 - Завершение вечера"],
   },
+  "kudalyk-gold-mobile": {
+    category: "Құдалық",
+    names: "Айдана & Нұрсұлтан",
+    parentsNames: "Қыз жақ: Асанова Болатбек, Асанова Гүлнар; Ұл жақ: Төлегенов Серік, Төлегенова Райхан",
+    date: "2026-10-25",
+    time: "16:00",
+    venue: "Бақшат мейрамханасы",
+    address: "Алматы қ., Абылай хан даңғ., 11",
+    dressCode: "Дәстүрлі / ұлттық киімде келулеріңізді сұраймыз",
+    text: "Құрметті ағайын-туыс, бауырлар! Сіздерді ұл-қызымыздың құдалық тойына қатысуға шақырамыз!",
+    program: ["16:00 - Қонақтарды қарсы алу", "17:00 - Құдалық рәсімі", "18:30 - Ақ дастархан", "20:00 - Тойдың жалғасы"],
+  },
 };
 
 export function getDemoInvite(templateId: string): PublicInviteView | undefined {
@@ -78,6 +90,8 @@ export function getDemoInvite(templateId: string): PublicInviteView | undefined 
     musicUrl: "",
     heroPhotoUrl: "",
     galleryUrls: [],
+    parentsNames: demo.parentsNames,
+    dressCode: demo.dressCode,
     rsvpEnabled: true,
     wishesEnabled: true,
   };

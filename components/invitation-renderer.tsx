@@ -4,6 +4,7 @@ import { QyzUzatuInvite } from "@/components/qyz-uzatu-invite";
 import { EmeraldEnvelopeInvite } from "@/components/emerald-envelope-invite";
 import { EmeraldCardInvite } from "@/components/emerald-card-invite";
 import { EditorialWeddingInvite } from "@/components/editorial-wedding-invite";
+import { KudalykGoldInvite } from "@/components/kudalyk-gold-invite";
 
 export type PublicInviteView = {
   slug: string;
@@ -21,6 +22,10 @@ export type PublicInviteView = {
   musicUrl?: string;
   heroPhotoUrl?: string;
   galleryUrls?: string[];
+  parentsNames?: string;
+  dressCode?: string;
+  contactPhone?: string;
+  whatsappPhone?: string;
   rsvpEnabled?: boolean;
   wishesEnabled?: boolean;
 };
@@ -105,6 +110,10 @@ export function InvitationRenderer({ invite }: { invite: PublicInviteView }) {
 
   if (invite.templateId === "wedding-editorial-istara") {
     return <EditorialWeddingInvite invite={invite} />;
+  }
+
+  if (invite.templateId === "kudalyk-gold-mobile") {
+    return <KudalykGoldInvite invite={invite} />;
   }
 
   if (invite.templateId === "wedding-classic-gold") {

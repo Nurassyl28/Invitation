@@ -240,6 +240,10 @@ export function getPublicInviteData(invitation: AgentInvitation) {
     musicUrl: invitation.musicUrl,
     heroPhotoUrl: invitation.heroPhotoUrl,
     galleryUrls: invitation.galleryUrls ?? [],
+    parentsNames: invitation.parentsNames,
+    dressCode: invitation.dressCode,
+    contactPhone: invitation.contactPhone,
+    whatsappPhone: invitation.whatsappPhone,
     rsvpEnabled: invitation.rsvpEnabled ?? true,
     wishesEnabled: invitation.wishesEnabled ?? false,
   };
