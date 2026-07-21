@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react"
 import type { PublicInviteView } from "@/components/invitation-renderer";
 
 const OPEN_DURATION = 1900;
+const BOTANICAL_BASE = "/images/istara-botanical";
 
 const monthNamesRu = [
   "января",
@@ -46,6 +47,10 @@ function splitNames(value: string) {
 function splitProgramItem(item: string) {
   const match = item.match(/^([^–—-]+)\s*[–—-]\s*(.+)$/);
   return match ? { time: match[1].trim(), title: match[2].trim() } : { time: "", title: item };
+}
+
+function BotanicalAsset({ className, file }: { className: string; file: string }) {
+  return <img className={`ew-botanical ${className}`} src={`${BOTANICAL_BASE}/${file}`} alt="" aria-hidden="true" draggable={false} />;
 }
 
 function useReveal(active: boolean) {
@@ -104,26 +109,6 @@ function GatePanel({ side }: { side: "left" | "right" }) {
         <path className="ew-gp-finial" d="M14 148C20 125 31 112 47 107C41 124 32 137 14 148ZM226 148C220 125 209 112 193 107C199 124 208 137 226 148Z" />
         <rect className="ew-gp-seam" x="230" y="20" width="6" height="482" rx="3" />
       </g>
-    </svg>
-  );
-}
-
-function DoveIcon({ side }: { side: "left" | "right" }) {
-  return (
-    <svg className={`ew-dove ew-dove-${side}`} viewBox="0 0 88 58" aria-hidden="true">
-      <path d="M12 34c19-24 34-29 55-16c-13 0-23 6-31 18c17-8 30-10 42-4c-20 10-38 14-55 9c-7-2-11-4-11-7Z" />
-      <path d="M20 29C17 18 20 10 31 5c0 11 6 20 17 28" />
-      <path d="M23 40c-2 7-7 11-15 12c4-6 5-12 4-18" />
-    </svg>
-  );
-}
-
-function BowIcon() {
-  return (
-    <svg className="ew-bow" viewBox="0 0 160 92" aria-hidden="true">
-      <path d="M80 39C58 8 26 5 18 30c-8 26 29 26 62 9Zm0 0c22-31 54-34 62-9c8 26-29 26-62 9Z" />
-      <path d="M80 39c-13 18-26 30-42 36M80 39c13 18 26 30 42 36" />
-      <path d="M67 35c7-9 19-9 26 0c-4 10-22 10-26 0Z" />
     </svg>
   );
 }
@@ -208,10 +193,11 @@ export function EditorialWeddingInvite({ invite }: { invite: PublicInviteView })
             <div className="ew-gate-paper">
               {/* Invitation revealed behind the gates */}
               <div className="ew-gate-reveal" aria-hidden="true">
-                <DoveIcon side="left" />
-                <DoveIcon side="right" />
-                <BowIcon />
+                <BotanicalAsset className="ew-gate-dove-img ew-gate-dove-left-img" file="dove-left.png" />
+                <BotanicalAsset className="ew-gate-dove-img ew-gate-dove-right-img" file="dove-right.png" />
+                <BotanicalAsset className="ew-gate-bow-img" file="bow.png" />
                 <span>МЫ ЖЕНИМСЯ</span>
+                <BotanicalAsset className="ew-gate-divider-img" file="divider-wide.png" />
                 <strong>{invite.names}</strong>
                 <p>{day} {month} {year}</p>
               </div>
@@ -251,9 +237,11 @@ export function EditorialWeddingInvite({ invite }: { invite: PublicInviteView })
               <small>сайт-приглашение</small>
             </div>
 
-            <DoveIcon side="left" />
-            <DoveIcon side="right" />
-            <BowIcon />
+            <BotanicalAsset className="ew-card-bow-img" file="bow.png" />
+            <BotanicalAsset className="ew-card-dove-img ew-card-dove-left-img" file="dove-left.png" />
+            <BotanicalAsset className="ew-card-dove-img ew-card-dove-right-img" file="dove-right.png" />
+            <BotanicalAsset className="ew-card-flower-img ew-card-flower-left-img" file="flowers-left.png" />
+            <BotanicalAsset className="ew-card-flower-img ew-card-flower-right-img" file="flowers-right.png" />
             <FrameFlourish side="left" />
             <FrameFlourish side="right" />
 
@@ -263,11 +251,15 @@ export function EditorialWeddingInvite({ invite }: { invite: PublicInviteView })
               {names.second ? <em>и</em> : null}
               {names.second ? <span>{names.second}</span> : null}
             </h1>
+            <BotanicalAsset className="ew-card-divider-img" file="divider-wide.png" />
             <p className="ew-hero-note">Будем счастливы видеть вас рядом в этот особенный день</p>
 
             <div className="ew-date-stack">
               <span>{weekday}</span>
-              <strong>{day}</strong>
+              <div className="ew-date-medallion">
+                <BotanicalAsset className="ew-date-frame-img" file="date-frame.png" />
+                <strong>{day}</strong>
+              </div>
               <span>{month}</span>
             </div>
 
@@ -369,6 +361,7 @@ export function EditorialWeddingInvite({ invite }: { invite: PublicInviteView })
               <span />
               <i />
             </div>
+            <BotanicalAsset className="ew-footer-flourish" file="flourish-center.png" />
             <Heart size={18} />
             <span className="ew-footer-kicker">До встречи на торжестве</span>
             <strong>{invite.names}</strong>

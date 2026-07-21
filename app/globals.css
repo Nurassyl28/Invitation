@@ -5721,27 +5721,6 @@ button {
   transform: none;
 }
 
-.ew-gate-reveal .ew-dove {
-  top: 24px;
-  width: 50px;
-  opacity: 0.78;
-}
-
-.ew-gate-reveal .ew-dove-left {
-  left: 24px;
-}
-
-.ew-gate-reveal .ew-dove-right {
-  right: 24px;
-}
-
-.ew-gate-reveal .ew-bow {
-  position: static;
-  width: 122px;
-  height: auto;
-  margin-top: 16px;
-}
-
 .ew-gate-reveal span {
   margin-top: 4px;
   font-size: 0.74rem;
@@ -5761,6 +5740,40 @@ button {
   margin: 0;
   font-family: var(--font-eb-garamond), Georgia, serif;
   font-size: 1.3rem;
+}
+
+.ew-botanical {
+  pointer-events: none;
+  user-select: none;
+  mix-blend-mode: multiply;
+}
+
+.ew-gate-bow-img {
+  width: min(252px, 72%);
+  margin: 2px auto 0;
+  opacity: 0.72;
+}
+
+.ew-gate-dove-img {
+  position: absolute;
+  top: 22px;
+  z-index: 1;
+  width: 72px;
+  opacity: 0.56;
+}
+
+.ew-gate-dove-left-img {
+  left: 20px;
+}
+
+.ew-gate-dove-right-img {
+  right: 20px;
+}
+
+.ew-gate-divider-img {
+  width: min(275px, 82%);
+  margin: -4px auto -2px;
+  opacity: 0.58;
 }
 
 .ew-gate-leaf {
@@ -6070,8 +6083,57 @@ button {
   letter-spacing: 0.1em;
 }
 
-.ew-dove,
-.ew-bow,
+.ew-card-bow-img,
+.ew-card-dove-img,
+.ew-card-flower-img {
+  position: absolute;
+  z-index: 1;
+}
+
+.ew-card-bow-img {
+  top: 34px;
+  left: 50%;
+  width: min(260px, 56%);
+  opacity: 0.58;
+  transform: translateX(-50%);
+}
+
+.ew-card-dove-img {
+  top: 48px;
+  width: clamp(58px, 14vw, 84px);
+  opacity: 0.52;
+}
+
+.ew-card-dove-left-img {
+  left: clamp(36px, 10vw, 68px);
+}
+
+.ew-card-dove-right-img {
+  right: clamp(36px, 10vw, 68px);
+}
+
+.ew-card-flower-img {
+  top: 150px;
+  width: clamp(118px, 22vw, 162px);
+  opacity: 0.2;
+}
+
+.ew-card-flower-left-img {
+  left: -22px;
+}
+
+.ew-card-flower-right-img {
+  right: -22px;
+}
+
+.ew-card-divider-img {
+  position: relative;
+  z-index: 2;
+  width: min(320px, 78%);
+  margin: -2px auto 12px;
+  opacity: 0.56;
+}
+
 .ew-frame-flourish,
 .ew-tiny-flourish {
   fill: none;
@@ -6079,31 +6141,6 @@ button {
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-width: 2.1;
-}
-
-.ew-dove {
-  position: absolute;
-  top: 74px;
-  width: 66px;
-  fill: rgba(151, 161, 132, 0.08);
-}
-
-.ew-dove-left {
-  left: clamp(38px, 12vw, 72px);
-}
-
-.ew-dove-right {
-  right: clamp(38px, 12vw, 72px);
-  transform: scaleX(-1);
-}
-
-.ew-bow {
-  position: absolute;
-  top: 104px;
-  left: 50%;
-  z-index: 1;
-  width: 130px;
-  transform: translateX(-50%);
 }
 
 .ew-frame-flourish {
@@ -6176,6 +6213,22 @@ button {
   text-transform: uppercase;
 }
 
+.ew-date-medallion {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 116px;
+  height: 106px;
+}
+
+.ew-date-frame-img {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 118px;
+  opacity: 0.52;
+  transform: translate(-50%, -50%);
+}
+
 .ew-date-stack span {
   font-size: clamp(1.1rem, 4vw, 1.55rem);
   letter-spacing: 0.04em;
@@ -6189,6 +6242,7 @@ button {
   border: 2px solid rgba(151, 161, 132, 0.72);
   border-radius: 999px;
   color: rgba(76, 81, 75, 0.74);
+  background: rgba(255, 253, 246, 0.62);
   font-size: 2.25rem;
   font-weight: 400;
   line-height: 1;
@@ -6498,6 +6552,14 @@ button {
   color: var(--ew-blush);
 }
 
+.ew-footer-flourish {
+  position: relative;
+  z-index: 2;
+  width: min(260px, 76%);
+  margin: -4px auto 0;
+  opacity: 0.56;
+}
+
 .ew-footer-envelope {
   position: relative;
   z-index: 2;
@@ -6654,22 +6716,33 @@ button {
     margin-bottom: 38px;
   }
 
-  .ew-dove {
-    top: 70px;
-    width: 52px;
+  .ew-gate-dove-img {
+    top: 18px;
+    width: 58px;
+    opacity: 0.48;
   }
 
-  .ew-dove-left {
-    left: 32px;
+  .ew-card-bow-img {
+    top: 30px;
+    width: min(230px, 58%);
   }
 
-  .ew-dove-right {
-    right: 32px;
+  .ew-card-dove-img {
+    top: 48px;
+    width: 54px;
   }
 
-  .ew-bow {
-    top: 98px;
-    width: 112px;
+  .ew-card-dove-left-img {
+    left: 28px;
+  }
+
+  .ew-card-dove-right-img {
+    right: 28px;
+  }
+
+  .ew-card-flower-img {
+    width: 116px;
+    opacity: 0.16;
   }
 
   .ew-frame-flourish {
@@ -6724,8 +6797,20 @@ button {
     padding: 24px 15px;
   }
 
-  .ew-gate-reveal .ew-bow {
-    width: 104px;
+  .ew-gate-bow-img {
+    width: min(210px, 76%);
+  }
+
+  .ew-gate-dove-img {
+    width: 48px;
+  }
+
+  .ew-gate-dove-left-img {
+    left: 12px;
+  }
+
+  .ew-gate-dove-right-img {
+    right: 12px;
   }
 
   .ew-gate-reveal strong {
@@ -6743,6 +6828,20 @@ button {
 
   .ew-invite-card {
     padding-inline: 20px;
+  }
+
+  .ew-card-bow-img {
+    width: min(205px, 62%);
+  }
+
+  .ew-card-dove-img {
+    width: 46px;
+    opacity: 0.44;
+  }
+
+  .ew-card-flower-img {
+    top: 146px;
+    width: 104px;
   }
 
   .ew-frame-flourish {
