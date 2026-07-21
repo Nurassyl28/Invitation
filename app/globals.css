@@ -5745,7 +5745,7 @@ button {
 .ew-botanical {
   pointer-events: none;
   user-select: none;
-  mix-blend-mode: multiply;
+  filter: saturate(1.04) contrast(1.03);
 }
 
 .ew-gate-bow-img {
