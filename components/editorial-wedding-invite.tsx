@@ -196,7 +196,7 @@ export function EditorialWeddingInvite({ invite }: { invite: PublicInviteView })
                 <BotanicalAsset className="ew-gate-dove-img ew-gate-dove-left-img" file="dove-left.png" />
                 <BotanicalAsset className="ew-gate-dove-img ew-gate-dove-right-img" file="dove-right.png" />
                 <BotanicalAsset className="ew-gate-bow-img" file="bow.png" />
-                <span>МЫ ЖЕНИМСЯ</span>
+                <span>Приглашаем на свадьбу</span>
                 <BotanicalAsset className="ew-gate-divider-img" file="divider-wide.png" />
                 <strong>{invite.names}</strong>
                 <p>{day} {month} {year}</p>
@@ -220,12 +220,12 @@ export function EditorialWeddingInvite({ invite }: { invite: PublicInviteView })
 
       <div className="ew-content" aria-hidden={!opened}>
         <header className="ew-header">
-          <a href="#hero">Amanat</a>
-          <nav aria-label="Wedding navigation">
-            <a href="#hero">Басы</a>
-            <a href="#program">Program</a>
+          <a href="#hero">Приглашение</a>
+          <nav aria-label="Навигация приглашения">
+            <a href="#hero">Главная</a>
+            <a href="#program">Программа</a>
             <a href="#rsvp">RSVP</a>
-            <a href="#share">Share</a>
+            <a href="#share">Поделиться</a>
           </nav>
         </header>
 
@@ -233,8 +233,8 @@ export function EditorialWeddingInvite({ invite }: { invite: PublicInviteView })
           <div className="ew-forest" aria-hidden="true" />
           <article className="ew-invite-card" data-reveal>
             <div className="ew-brand">
-              <span>Amanat</span>
-              <small>сайт-приглашение</small>
+              <span>Свадебное приглашение</span>
+              <small>{day} {month} {year}</small>
             </div>
 
             <BotanicalAsset className="ew-card-bow-img" file="bow.png" />
@@ -245,7 +245,7 @@ export function EditorialWeddingInvite({ invite }: { invite: PublicInviteView })
             <FrameFlourish side="left" />
             <FrameFlourish side="right" />
 
-            <span className="ew-kicker">МЫ ЖЕНИМСЯ</span>
+            <span className="ew-kicker">Приглашаем на свадьбу</span>
             <h1>
               <span>{names.first}</span>
               {names.second ? <em>и</em> : null}
