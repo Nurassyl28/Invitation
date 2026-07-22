@@ -85,42 +85,6 @@ function useReveal(active: boolean) {
   return rootRef;
 }
 
-function GatePanel({ side }: { side: "left" | "right" }) {
-  return (
-    <svg className="ew-gate-panel" viewBox="0 0 240 520" preserveAspectRatio="none" aria-hidden="true">
-      <g transform={side === "right" ? "translate(240 0) scale(-1 1)" : undefined}>
-        <rect className="ew-gp-fill" x="0" y="0" width="240" height="520" />
-        <path className="ew-gp-arch-fill" d="M18 486V176C27 108 78 55 120 30C162 55 213 108 222 176V486Z" />
-        <path className="ew-gp-frame" d="M18 486V176C27 108 78 55 120 30C162 55 213 108 222 176V486Z" />
-        <path className="ew-gp-frame soft" d="M43 486V182C52 126 88 84 120 64C152 84 188 126 197 182V486Z" />
-        <path className="ew-gp-post" d="M20 148V504M220 148V504" />
-        <path className="ew-gp-line" d="M48 190V504M76 142V504M104 94V504M132 94V504M160 142V504M188 190V504" />
-        <path className="ew-gp-line strong" d="M30 252H210M30 354H210M30 468H210" />
-        <path className="ew-gp-line" d="M38 420C66 386 96 386 120 420C144 386 174 386 202 420" />
-        <path className="ew-gp-scroll" d="M52 208C72 172 102 166 121 190C95 185 76 197 67 222C64 216 59 211 52 208Z" />
-        <path className="ew-gp-scroll" d="M188 208C168 172 138 166 119 190C145 185 164 197 173 222C176 216 181 211 188 208Z" />
-        <path className="ew-gp-scroll" d="M48 312C76 276 109 281 124 313C96 297 72 306 59 338C57 327 53 318 48 312Z" />
-        <path className="ew-gp-scroll" d="M192 312C164 276 131 281 116 313C144 297 168 306 181 338C183 327 187 318 192 312Z" />
-        <path className="ew-gp-scroll crown" d="M120 32C126 70 154 86 191 80C166 103 158 133 169 168C143 146 119 136 88 150C113 121 123 84 120 32Z" />
-        <path className="ew-gp-line strong" d="M72 98C88 72 105 55 120 47C135 55 152 72 168 98" />
-        <circle className="ew-gp-dot" cx="120" cy="252" r="5" />
-        <circle className="ew-gp-dot" cx="120" cy="354" r="4" />
-        <circle className="ew-gp-dot" cx="120" cy="468" r="4" />
-        <path className="ew-gp-finial" d="M14 148C20 125 31 112 47 107C41 124 32 137 14 148ZM226 148C220 125 209 112 193 107C199 124 208 137 226 148Z" />
-        <rect className="ew-gp-seam" x="230" y="20" width="6" height="482" rx="3" />
-      </g>
-    </svg>
-  );
-}
-
-function TinyFlourish() {
-  return (
-    <svg className="ew-tiny-flourish" viewBox="0 0 160 32" aria-hidden="true">
-      <path d="M8 16c26 0 29-14 44-14c13 0 18 9 28 14c10-5 15-14 28-14c15 0 18 14 44 14c-26 0-29 14-44 14c-13 0-18-9-28-14c-10 5-15 14-28 14C37 30 34 16 8 16Z" />
-    </svg>
-  );
-}
-
 export function EditorialWeddingInvite({ invite }: { invite: PublicInviteView }) {
   const [opening, setOpening] = useState(false);
   const [opened, setOpened] = useState(false);
@@ -184,10 +148,10 @@ export function EditorialWeddingInvite({ invite }: { invite: PublicInviteView })
 
               {/* Two solid ornate gates that swing open */}
               <div className="ew-gate-leaf ew-gate-leaf-left" aria-hidden="true">
-                <GatePanel side="left" />
+                <BotanicalAsset className="ew-gate-image ew-gate-image-left" file="gate-left.png" />
               </div>
               <div className="ew-gate-leaf ew-gate-leaf-right" aria-hidden="true">
-                <GatePanel side="right" />
+                <BotanicalAsset className="ew-gate-image ew-gate-image-right" file="gate-right.png" />
               </div>
 
               <button className="ew-gate-button" type="button" onClick={handleOpen} aria-label="Открыть приглашение">
@@ -199,28 +163,20 @@ export function EditorialWeddingInvite({ invite }: { invite: PublicInviteView })
       ) : null}
 
       <div className="ew-content" aria-hidden={!opened}>
-        <header className="ew-header">
-          <a href="#hero">Приглашение</a>
-          <nav aria-label="Навигация приглашения">
-            <a href="#hero">Главная</a>
-            <a href="#program">Программа</a>
-            <a href="#rsvp">RSVP</a>
-            <a href="#share">Поделиться</a>
-          </nav>
-        </header>
-
         <section className="ew-hero" id="hero">
           <div className="ew-forest" aria-hidden="true" />
           <article className="ew-invite-card" data-reveal>
-            <div className="ew-brand">
-              <span>Свадебное приглашение</span>
-              <small>{day} {month} {year}</small>
-            </div>
-
+            <BotanicalAsset className="ew-card-bow-img" file="bow.png" />
+            <BotanicalAsset className="ew-card-dove-img ew-card-dove-left-img" file="dove-left.png" />
+            <BotanicalAsset className="ew-card-dove-img ew-card-dove-right-img" file="dove-right.png" />
+            <BotanicalAsset className="ew-card-arch-img ew-card-arch-left-img" file="arch-left.png" />
+            <BotanicalAsset className="ew-card-arch-img ew-card-arch-right-img" file="arch-right.png" />
+            <BotanicalAsset className="ew-card-sprig-img ew-card-sprig-left-img" file="upper-sprig-left.png" />
+            <BotanicalAsset className="ew-card-sprig-img ew-card-sprig-right-img" file="upper-sprig-right.png" />
             <BotanicalAsset className="ew-card-flower-img ew-card-flower-left-img" file="flowers-left.png" />
             <BotanicalAsset className="ew-card-flower-img ew-card-flower-right-img" file="flowers-right.png" />
 
-            <span className="ew-kicker">Приглашаем на свадьбу</span>
+            <span className="ew-kicker">Мы женимся!</span>
             <h1>
               <span>{names.first}</span>
               {names.second ? <em>и</em> : null}
@@ -238,8 +194,8 @@ export function EditorialWeddingInvite({ invite }: { invite: PublicInviteView })
               <span>{month}</span>
             </div>
 
-            <TinyFlourish />
-            <a href="#details" className="ew-scroll-link">Смотреть детали</a>
+            <BotanicalAsset className="ew-date-lower-flourish-img" file="flourish-center.png" />
+            <BotanicalAsset className="ew-card-bottom-bow-img" file="bottom-bow.png" />
           </article>
         </section>
 

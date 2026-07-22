@@ -24,16 +24,19 @@ export default async function DemoInvitePage({ params }: { params: Promise<{ tem
   }
 
   const hasFixedTemplateNav = ["qyz-uzatu-anel", "wedding-emerald-envelope", "wedding-classic-gold", "wedding-emerald-card", "wedding-editorial-istara", "kudalyk-gold-mobile"].includes(demo.templateId ?? "");
+  const hideDemoBackLink = demo.templateId === "wedding-editorial-istara";
 
   return (
     <>
-      <Link
-        className={`demo-back-link ${hasFixedTemplateNav ? "invite-demo-back-link" : ""} ${demo.templateId === "qyz-uzatu-anel" ? "qyz-demo-back-link" : ""}`}
-        href="/demo"
-      >
-        <ArrowLeft size={16} />
-        Все демо
-      </Link>
+      {!hideDemoBackLink ? (
+        <Link
+          className={`demo-back-link ${hasFixedTemplateNav ? "invite-demo-back-link" : ""} ${demo.templateId === "qyz-uzatu-anel" ? "qyz-demo-back-link" : ""}`}
+          href="/demo"
+        >
+          <ArrowLeft size={16} />
+          Все демо
+        </Link>
+      ) : null}
       <InvitationRenderer invite={demo} />
     </>
   );
