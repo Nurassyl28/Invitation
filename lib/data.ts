@@ -43,12 +43,12 @@ export const templates: Template[] = [
   },
   {
     id: "wedding-classic-gold",
-    title: "Amanat Classic Gold",
+    title: "Classic Gold Wedding",
     category: "Свадьба",
     tariff: "Premium",
     color: "gold",
-    tags: ["wedding", "gold", "koshkar-muiz", "amanat", "classic", "kz-ru"],
-    description: "Классический казахский свадебный шаблон Amanat: қошқар мүйіз ою, алтын жиек, ivory фон, двуязычные тексты (kz/ru), программа вечера, галерея и RSVP.",
+    tags: ["wedding", "gold", "koshkar-muiz", "classic", "kz-ru"],
+    description: "Классический казахский свадебный шаблон: қошқар мүйіз ою, алтын жиек, ivory фон, двуязычные тексты (kz/ru), программа вечера, галерея и RSVP.",
   },
   {
     id: "wedding-emerald-card",

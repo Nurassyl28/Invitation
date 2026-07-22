@@ -113,26 +113,6 @@ function GatePanel({ side }: { side: "left" | "right" }) {
   );
 }
 
-function FrameFlourish({ side }: { side: "left" | "right" }) {
-  return (
-    <svg className={`ew-frame-flourish ew-frame-flourish-${side}`} viewBox="0 0 130 420" aria-hidden="true">
-      <g transform={side === "right" ? "translate(130 0) scale(-1 1)" : undefined}>
-        <path d="M100 10C42 55 22 111 37 178c14 63 1 114-27 153" />
-        <path d="M45 83c-27-11-39-29-35-54c22 5 34 22 35 54Z" />
-        <path d="M37 149c-25-4-39-18-43-42c23-2 38 12 43 42Z" />
-        <path d="M44 218c-25 2-42-9-52-31c22-7 40 4 52 31Z" />
-        <path d="M31 286c-24 9-43 3-59-16c19-13 40-7 59 16Z" />
-        <path d="M34 107c20-20 40-25 61-14c-11 20-32 25-61 14Z" />
-        <path d="M41 183c19-16 38-18 57-6c-12 17-31 19-57 6Z" />
-        <path d="M35 254c20-12 39-10 56 5c-14 14-32 13-56-5Z" />
-        <circle cx="32" cy="164" r="5" />
-        <circle cx="42" cy="230" r="4" />
-        <circle cx="24" cy="303" r="4" />
-      </g>
-    </svg>
-  );
-}
-
 function TinyFlourish() {
   return (
     <svg className="ew-tiny-flourish" viewBox="0 0 160 32" aria-hidden="true">
@@ -237,13 +217,8 @@ export function EditorialWeddingInvite({ invite }: { invite: PublicInviteView })
               <small>{day} {month} {year}</small>
             </div>
 
-            <BotanicalAsset className="ew-card-bow-img" file="bow.png" />
-            <BotanicalAsset className="ew-card-dove-img ew-card-dove-left-img" file="dove-left.png" />
-            <BotanicalAsset className="ew-card-dove-img ew-card-dove-right-img" file="dove-right.png" />
             <BotanicalAsset className="ew-card-flower-img ew-card-flower-left-img" file="flowers-left.png" />
             <BotanicalAsset className="ew-card-flower-img ew-card-flower-right-img" file="flowers-right.png" />
-            <FrameFlourish side="left" />
-            <FrameFlourish side="right" />
 
             <span className="ew-kicker">Приглашаем на свадьбу</span>
             <h1>
@@ -357,10 +332,6 @@ export function EditorialWeddingInvite({ invite }: { invite: PublicInviteView })
 
         <footer className="ew-footer" id="share" data-reveal>
           <div className="ew-footer-card">
-            <div className="ew-footer-envelope" aria-hidden="true">
-              <span />
-              <i />
-            </div>
             <BotanicalAsset className="ew-footer-flourish" file="flourish-center.png" />
             <Heart size={18} />
             <span className="ew-footer-kicker">До встречи на торжестве</span>

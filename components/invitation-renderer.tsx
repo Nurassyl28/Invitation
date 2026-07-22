@@ -287,7 +287,7 @@ function WeddingClassicGoldInvite({ invite }: { invite: PublicInviteView }) {
           <span />
           <span />
         </a>
-        <strong>Amanat</strong>
+        <strong>Шақыру</strong>
         <a aria-label="Музыка" href="#music">
           <Music2 size={22} />
         </a>

@@ -24,7 +24,7 @@ npm run build
 - `/demo` — единственная публичная витрина шаблонов
 - `/demo/wedding-emerald-envelope` — свадебный шаблон (конверт с восковой печатью)
 - `/demo/qyz-uzatu-anel` — қыз ұзату (анимация, countdown)
-- `/demo/wedding-classic-gold` — классический свадебный шаблон Amanat
+- `/demo/wedding-classic-gold` — классический свадебный шаблон
 - `/demo/wedding-emerald-card` — лаконичный emerald wedding шаблон
 - `/invite/[slug]` — публичная страница приглашения
 - `/admin` — скрытая служебная страница для заказов и оплат

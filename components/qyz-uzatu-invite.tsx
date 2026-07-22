@@ -145,7 +145,7 @@ export function QyzUzatuInvite({ invite }: { invite: PublicInviteView }) {
       </div>
 
       <header className="qu-topbar">
-        <strong>Amanat</strong>
+        <strong>Qyz Uzatu</strong>
         <a href="#music" aria-label="Музыка"><Music2 size={20} /></a>
       </header>
 
