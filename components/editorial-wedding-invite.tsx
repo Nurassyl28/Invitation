@@ -112,15 +112,36 @@ export function EditorialWeddingInvite({ invite }: { invite: PublicInviteView })
     };
   }, [opened]);
 
+  useEffect(() => {
+    if (!opened) return;
+
+    const resetToTop = () => window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    resetToTop();
+    const frame = window.requestAnimationFrame(resetToTop);
+    const timeout = window.setTimeout(resetToTop, 120);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.clearTimeout(timeout);
+    };
+  }, [opened]);
+
   function handleOpen() {
     if (opening) return;
+
+    const resetToTop = () => window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    resetToTop();
+
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       setOpened(true);
       return;
     }
 
     setOpening(true);
-    window.setTimeout(() => setOpened(true), OPEN_DURATION);
+    window.setTimeout(() => {
+      resetToTop();
+      setOpened(true);
+    }, OPEN_DURATION);
   }
 
   return (
@@ -177,7 +198,7 @@ export function EditorialWeddingInvite({ invite }: { invite: PublicInviteView })
             <BotanicalAsset className="ew-card-flower-img ew-card-flower-right-img" file="flowers-right.png" />
 
             <span className="ew-kicker">Мы женимся!</span>
-            <h1>
+            <h1 aria-label={names.second ? `${names.first} и ${names.second}` : names.first}>
               <span>{names.first}</span>
               {names.second ? <em>и</em> : null}
               {names.second ? <span>{names.second}</span> : null}

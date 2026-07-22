@@ -5579,8 +5579,8 @@ button {
 
 .ew-gate-frame {
   position: relative;
-  width: min(370px, calc(100vw - 32px));
-  height: min(740px, calc(100svh - 28px));
+  width: min(520px, calc(100vw - 32px));
+  height: min(860px, calc(100svh - 28px));
   padding: clamp(18px, 4vw, 30px);
   border: 1px solid rgba(255, 255, 255, 0.86);
   border-radius: 30px;
@@ -5793,13 +5793,13 @@ button {
 }
 
 .ew-gate-leaf-left {
-  left: 0;
+  left: -1px;
   justify-items: start;
   transform-origin: left center;
 }
 
 .ew-gate-leaf-right {
-  right: 0;
+  right: -1px;
   justify-items: end;
   transform-origin: right center;
 }
@@ -5816,22 +5816,22 @@ button {
 
 .ew-gate-image {
   display: block;
-  width: 112%;
-  height: 94%;
-  object-fit: contain;
+  width: 210%;
+  max-width: none;
+  height: auto;
   object-position: center bottom;
   opacity: 0.96;
-  transform: translateY(2%);
+  transform: translateY(1%);
 }
 
 .ew-gate-image-left {
   object-position: left bottom;
-  transform: translate(-2%, 2%);
+  transform: translate(-8%, 1%);
 }
 
 .ew-gate-image-right {
   object-position: right bottom;
-  transform: translate(2%, 2%);
+  transform: translate(8%, 1%);
 }
 
 .ew-gate-button {
@@ -5952,9 +5952,9 @@ button {
   position: relative;
   display: grid;
   justify-items: center;
-  width: min(510px, 100%);
-  min-height: min(760px, calc(100svh - 148px));
-  padding: clamp(34px, 7vw, 62px) clamp(28px, 7vw, 58px);
+  width: min(540px, 100%);
+  min-height: min(790px, calc(100svh - 120px));
+  padding: clamp(34px, 7vw, 62px) clamp(24px, 6vw, 52px);
   overflow: hidden;
   background:
     radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.72), transparent 24%),
@@ -6018,69 +6018,69 @@ button {
 }
 
 .ew-card-bow-img {
-  top: 34px;
+  top: 28px;
   left: 50%;
-  width: min(300px, 72%);
-  opacity: 0.62;
+  width: min(324px, 76%);
+  opacity: 0.66;
   transform: translateX(-50%);
 }
 
 .ew-card-dove-img {
-  top: 92px;
-  width: clamp(52px, 13vw, 74px);
-  opacity: 0.64;
+  top: 104px;
+  width: clamp(54px, 12vw, 78px);
+  opacity: 0.58;
 }
 
 .ew-card-dove-left-img {
-  left: clamp(46px, 11vw, 76px);
+  left: clamp(48px, 10vw, 78px);
 }
 
 .ew-card-dove-right-img {
-  right: clamp(46px, 11vw, 76px);
+  right: clamp(48px, 10vw, 78px);
 }
 
 .ew-card-sprig-img {
-  top: 168px;
-  width: clamp(108px, 23vw, 145px);
-  opacity: 0.48;
+  top: 162px;
+  width: clamp(116px, 22vw, 150px);
+  opacity: 0.46;
 }
 
 .ew-card-sprig-left-img {
-  left: clamp(30px, 8vw, 58px);
+  left: clamp(34px, 8vw, 62px);
 }
 
 .ew-card-sprig-right-img {
-  right: clamp(30px, 8vw, 58px);
+  right: clamp(34px, 8vw, 62px);
 }
 
 .ew-card-arch-img {
-  top: 248px;
-  width: clamp(180px, 42vw, 228px);
-  opacity: 0.38;
+  top: 250px;
+  width: clamp(190px, 40vw, 236px);
+  opacity: 0.28;
 }
 
 .ew-card-arch-left-img {
-  left: clamp(-34px, -5vw, -18px);
+  left: clamp(-42px, -6vw, -24px);
   clip-path: inset(0 46% 0 0);
 }
 
 .ew-card-arch-right-img {
-  right: clamp(-34px, -5vw, -18px);
+  right: clamp(-42px, -6vw, -24px);
   clip-path: inset(0 0 0 46%);
 }
 
 .ew-card-flower-img {
-  top: 352px;
-  width: clamp(94px, 20vw, 132px);
-  opacity: 0.34;
+  top: 354px;
+  width: clamp(106px, 19vw, 134px);
+  opacity: 0.24;
 }
 
 .ew-card-flower-left-img {
-  left: clamp(24px, 7vw, 48px);
+  left: clamp(28px, 7vw, 52px);
 }
 
 .ew-card-flower-right-img {
-  right: clamp(24px, 7vw, 48px);
+  right: clamp(28px, 7vw, 52px);
 }
 
 .ew-card-divider-img {
@@ -6092,17 +6092,17 @@ button {
 }
 
 .ew-card-bottom-bow-img {
-  bottom: 42px;
+  bottom: 46px;
   left: 50%;
-  width: min(230px, 54%);
-  opacity: 0.48;
+  width: min(242px, 54%);
+  opacity: 0.44;
   transform: translateX(-50%);
 }
 
 .ew-kicker {
   position: relative;
   z-index: 2;
-  margin-top: clamp(128px, 23vw, 152px);
+  margin-top: clamp(144px, 23vw, 166px);
   color: rgba(76, 81, 75, 0.66);
   font-size: 0.74rem;
   font-weight: 800;
@@ -6112,24 +6112,29 @@ button {
 .ew-invite-card h1 {
   position: relative;
   z-index: 2;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0 0.22em;
+  display: block;
   max-width: 100%;
-  margin: 24px 0 26px;
+  margin: 22px auto 24px;
   color: rgba(76, 81, 75, 0.72);
   font-family: var(--font-script), var(--font-eb-garamond), Georgia, serif;
-  font-size: clamp(2.55rem, 10vw, 4.8rem);
+  font-size: clamp(2.8rem, 8.2vw, 4.25rem);
   font-style: italic;
   font-weight: 400;
-  line-height: 0.92;
+  line-height: 0.98;
+  text-align: center;
 }
 
 .ew-invite-card h1 em {
+  display: inline;
+  margin: 0 0.18em;
   color: var(--ew-blush);
-  font-size: 0.52em;
+  font-size: 0.42em;
   font-style: italic;
+  vertical-align: 0.18em;
+}
+
+.ew-invite-card h1 span {
+  display: inline;
 }
 
 .ew-hero-note {
@@ -6150,7 +6155,7 @@ button {
   display: grid;
   justify-items: center;
   gap: 6px;
-  margin-top: 8px;
+  margin-top: 4px;
   color: rgba(76, 81, 75, 0.68);
   font-family: var(--font-eb-garamond), Georgia, serif;
   text-transform: uppercase;
@@ -6198,7 +6203,7 @@ button {
   position: relative;
   z-index: 2;
   width: min(190px, 46%);
-  margin: 16px auto 72px;
+  margin: 14px auto 78px;
   opacity: 0.58;
 }
 
@@ -6566,8 +6571,8 @@ button {
 
 @media (max-width: 720px) {
   .ew-gate-frame {
-    width: min(342px, calc(100vw - 36px));
-    height: min(700px, calc(100svh - 24px));
+    width: min(376px, calc(100vw - 24px));
+    height: min(730px, calc(100svh - 18px));
     padding: 12px;
     border-radius: 22px;
   }
@@ -6593,7 +6598,7 @@ button {
 
   .ew-invite-card {
     min-height: calc(100svh - 112px);
-    padding: 34px 24px;
+    padding: 34px 22px;
   }
 
   .ew-gate-dove-img {
@@ -6603,50 +6608,50 @@ button {
   }
 
   .ew-card-bow-img {
-    top: 30px;
-    width: min(268px, 76%);
+    top: 28px;
+    width: min(284px, 78%);
   }
 
   .ew-card-dove-img {
-    top: 86px;
-    width: 56px;
+    top: 96px;
+    width: 58px;
   }
 
   .ew-card-dove-left-img {
-    left: 42px;
+    left: 44px;
   }
 
   .ew-card-dove-right-img {
-    right: 42px;
+    right: 44px;
   }
 
   .ew-card-sprig-img {
-    top: 154px;
-    width: 118px;
+    top: 156px;
+    width: 122px;
   }
 
   .ew-card-sprig-left-img {
-    left: 34px;
+    left: 32px;
   }
 
   .ew-card-sprig-right-img {
-    right: 34px;
+    right: 32px;
   }
 
   .ew-card-arch-img {
-    top: 238px;
-    width: 196px;
-    opacity: 0.26;
+    top: 246px;
+    width: 204px;
+    opacity: 0.24;
   }
 
   .ew-card-flower-img {
-    top: 348px;
+    top: 350px;
     width: 104px;
-    opacity: 0.22;
+    opacity: 0.2;
   }
 
   .ew-kicker {
-    margin-top: 130px;
+    margin-top: 140px;
   }
 
   .ew-details {
@@ -6673,9 +6678,9 @@ button {
 
 @media (max-width: 420px) {
   .ew-gate-frame {
-    width: min(326px, calc(100vw - 36px));
-    height: min(680px, calc(100svh - 24px));
-    padding: 9px;
+    width: min(364px, calc(100vw - 20px));
+    height: min(700px, calc(100svh - 18px));
+    padding: 8px;
   }
 
   .ew-gate-reveal {
@@ -6714,57 +6719,57 @@ button {
   }
 
   .ew-invite-card {
-    padding-inline: 20px;
+    padding-inline: 18px;
   }
 
   .ew-card-bow-img {
-    top: 28px;
-    width: min(250px, 78%);
+    top: 26px;
+    width: min(262px, 80%);
   }
 
   .ew-card-dove-img {
-    top: 84px;
-    width: 49px;
-    opacity: 0.44;
+    top: 90px;
+    width: 50px;
+    opacity: 0.42;
   }
 
   .ew-card-dove-left-img {
-    left: 30px;
+    left: 31px;
   }
 
   .ew-card-dove-right-img {
-    right: 30px;
+    right: 31px;
   }
 
   .ew-card-sprig-img {
-    top: 148px;
-    width: 104px;
+    top: 146px;
+    width: 108px;
   }
 
   .ew-card-sprig-left-img {
-    left: 22px;
+    left: 20px;
   }
 
   .ew-card-sprig-right-img {
-    right: 22px;
+    right: 20px;
   }
 
   .ew-card-arch-img {
-    top: 244px;
-    width: 184px;
+    top: 238px;
+    width: 188px;
   }
 
   .ew-card-flower-img {
-    top: 354px;
-    width: 94px;
+    top: 342px;
+    width: 96px;
   }
 
   .ew-card-flower-left-img {
-    left: 16px;
+    left: 14px;
   }
 
   .ew-card-flower-right-img {
-    right: 16px;
+    right: 14px;
   }
 
   .ew-card-bottom-bow-img {
@@ -6773,7 +6778,7 @@ button {
   }
 
   .ew-kicker {
-    margin-top: 124px;
+    margin-top: 132px;
   }
 
   .ew-date-stack strong {
