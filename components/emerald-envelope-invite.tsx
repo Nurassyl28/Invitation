@@ -114,12 +114,19 @@ export function EmeraldEnvelopeInvite({ invite }: { invite: PublicInviteView }) 
 
   function handleOpen() {
     if (opening) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    const showContent = () => {
       setOpened(true);
+      window.requestAnimationFrame(() => {
+        window.scrollTo(0, 0);
+      });
+    };
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      showContent();
       return;
     }
     setOpening(true);
-    window.setTimeout(() => setOpened(true), OPEN_DURATION);
+    window.setTimeout(showContent, OPEN_DURATION);
   }
 
   return (
