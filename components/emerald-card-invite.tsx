@@ -106,15 +106,18 @@ export function EmeraldCardInvite({ invite }: { invite: PublicInviteView }) {
         <section className="ecard-section ecard-rsvp" id="rsvp" data-reveal>
           <MessageCircle size={26} />
           <h2>Подтвердите участие</h2>
-          <label>
-            <span>Ваше имя</span>
-            <input placeholder="Имя и фамилия" />
-          </label>
-          <label>
-            <span>Количество гостей</span>
-            <input defaultValue="2" type="number" />
-          </label>
-          <button type="button"><Send size={16} />Отправить</button>
+          <form action={`/api/invite/${invite.slug}/rsvp`} method="post">
+            <input name="answer" type="hidden" value="yes" />
+            <label>
+              <span>Ваше имя</span>
+              <input name="guest_name" placeholder="Имя и фамилия" required />
+            </label>
+            <label>
+              <span>Количество гостей</span>
+              <input defaultValue="2" min="1" name="guest_count" type="number" />
+            </label>
+            <button type="submit"><Send size={16} />Отправить</button>
+          </form>
         </section>
       ) : null}
 

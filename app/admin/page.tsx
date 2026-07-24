@@ -34,6 +34,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
   const store = await readAgentStore();
   const latestOrders = store.orders.slice(0, 8);
   const latestPayments = store.payments.slice(0, 8);
+  const latestRsvpResponses = store.rsvpResponses.slice(0, 8);
   const paymentsForReview = store.payments.filter((payment) => payment.status === "pending" || payment.status === "payment_review").length;
   const adminHref = token ? `/admin?token=${encodeURIComponent(token)}` : "/admin";
 
@@ -65,6 +66,7 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
               <article className="stat-card"><span className="eyebrow">Чеки</span><strong>{paymentsForReview}</strong><p>ждут ручной проверки</p></article>
               <article className="stat-card"><span className="eyebrow">Шаблоны</span><strong>{store.templates.length}</strong><p>доступны для OpenClaw</p></article>
               <article className="stat-card"><span className="eyebrow">Agent orders</span><strong>{store.orders.length}</strong><p>созданы через API</p></article>
+              <article className="stat-card"><span className="eyebrow">RSVP</span><strong>{store.rsvpResponses.length}</strong><p>ответы гостей</p></article>
             </div>
 
             <section className="table-panel">
@@ -145,6 +147,42 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                   ) : (
                     <tr>
                       <td colSpan={5}>Пока нет чеков на проверку.</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </section>
+
+            <section className="table-panel">
+              <h2>RSVP responses</h2>
+              <table>
+                <thead><tr><th>Гость</th><th>Ответ</th><th>Кол-во</th><th>Приглашение</th><th>Комментарий</th></tr></thead>
+                <tbody>
+                  {latestRsvpResponses.length ? (
+                    latestRsvpResponses.map((response) => {
+                      const invitation = store.invitations.find((item) => item.id === response.invitationId);
+
+                      return (
+                        <tr key={response.id}>
+                          <td>{response.guestName}</td>
+                          <td>{response.answer}</td>
+                          <td>{response.guestCount}</td>
+                          <td>
+                            {invitation ? (
+                              <Link className="small-action" href={`/invite/${invitation.slug}`}>
+                                {invitation.slug}
+                              </Link>
+                            ) : (
+                              response.invitationId.slice(0, 12)
+                            )}
+                          </td>
+                          <td>{response.comment ?? "-"}</td>
+                        </tr>
+                      );
+                    })
+                  ) : (
+                    <tr>
+                      <td colSpan={5}>Пока нет ответов гостей.</td>
                     </tr>
                   )}
                 </tbody>

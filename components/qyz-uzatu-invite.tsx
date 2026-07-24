@@ -269,15 +269,18 @@ export function QyzUzatuInvite({ invite }: { invite: PublicInviteView }) {
           <MessageCircle size={28} />
           <h2>Растау / RSVP</h2>
           <p>Пожалуйста, сообщите заранее, сможете ли вы прийти.</p>
-          <label>
-            <span>Аты-жөніңіз / Ваше имя</span>
-            <input placeholder="Напишите полное имя" />
-          </label>
-          <label>
-            <span>Қонақтар саны / Гостей</span>
-            <input defaultValue="2" type="number" />
-          </label>
-          <button type="button"><Send size={17} />Жіберу / Отправить</button>
+          <form action={`/api/invite/${invite.slug}/rsvp`} method="post">
+            <input name="answer" type="hidden" value="yes" />
+            <label>
+              <span>Аты-жөніңіз / Ваше имя</span>
+              <input name="guest_name" placeholder="Напишите полное имя" required />
+            </label>
+            <label>
+              <span>Қонақтар саны / Гостей</span>
+              <input defaultValue="2" min="1" name="guest_count" type="number" />
+            </label>
+            <button type="submit"><Send size={17} />Жіберу / Отправить</button>
+          </form>
         </section>
       ) : null}
 

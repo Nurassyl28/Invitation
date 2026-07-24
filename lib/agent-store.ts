@@ -598,13 +598,25 @@ type SupabasePaymentRow = {
   updated_at: string;
 };
 
+type SupabaseRsvpResponseRow = {
+  id: string;
+  invitation_id: string;
+  guest_name: string;
+  phone: string | null;
+  answer: AgentRsvpResponse["answer"];
+  guest_count: number;
+  comment: string | null;
+  created_at: string;
+};
+
 async function readSupabaseAgentStore(): Promise<AgentStore> {
-  const [templateRows, conversationRows, orderRows, invitationRows, paymentRows] = await Promise.all([
+  const [templateRows, conversationRows, orderRows, invitationRows, paymentRows, rsvpRows] = await Promise.all([
     selectSupabaseRows<SupabaseTemplateRow>("templates"),
     selectSupabaseRows<SupabaseConversationRow>("conversations"),
     selectSupabaseRows<SupabaseOrderRow>("orders"),
     selectSupabaseRows<SupabaseInvitationRow>("invitations"),
     selectSupabaseRows<SupabasePaymentRow>("payments"),
+    selectSupabaseRows<SupabaseRsvpResponseRow>("rsvp_responses"),
   ]);
 
   const store = normalizeStore({
@@ -613,7 +625,7 @@ async function readSupabaseAgentStore(): Promise<AgentStore> {
     orders: orderRows.map(rowToOrder),
     invitations: invitationRows.map(rowToInvitation),
     payments: paymentRows.map(rowToPayment),
-    rsvpResponses: [],
+    rsvpResponses: rsvpRows.map(rowToRsvpResponse),
     actionLogs: [],
   });
 
@@ -630,6 +642,7 @@ async function writeSupabaseAgentStore(store: AgentStore) {
   await upsertSupabaseRows("orders", store.orders.map(orderToRow));
   await upsertSupabaseRows("invitations", store.invitations.map(invitationToRow));
   await upsertSupabaseRows("payments", store.payments.map(paymentToRow));
+  await upsertSupabaseRows("rsvp_responses", store.rsvpResponses.map(rsvpResponseToRow));
 }
 
 async function selectSupabaseRows<T>(table: string): Promise<T[]> {
@@ -818,6 +831,32 @@ function paymentToRow(payment: AgentPayment): Record<string, unknown> {
   };
 }
 
+function rowToRsvpResponse(row: SupabaseRsvpResponseRow): AgentRsvpResponse {
+  return {
+    id: row.id,
+    invitationId: row.invitation_id,
+    guestName: row.guest_name,
+    phone: row.phone ?? undefined,
+    answer: normalizeRsvpAnswer(row.answer),
+    guestCount: normalizeGuestCount(row.guest_count),
+    comment: row.comment ?? undefined,
+    createdAt: row.created_at,
+  };
+}
+
+function rsvpResponseToRow(response: AgentRsvpResponse): Record<string, unknown> {
+  return {
+    id: response.id,
+    invitation_id: response.invitationId,
+    guest_name: response.guestName,
+    phone: response.phone ?? null,
+    answer: normalizeRsvpAnswer(response.answer),
+    guest_count: normalizeGuestCount(response.guestCount),
+    comment: response.comment ?? null,
+    created_at: response.createdAt,
+  };
+}
+
 function invitationFieldsFromInvitation(invitation: AgentInvitation): InvitationFields {
   return {
     hostNames: invitation.hostNames,
@@ -944,6 +983,34 @@ function pickPrivacyMode(input: Record<string, unknown>): "public" | "password" 
 
 function objectFrom(value: unknown) {
   return value && typeof value === "object" && !Array.isArray(value) ? (value as Record<string, unknown>) : {};
+}
+
+export function normalizeRsvpAnswer(value: unknown): AgentRsvpResponse["answer"] {
+  if (typeof value !== "string") {
+    return "yes";
+  }
+
+  const answer = value.toLowerCase().trim();
+
+  if (answer === "no" || answer === "нет" || answer === "жоқ") {
+    return "no";
+  }
+
+  if (answer === "maybe" || answer === "возможно" || answer === "мүмкін") {
+    return "maybe";
+  }
+
+  return "yes";
+}
+
+export function normalizeGuestCount(value: unknown) {
+  const count = typeof value === "number" ? value : Number(value);
+
+  if (!Number.isFinite(count)) {
+    return 1;
+  }
+
+  return Math.min(20, Math.max(1, Math.floor(count)));
 }
 
 function templateForToiType(store: AgentStore, toiType: string) {

@@ -307,10 +307,16 @@ export function KudalykGoldInvite({ invite }: { invite: PublicInviteView }) {
           <section className="kg-rsvp" data-kg-reveal>
             <h2>ҚАТЫСУЫҢЫЗДЫ РАСТАҢЫЗ</h2>
             <Divider />
-            <a href={whatsappHref}>
-              <MessageCircle size={24} />
-              ҚАТЫСАТЫНЫҢЫЗДЫ ХАБАРЛАҢЫЗ
-            </a>
+            <form action={`/api/invite/${invite.slug}/rsvp`} method="post">
+              <input name="answer" type="hidden" value="yes" />
+              <input name="guest_name" placeholder="Аты-жөніңіз" required />
+              <input defaultValue="2" min="1" name="guest_count" type="number" />
+              <button type="submit">
+                <MessageCircle size={24} />
+                ҚАТЫСАТЫНЫҢЫЗДЫ ХАБАРЛАҢЫЗ
+              </button>
+            </form>
+            <a className="kg-rsvp-whatsapp" href={whatsappHref}>WhatsApp арқылы жазу</a>
             <p>Сіздің жауаптарыңыз біз үшін маңызды ♥</p>
           </section>
         ) : null}

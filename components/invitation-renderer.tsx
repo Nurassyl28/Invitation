@@ -234,24 +234,27 @@ export function InvitationRenderer({ invite }: { invite: PublicInviteView }) {
         <section className="toi-section toi-rsvp toi-reveal delay-six" id="rsvp">
           <MessageCircle size={24} />
           <h2>Қатысуыңызды растаңыз</h2>
-          <div className="toi-rsvp-grid">
-            <label>
-              <span>Имя</span>
-              <input placeholder="Ваше имя" />
-            </label>
-            <label>
-              <span>Гостей</span>
-              <input defaultValue="2" type="number" />
-            </label>
-            <label className="full">
-              <span>Пожелание</span>
-              <textarea placeholder="Жылы тілегіңіз..." />
-            </label>
-          </div>
-          <button className="toi-action" type="button">
-            <Send size={17} />
-            Жіберу
-          </button>
+          <form action={`/api/invite/${invite.slug}/rsvp`} method="post">
+            <input name="answer" type="hidden" value="yes" />
+            <div className="toi-rsvp-grid">
+              <label>
+                <span>Имя</span>
+                <input name="guest_name" placeholder="Ваше имя" required />
+              </label>
+              <label>
+                <span>Гостей</span>
+                <input defaultValue="2" min="1" name="guest_count" type="number" />
+              </label>
+              <label className="full">
+                <span>Пожелание</span>
+                <textarea name="comment" placeholder="Жылы тілегіңіз..." />
+              </label>
+            </div>
+            <button className="toi-action" type="submit">
+              <Send size={17} />
+              Жіберу
+            </button>
+          </form>
         </section>
       ) : null}
 
@@ -444,24 +447,27 @@ function WeddingClassicGoldInvite({ invite }: { invite: PublicInviteView }) {
           <MessageCircle size={34} />
           <h2>Өтінеміз, келетініңізді растаңыз</h2>
           <p>Подтвердите участие, чтобы ұйымдастырушылар қонақ санын алдын ала білсін.</p>
-          <div className="amanat-rsvp-grid">
-            <label>
-              <span>Ваше имя / Есіміңіз</span>
-              <input placeholder="Атыңызды жазыңыз" />
-            </label>
-            <label>
-              <span>Қонақ саны</span>
-              <input defaultValue="2" type="number" />
-            </label>
-            <label className="full">
-              <span>Тілек / Пожелание</span>
-              <textarea placeholder="Жылы тілегіңіз..." />
-            </label>
-          </div>
-          <button className="amanat-primary-action" type="button">
-            <Send size={18} />
-            Жіберу / Отправить
-          </button>
+          <form action={`/api/invite/${invite.slug}/rsvp`} method="post">
+            <input name="answer" type="hidden" value="yes" />
+            <div className="amanat-rsvp-grid">
+              <label>
+                <span>Ваше имя / Есіміңіз</span>
+                <input name="guest_name" placeholder="Атыңызды жазыңыз" required />
+              </label>
+              <label>
+                <span>Қонақ саны</span>
+                <input defaultValue="2" min="1" name="guest_count" type="number" />
+              </label>
+              <label className="full">
+                <span>Тілек / Пожелание</span>
+                <textarea name="comment" placeholder="Жылы тілегіңіз..." />
+              </label>
+            </div>
+            <button className="amanat-primary-action" type="submit">
+              <Send size={18} />
+              Жіберу / Отправить
+            </button>
+          </form>
         </section>
       ) : null}
 

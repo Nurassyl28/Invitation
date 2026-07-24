@@ -17,6 +17,7 @@ export async function GET() {
     storage_error: snapshot.error,
     buckets: SUPABASE_STORAGE_BUCKETS,
     templates: store.templates.filter((template) => template.isActive).length,
+    rsvpResponses: store.rsvpResponses.length,
     time: new Date().toISOString(),
   });
 }

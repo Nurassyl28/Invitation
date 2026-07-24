@@ -293,18 +293,21 @@ export function EditorialWeddingInvite({ invite }: { invite: PublicInviteView })
           <section className="ew-rsvp" id="rsvp" data-reveal>
             <MessageCircle size={28} />
             <h2>Қатысуыңызды растаңыз</h2>
-            <label>
-              <span>Имя</span>
-              <input placeholder="Имя и фамилия" />
-            </label>
-            <label>
-              <span>Количество гостей</span>
-              <input defaultValue="2" type="number" />
-            </label>
-            <button type="button">
-              <Send size={16} />
-              Подтвердить участие
-            </button>
+            <form action={`/api/invite/${invite.slug}/rsvp`} method="post">
+              <input name="answer" type="hidden" value="yes" />
+              <label>
+                <span>Имя</span>
+                <input name="guest_name" placeholder="Имя и фамилия" required />
+              </label>
+              <label>
+                <span>Количество гостей</span>
+                <input defaultValue="2" min="1" name="guest_count" type="number" />
+              </label>
+              <button type="submit">
+                <Send size={16} />
+                Подтвердить участие
+              </button>
+            </form>
           </section>
         ) : null}
 

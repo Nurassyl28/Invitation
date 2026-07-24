@@ -100,6 +100,17 @@ create table if not exists payments (
   updated_at timestamptz not null default now()
 );
 
+create table if not exists rsvp_responses (
+  id text primary key,
+  invitation_id text not null references invitations(id) on delete cascade,
+  guest_name text not null,
+  phone text,
+  answer text not null check (answer in ('yes', 'no', 'maybe')),
+  guest_count integer not null default 1 check (guest_count >= 1 and guest_count <= 20),
+  comment text,
+  created_at timestamptz not null default now()
+);
+
 create index if not exists templates_toi_type_idx on templates(toi_type);
 create index if not exists orders_template_id_idx on orders(template_id);
 create index if not exists orders_status_idx on orders(status);
@@ -107,6 +118,26 @@ create index if not exists orders_customer_phone_idx on orders(customer_phone);
 create index if not exists invitations_slug_idx on invitations(slug);
 create index if not exists payments_status_idx on payments(status);
 create index if not exists payments_order_id_idx on payments(order_id);
+create index if not exists rsvp_responses_invitation_id_idx on rsvp_responses(invitation_id);
+create index if not exists rsvp_responses_created_at_idx on rsvp_responses(created_at desc);
+
+insert into templates (id, toi_type, name, style, tariff, preview_image, component_key, is_active)
+values
+  ('wedding-emerald-envelope', 'Свадьба', 'Emerald Envelope Wedding', 'classic', 'fixed', null, 'WeddingEmeraldEnvelopeTemplate', true),
+  ('qyz-uzatu-anel', 'Қыз ұзату', 'Qyz Uzatu Anel', 'modern', 'fixed', null, 'QyzUzatuAnelTemplate', true),
+  ('wedding-classic-gold', 'Свадьба', 'Classic Gold Wedding', 'classic', 'fixed', null, 'WeddingClassicGoldTemplate', true),
+  ('wedding-emerald-card', 'Свадьба', 'Emerald Card', 'modern', 'fixed', null, 'WeddingEmeraldCardTemplate', true),
+  ('wedding-editorial-istara', 'Свадьба', 'Garden Gate Wedding', 'classic', 'fixed', null, 'WeddingEditorialIstaraTemplate', true),
+  ('kudalyk-gold-mobile', 'Құдалық', 'Qudalyk Gold Mobile', 'modern', 'fixed', null, 'KudalykGoldMobileTemplate', true)
+on conflict (id) do update
+set
+  toi_type = excluded.toi_type,
+  name = excluded.name,
+  style = excluded.style,
+  tariff = excluded.tariff,
+  preview_image = excluded.preview_image,
+  component_key = excluded.component_key,
+  is_active = excluded.is_active;
 
 insert into storage.buckets (id, name, public)
 values
