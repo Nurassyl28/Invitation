@@ -159,6 +159,14 @@ export type AgentStore = {
   actionLogs: AgentActionLog[];
 };
 
+export type AgentStoreStorage = "supabase" | "dev-json" | "dev-json-fallback";
+
+export type AgentStoreSnapshot = {
+  store: AgentStore;
+  storage: AgentStoreStorage;
+  error?: string;
+};
+
 const storeFile = path.join(process.cwd(), "data", "dev-store.json");
 const mvpFixedPrice = Number(process.env.MVP_FIXED_PRICE ?? 12900);
 
@@ -287,11 +295,36 @@ export function mergeInvitationFields(current: InvitationFields, next: Invitatio
   return merged;
 }
 
-export async function readAgentStore(): Promise<AgentStore> {
+export async function readAgentStoreSnapshot(): Promise<AgentStoreSnapshot> {
   if (isSupabaseConfigured()) {
-    return readSupabaseAgentStore();
+    try {
+      return {
+        store: await readSupabaseAgentStore(),
+        storage: "supabase",
+      };
+    } catch (error) {
+      const message = errorMessage(error);
+      console.error("Supabase store unavailable, falling back to dev JSON:", message);
+
+      return {
+        store: await readJsonAgentStore(),
+        storage: "dev-json-fallback",
+        error: message,
+      };
+    }
   }
 
+  return {
+    store: await readJsonAgentStore(),
+    storage: "dev-json",
+  };
+}
+
+export async function readAgentStore(): Promise<AgentStore> {
+  return (await readAgentStoreSnapshot()).store;
+}
+
+async function readJsonAgentStore(): Promise<AgentStore> {
   try {
     const raw = await readFile(storeFile, "utf8");
     return normalizeStore(JSON.parse(raw) as Partial<AgentStore>);
@@ -310,9 +343,9 @@ export async function findAgentInvitationBySlug(slug: string) {
 }
 
 export async function updateAgentStore<T>(mutator: (store: AgentStore) => T): Promise<T> {
-  const store = await readAgentStore();
-  const result = mutator(store);
-  await persistAgentStore(store);
+  const snapshot = await readAgentStoreSnapshot();
+  const result = mutator(snapshot.store);
+  await persistAgentStore(snapshot.store, snapshot.storage === "supabase");
   return result;
 }
 
@@ -809,10 +842,14 @@ function invitationFieldsFromInvitation(invitation: AgentInvitation): Invitation
   };
 }
 
-async function persistAgentStore(store: AgentStore) {
-  if (isSupabaseConfigured()) {
-    await writeSupabaseAgentStore(store);
-    return;
+async function persistAgentStore(store: AgentStore, preferSupabase: boolean) {
+  if (preferSupabase) {
+    try {
+      await writeSupabaseAgentStore(store);
+      return;
+    } catch (error) {
+      console.error("Supabase write failed, falling back to dev JSON:", errorMessage(error));
+    }
   }
 
   await writeAgentStore(store);
@@ -825,6 +862,10 @@ async function writeAgentStore(store: AgentStore) {
 
 function isFileMissing(error: unknown) {
   return typeof error === "object" && error !== null && "code" in error && error.code === "ENOENT";
+}
+
+function errorMessage(error: unknown) {
+  return error instanceof Error ? error.message : "Unknown error";
 }
 
 function pickString(input: Record<string, unknown>, keys: string[]) {

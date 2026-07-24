@@ -27,12 +27,7 @@ export async function supabaseRest<T>(path: string, init?: RequestInit): Promise
   const env = requireSupabaseEnv();
   const response = await fetch(`${env.url}/rest/v1/${path.replace(/^\/+/, "")}`, {
     ...init,
-    headers: {
-      apikey: env.key,
-      Authorization: `Bearer ${env.key}`,
-      "Content-Type": "application/json",
-      ...(init?.headers ?? {}),
-    },
+    headers: supabaseHeaders(env, "application/json", init?.headers),
   });
 
   if (!response.ok) {
@@ -58,12 +53,7 @@ export async function uploadSupabaseObject(input: {
     `${env.url}/storage/v1/object/${input.bucket}/${input.objectPath}`,
     {
       method: "PUT",
-      headers: {
-        apikey: env.key,
-        Authorization: `Bearer ${env.key}`,
-        "Content-Type": input.contentType,
-        "x-upsert": "true",
-      },
+      headers: supabaseHeaders(env, input.contentType, { "x-upsert": "true" }),
       body: input.body,
     },
   );
@@ -90,6 +80,18 @@ function requireSupabaseEnv(): SupabaseEnv {
   }
 
   return env;
+}
+
+function supabaseHeaders(env: SupabaseEnv, contentType: string, extraHeaders?: HeadersInit) {
+  const headers = new Headers(extraHeaders);
+  headers.set("apikey", env.key);
+  headers.set("Content-Type", contentType);
+
+  if (!env.key.startsWith("sb_secret_")) {
+    headers.set("Authorization", `Bearer ${env.key}`);
+  }
+
+  return headers;
 }
 
 function readSupabaseEnv(): SupabaseEnv | undefined {
