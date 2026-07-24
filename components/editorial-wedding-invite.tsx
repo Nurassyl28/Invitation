@@ -187,15 +187,16 @@ export function EditorialWeddingInvite({ invite }: { invite: PublicInviteView })
         <section className="ew-hero" id="hero">
           <div className="ew-forest" aria-hidden="true" />
           <article className="ew-invite-card" data-reveal>
+            {/* Right-side ornaments reuse the left source and are mirrored in CSS for strict symmetry. */}
             <BotanicalAsset className="ew-card-bow-img" file="bow.png" />
             <BotanicalAsset className="ew-card-dove-img ew-card-dove-left-img" file="dove-left.png" />
-            <BotanicalAsset className="ew-card-dove-img ew-card-dove-right-img" file="dove-right.png" />
+            <BotanicalAsset className="ew-card-dove-img ew-card-dove-right-img" file="dove-left.png" />
             <BotanicalAsset className="ew-card-arch-img ew-card-arch-left-img" file="arch-left.png" />
-            <BotanicalAsset className="ew-card-arch-img ew-card-arch-right-img" file="arch-right.png" />
+            <BotanicalAsset className="ew-card-arch-img ew-card-arch-right-img" file="arch-left.png" />
             <BotanicalAsset className="ew-card-sprig-img ew-card-sprig-left-img" file="upper-sprig-left.png" />
-            <BotanicalAsset className="ew-card-sprig-img ew-card-sprig-right-img" file="upper-sprig-right.png" />
+            <BotanicalAsset className="ew-card-sprig-img ew-card-sprig-right-img" file="upper-sprig-left.png" />
             <BotanicalAsset className="ew-card-flower-img ew-card-flower-left-img" file="flowers-left.png" />
-            <BotanicalAsset className="ew-card-flower-img ew-card-flower-right-img" file="flowers-right.png" />
+            <BotanicalAsset className="ew-card-flower-img ew-card-flower-right-img" file="flowers-left.png" />
 
             <span className="ew-kicker">Мы женимся!</span>
             <h1 aria-label={names.second ? `${names.first} и ${names.second}` : names.first}>
