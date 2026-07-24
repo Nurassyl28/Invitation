@@ -3,6 +3,7 @@ import { RefreshCw } from "lucide-react";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { SiteNav } from "@/components/site-nav";
+import { adminTokenFromHeaders, isValidAdminToken } from "@/lib/admin-auth";
 import { readAgentStore } from "@/lib/agent-store";
 
 export const metadata = {
@@ -122,6 +123,22 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                           ) : (
                             "Нет чека"
                           )}
+                          <form action="/admin/payments/review" className="admin-inline-form" method="post">
+                            <input name="payment_id" type="hidden" value={payment.id} />
+                            <input name="decision" type="hidden" value="approve" />
+                            {token ? <input name="token" type="hidden" value={token} /> : null}
+                            <button className="small-action" disabled={payment.status === "paid"} type="submit">
+                              Approve
+                            </button>
+                          </form>
+                          <form action="/admin/payments/review" className="admin-inline-form" method="post">
+                            <input name="payment_id" type="hidden" value={payment.id} />
+                            <input name="decision" type="hidden" value="reject" />
+                            {token ? <input name="token" type="hidden" value={token} /> : null}
+                            <button className="small-action danger" disabled={payment.status === "rejected"} type="submit">
+                              Reject
+                            </button>
+                          </form>
                         </td>
                       </tr>
                     ))
@@ -163,19 +180,8 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
 }
 
 async function hasAdminAccess(queryToken?: string) {
-  const expectedToken = process.env.ADMIN_TOKEN ?? (process.env.NODE_ENV === "production" ? "" : "dev-admin-token");
-
-  if (!expectedToken) {
-    return false;
-  }
-
   const headerList = await headers();
-  const authHeader = headerList.get("authorization");
-  const bearerToken = authHeader?.startsWith("Bearer ") ? authHeader.slice("Bearer ".length).trim() : "";
-  const headerToken = headerList.get("x-admin-token")?.trim();
-  const providedToken = queryToken || headerToken || bearerToken;
-
-  return providedToken === expectedToken;
+  return isValidAdminToken(queryToken || adminTokenFromHeaders(headerList));
 }
 
 function firstParam(value: string | string[] | undefined) {

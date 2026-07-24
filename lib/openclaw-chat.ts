@@ -120,6 +120,27 @@ function handleMessage(store: AgentStore, payload: OpenClawMessagePayload): Open
   }
 
   if (!order) {
+    const leadOrder = parseOrderFromText(store, text);
+
+    if (leadOrder) {
+      leadOrder.conversationId = conversation.id;
+      leadOrder.customerPhone = phone ?? chatId;
+      leadOrder.fields = mergeInvitationFields(leadOrder.fields, { contactPhone: phone ?? leadOrder.fields.contactPhone });
+      leadOrder.updatedAt = new Date().toISOString();
+      conversation.currentOrderId = leadOrder.id;
+      conversation.state = leadOrder.fields.hostNames ? "collecting_date" : "collecting_names";
+      addActionLog(store, "openclaw_lead_order_attached", leadOrder.id, {
+        text,
+        chat_id: chatId,
+      });
+
+      return reply(
+        conversation,
+        leadOrder,
+        `Заказ найден: ${leadOrder.id}.\nДизайн: ${selectedTemplate(store, leadOrder)?.name ?? leadOrder.templateId ?? "-"}.\nТеперь напишите имена для приглашения. Например: "Аян и Мадина".`,
+      );
+    }
+
     const selectedFromDemo = parseTemplateCodeFromText(store, text);
 
     if (selectedFromDemo) {
@@ -492,6 +513,16 @@ function templateNames(store: AgentStore, order: AgentOrder) {
 
 function selectedTemplate(store: AgentStore, order: AgentOrder) {
   return store.templates.find((template) => template.id === order.templateId);
+}
+
+function parseOrderFromText(store: AgentStore, text: string) {
+  const orderId = text.match(/ord_[a-z0-9-]+/i)?.[0];
+
+  if (!orderId) {
+    return undefined;
+  }
+
+  return store.orders.find((order) => normalizeForMatch(order.id) === normalizeForMatch(orderId));
 }
 
 function parseTemplateCodeFromText(store: AgentStore, text: string) {
