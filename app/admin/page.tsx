@@ -1,10 +1,8 @@
 import Link from "next/link";
-import { Check, RefreshCw } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { SiteNav } from "@/components/site-nav";
-import type { PaymentStatus } from "@/lib/data";
-import { payments, templates } from "@/lib/data";
 import { readAgentStore } from "@/lib/agent-store";
 
 export const metadata = {
@@ -13,10 +11,11 @@ export const metadata = {
 
 export const dynamic = "force-dynamic";
 
-const paymentStatusLabels: Record<PaymentStatus, string> = {
-  approved: "Одобрено",
-  pending: "Ожидает",
-  review: "Проверка",
+const paymentStatusLabels = {
+  pending: "Ожидает чек",
+  payment_review: "Проверка",
+  paid: "Оплачено",
+  rejected: "Отклонено",
 };
 
 type AdminPageProps = {
@@ -33,6 +32,8 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
 
   const store = await readAgentStore();
   const latestOrders = store.orders.slice(0, 8);
+  const latestPayments = store.payments.slice(0, 8);
+  const paymentsForReview = store.payments.filter((payment) => payment.status === "pending" || payment.status === "payment_review").length;
   const adminHref = token ? `/admin?token=${encodeURIComponent(token)}` : "/admin";
 
   return (
@@ -45,10 +46,10 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
             <h1>Операции платформы</h1>
             <p className="page-lede">Скрытая служебная зона для OpenClaw-заказов, оплат, шаблонов и опубликованных ссылок.</p>
           </div>
-          <button className="button primary" type="button">
+          <Link className="button primary" href={adminHref}>
             <RefreshCw size={16} />
             Обновить
-          </button>
+          </Link>
         </section>
 
         <section className="admin-grid">
@@ -59,8 +60,8 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
 
           <div className="app-main">
             <div className="stats-grid">
-              <article className="stat-card"><span className="eyebrow">MRR</span><strong>189k ₸</strong><p>плановая выручка месяца</p></article>
-              <article className="stat-card"><span className="eyebrow">Чеки</span><strong>5</strong><p>ждут проверки</p></article>
+              <article className="stat-card"><span className="eyebrow">MVP</span><strong>12 900 ₸</strong><p>фиксированная цена заказа</p></article>
+              <article className="stat-card"><span className="eyebrow">Чеки</span><strong>{paymentsForReview}</strong><p>ждут ручной проверки</p></article>
               <article className="stat-card"><span className="eyebrow">Шаблоны</span><strong>{store.templates.length}</strong><p>доступны для OpenClaw</p></article>
               <article className="stat-card"><span className="eyebrow">Agent orders</span><strong>{store.orders.length}</strong><p>созданы через API</p></article>
             </div>
@@ -102,24 +103,33 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
               <table>
                 <thead><tr><th>Приглашение</th><th>Клиент</th><th>Сумма</th><th>Статус</th><th>Действие</th></tr></thead>
                 <tbody>
-                  {payments.map((payment) => (
-                    <tr key={payment.invite}>
-                      <td>{payment.invite}</td>
-                      <td>{payment.client}</td>
-                      <td>{payment.amount}</td>
-                      <td>
-                        <span className={`status ${payment.status}`}>
-                          {paymentStatusLabels[payment.status]}
-                        </span>
-                      </td>
-                      <td>
-                        <button className="small-action" type="button">
-                          <Check size={14} />
-                          Approve
-                        </button>
-                      </td>
+                  {latestPayments.length ? (
+                    latestPayments.map((payment) => (
+                      <tr key={payment.id}>
+                        <td>{payment.invitationId ?? payment.orderId ?? payment.id.slice(0, 12)}</td>
+                        <td>{payment.customerPhone ?? "-"}</td>
+                        <td>{formatPrice(payment.amount)}</td>
+                        <td>
+                          <span className={`status ${payment.status}`}>
+                            {paymentStatusLabels[payment.status]}
+                          </span>
+                        </td>
+                        <td>
+                          {payment.receiptUrls[0] ? (
+                            <a className="small-action" href={payment.receiptUrls[0]} rel="noreferrer" target="_blank">
+                              Открыть чек
+                            </a>
+                          ) : (
+                            "Нет чека"
+                          )}
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={5}>Пока нет чеков на проверку.</td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
             </section>
@@ -129,11 +139,11 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
               <table>
                 <thead><tr><th>Название</th><th>Категория</th><th>Тариф</th></tr></thead>
                 <tbody>
-                  {templates.length ? (
-                    templates.map((template) => (
+                  {store.templates.length ? (
+                    store.templates.map((template) => (
                       <tr key={template.id}>
-                        <td>{template.title}</td>
-                        <td>{template.category}</td>
+                        <td>{template.name}</td>
+                        <td>{template.toiType}</td>
                         <td>{template.tariff}</td>
                       </tr>
                     ))
@@ -170,4 +180,8 @@ async function hasAdminAccess(queryToken?: string) {
 
 function firstParam(value: string | string[] | undefined) {
   return Array.isArray(value) ? value[0] : value;
+}
+
+function formatPrice(price: number) {
+  return new Intl.NumberFormat("ru-KZ").format(price) + " ₸";
 }

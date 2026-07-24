@@ -5,7 +5,6 @@ import {
   AgentConversationState,
   AgentOrder,
   AgentStore,
-  AgentTariff,
   AgentTemplate,
   createSlug,
   createOrderFromPayload,
@@ -14,7 +13,6 @@ import {
   mergeInvitationFields,
   missingRequiredFields,
   normalizeLanguage,
-  normalizeTariff,
   updateAgentStore,
 } from "@/lib/agent-store";
 
@@ -44,7 +42,7 @@ export type OpenClawMessageResult = {
   quick_replies?: string[];
 };
 
-const categories = ["Свадьба", "Қыз ұзату", "Бесік той", "Тұсаукесер", "Сүндет той", "Юбилей"];
+const categories = ["Свадьба", "Қыз ұзату", "Құдалық"];
 
 export async function handleOpenClawMessage(payload: OpenClawMessagePayload): Promise<OpenClawMessageResult> {
   return updateAgentStore((store) => handleMessage(store, payload));
@@ -97,8 +95,20 @@ function handleMessage(store: AgentStore, payload: OpenClawMessagePayload): Open
 
   if (conversation.state === "waiting_payment" && mediaUrls.length) {
     if (order) {
+      const now = new Date().toISOString();
       order.status = "payment_review";
-      order.updatedAt = new Date().toISOString();
+      order.updatedAt = now;
+      store.payments.unshift({
+        id: `pay_${randomUUID()}`,
+        orderId: order.id,
+        customerPhone: order.customerPhone,
+        amount: order.price,
+        method: "kaspi_manual",
+        status: "payment_review",
+        receiptUrls: mediaUrls,
+        createdAt: now,
+        updatedAt: now,
+      });
       addActionLog(store, "payment_receipt_received", order.id, {
         media_urls: mediaUrls,
         media_type: payload.media_type ?? payload.mediaType,
@@ -110,6 +120,38 @@ function handleMessage(store: AgentStore, payload: OpenClawMessagePayload): Open
   }
 
   if (!order) {
+    const selectedFromDemo = parseTemplateCodeFromText(store, text);
+
+    if (selectedFromDemo) {
+      const createdOrder = createOrderFromPayload({
+        phone: phone ?? chatId,
+        customer_name: payload.name,
+        toi_type: selectedFromDemo.toiType,
+        template_id: selectedFromDemo.id,
+        language: "kz_ru",
+        tariff: "fixed",
+        contact_phone: phone,
+      });
+
+      createdOrder.conversationId = conversation.id;
+      createdOrder.templateId = selectedFromDemo.id;
+      createdOrder.price = getTariffPrice("fixed");
+      store.orders.unshift(createdOrder);
+      conversation.currentOrderId = createdOrder.id;
+      conversation.state = "collecting_names";
+      addActionLog(store, "openclaw_order_started_from_demo", createdOrder.id, {
+        text,
+        chat_id: chatId,
+        template_id: selectedFromDemo.id,
+      });
+
+      return reply(
+        conversation,
+        createdOrder,
+        `Дизайн выбран: ${selectedFromDemo.name}.\nТеперь напишите имена для приглашения. Например: "Аян и Мадина".`,
+      );
+    }
+
     const toiType = parseToiType(text);
 
     if (!toiType) {
@@ -122,11 +164,12 @@ function handleMessage(store: AgentStore, payload: OpenClawMessagePayload): Open
       customer_name: payload.name,
       toi_type: toiType,
       language: "kz_ru",
-      tariff: "standard",
+      tariff: "fixed",
       contact_phone: phone,
     });
 
     createdOrder.conversationId = conversation.id;
+    createdOrder.price = getTariffPrice("fixed");
     store.orders.unshift(createdOrder);
     conversation.currentOrderId = createdOrder.id;
     conversation.state = "collecting_names";
@@ -181,23 +224,16 @@ function handleMessage(store: AgentStore, payload: OpenClawMessagePayload): Open
 
     case "collecting_language":
       order.language = normalizeLanguage(parseLanguage(text));
-      conversation.state = "choosing_tariff";
+      order.tariff = "fixed";
+      order.price = getTariffPrice("fixed");
+      conversation.state = order.templateId ? "collecting_slug" : "choosing_template";
       touchOrder(order);
-      return reply(conversation, order, tariffQuestion(), ["Lite", "Standard", "Premium", "Custom"]);
 
-    case "choosing_tariff": {
-      const tariff = parseTariff(text);
-
-      if (!tariff) {
-        return reply(conversation, order, tariffQuestion(), ["Lite", "Standard", "Premium", "Custom"]);
+      if (order.templateId) {
+        return reply(conversation, order, linkNameQuestion(order), ["Без разницы", "arman-aruzhan", "aidos-madina"]);
       }
 
-      order.tariff = tariff;
-      order.price = getTariffPrice(tariff);
-      conversation.state = "choosing_template";
-      touchOrder(order);
       return reply(conversation, order, templateQuestion(store, order), templateNames(store, order));
-    }
 
     case "choosing_template": {
       const template = parseTemplate(store, order, text);
@@ -330,11 +366,7 @@ function getOrCreateConversation(
 }
 
 function categoryQuestion() {
-  return "Салем! Какой той делаем?\n1. Свадьба\n2. Қыз ұзату\n3. Бесік той\n4. Тұсаукесер\n5. Сүндет той\n6. Юбилей";
-}
-
-function tariffQuestion() {
-  return "Выберите тариф:\n1. Lite — 4 990 ₸\n2. Standard — 8 990 ₸\n3. Premium — 12 900 ₸\n4. Custom — от 20 000 ₸";
+  return "Сәлеметсіз бе! Какой той делаем?\n1. Свадьба\n2. Қыз ұзату\n3. Құдалық";
 }
 
 function templateQuestion(store: AgentStore, order: AgentOrder) {
@@ -369,7 +401,7 @@ function confirmationText(order: AgentOrder, template?: AgentTemplate) {
     `Зал: ${order.fields.venueName ?? "-"}`,
     `Адрес/карта: ${order.fields.address ?? order.fields.mapLink ?? "-"}`,
     `Язык: ${order.language}`,
-    `Тариф: ${order.tariff} (${formatPrice(order.price)})`,
+    `Стоимость: ${formatPrice(order.price)}`,
     `Шаблон: ${template?.name ?? order.templateId ?? "-"}`,
     `Ссылка: ${publicBaseUrl()}/invite/${slug}`,
     "",
@@ -408,10 +440,7 @@ function parseToiType(text: string) {
 
   if (normalized === "1" || normalized.includes("svad") || normalized.includes("свад") || normalized.includes("уилен") || normalized.includes("үйлен")) return "Свадьба";
   if (normalized === "2" || normalized.includes("uzatu") || normalized.includes("ұзату") || normalized.includes("узату")) return "Қыз ұзату";
-  if (normalized === "3" || normalized.includes("besik") || normalized.includes("бес")) return "Бесік той";
-  if (normalized === "4" || normalized.includes("tusau") || normalized.includes("тұсау") || normalized.includes("туса")) return "Тұсаукесер";
-  if (normalized === "5" || normalized.includes("sundet") || normalized.includes("сүндет") || normalized.includes("сундет")) return "Сүндет той";
-  if (normalized === "6" || normalized.includes("юб") || normalized.includes("мерейт") || normalized.includes("mere")) return "Юбилей";
+  if (normalized === "3" || normalized.includes("qudalyk") || normalized.includes("kudalyk") || normalized.includes("кудалык") || normalized.includes("құдалық") || normalized.includes("кұдалық")) return "Құдалық";
 
   return undefined;
 }
@@ -424,17 +453,6 @@ function parseLanguage(text: string) {
   return "kz_ru";
 }
 
-function parseTariff(text: string): AgentTariff | undefined {
-  const normalized = normalizeForMatch(text);
-
-  if (normalized === "1" || normalized.includes("lite") || normalized.includes("лайт")) return "lite";
-  if (normalized === "2" || normalized.includes("standard") || normalized.includes("стандарт")) return "standard";
-  if (normalized === "3" || normalized.includes("premium") || normalized.includes("прем")) return "premium";
-  if (normalized === "4" || normalized.includes("custom") || normalized.includes("кастом") || normalized.includes("индив")) return "custom";
-
-  return undefined;
-}
-
 function parseTemplate(store: AgentStore, order: AgentOrder, text: string) {
   const templates = templatesForOrder(store, order);
   const normalized = normalizeForMatch(text);
@@ -444,7 +462,12 @@ function parseTemplate(store: AgentStore, order: AgentOrder, text: string) {
     return templates[number - 1];
   }
 
-  return templates.find((template) => normalizeForMatch(template.name).includes(normalized) || normalized.includes(normalizeForMatch(template.name)));
+  return templates.find(
+    (template) =>
+      normalizeForMatch(template.id) === normalized ||
+      normalizeForMatch(template.name).includes(normalized) ||
+      normalized.includes(normalizeForMatch(template.name)),
+  );
 }
 
 function parseCustomSlug(text: string) {
@@ -460,7 +483,7 @@ function parseCustomSlug(text: string) {
 function templatesForOrder(store: AgentStore, order: AgentOrder) {
   const normalizedToi = normalizeForMatch(order.toiType);
   const matched = store.templates.filter((template) => template.isActive && normalizeForMatch(template.toiType) === normalizedToi);
-  return matched.length ? matched : store.templates.filter((template) => template.isActive).slice(0, 3);
+  return matched;
 }
 
 function templateNames(store: AgentStore, order: AgentOrder) {
@@ -471,8 +494,23 @@ function selectedTemplate(store: AgentStore, order: AgentOrder) {
   return store.templates.find((template) => template.id === order.templateId);
 }
 
+function parseTemplateCodeFromText(store: AgentStore, text: string) {
+  const normalized = normalizeForMatch(text);
+  const code = text.match(/(?:коды|код|code)\s*:\s*([a-z0-9-]+)/i)?.[1] ?? text.match(/\/demo\/([a-z0-9-]+)/i)?.[1];
+  const templateId = code ? normalizeForMatch(code) : undefined;
+
+  return store.templates.find((template) => {
+    if (!template.isActive) {
+      return false;
+    }
+
+    const normalizedId = normalizeForMatch(template.id);
+    return normalizedId === templateId || normalized.includes(normalizedId);
+  });
+}
+
 function touchOrder(order: AgentOrder) {
-  order.status = order.status === "new" ? "collecting" : order.status;
+  order.status = order.status === "collecting_data" ? "collecting_data" : order.status;
   order.updatedAt = new Date().toISOString();
 }
 

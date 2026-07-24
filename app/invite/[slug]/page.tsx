@@ -11,7 +11,7 @@ export const dynamic = "force-dynamic";
 
 export default async function InvitePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const storedInvitation = findAgentInvitationBySlug(slug);
+  const storedInvitation = await findAgentInvitationBySlug(slug);
   const currentInvitation =
     storedInvitation
       ? getPublicInviteData(storedInvitation)

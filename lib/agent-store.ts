@@ -1,16 +1,14 @@
 import { randomUUID } from "node:crypto";
-import { readFileSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { templates as catalogTemplates } from "@/lib/data";
+import { isSupabaseConfigured, supabaseRest } from "@/lib/supabase-server";
 
 export type AgentLanguage = "kz" | "ru" | "kz_ru";
-export type AgentTariff = "lite" | "standard" | "premium" | "custom";
+export type AgentTariff = "fixed";
 export type AgentOrderStatus =
-  | "new"
-  | "collecting"
-  | "draft"
-  | "waiting_approval"
+  | "collecting_data"
+  | "preview"
   | "waiting_payment"
   | "payment_review"
   | "paid"
@@ -40,7 +38,6 @@ export type AgentConversationState =
   | "collecting_venue"
   | "collecting_address"
   | "collecting_language"
-  | "choosing_tariff"
   | "choosing_template"
   | "collecting_slug"
   | "collecting_contact"
@@ -129,6 +126,20 @@ export type AgentRsvpResponse = {
   createdAt: string;
 };
 
+export type AgentPayment = {
+  id: string;
+  orderId?: string;
+  invitationId?: string;
+  customerPhone?: string;
+  amount: number;
+  method: "kaspi_manual";
+  status: "pending" | "payment_review" | "paid" | "rejected";
+  receiptUrls: string[];
+  reviewerNote?: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
 export type AgentActionLog = {
   id: string;
   action: string;
@@ -143,24 +154,21 @@ export type AgentStore = {
   conversations: AgentConversation[];
   orders: AgentOrder[];
   invitations: AgentInvitation[];
+  payments: AgentPayment[];
   rsvpResponses: AgentRsvpResponse[];
   actionLogs: AgentActionLog[];
 };
 
 const storeFile = path.join(process.cwd(), "data", "dev-store.json");
+const mvpFixedPrice = Number(process.env.MVP_FIXED_PRICE ?? 12900);
 
 const tariffPrices: Record<AgentTariff, number> = {
-  lite: 4990,
-  standard: 8990,
-  premium: 12900,
-  custom: 20000,
+  fixed: Number.isFinite(mvpFixedPrice) && mvpFixedPrice > 0 ? mvpFixedPrice : 12900,
 };
 
 const validOrderStatuses: AgentOrderStatus[] = [
-  "new",
-  "collecting",
-  "draft",
-  "waiting_approval",
+  "collecting_data",
+  "preview",
   "waiting_payment",
   "payment_review",
   "paid",
@@ -176,13 +184,7 @@ export function getTariffPrice(tariff: AgentTariff) {
 }
 
 export function normalizeTariff(value: unknown): AgentTariff {
-  const tariff = typeof value === "string" ? value.toLowerCase().trim() : "";
-
-  if (tariff === "lite" || tariff === "standard" || tariff === "premium" || tariff === "custom") {
-    return tariff;
-  }
-
-  return "standard";
+  return "fixed";
 }
 
 export function normalizeLanguage(value: unknown): AgentLanguage {
@@ -286,6 +288,10 @@ export function mergeInvitationFields(current: InvitationFields, next: Invitatio
 }
 
 export async function readAgentStore(): Promise<AgentStore> {
+  if (isSupabaseConfigured()) {
+    return readSupabaseAgentStore();
+  }
+
   try {
     const raw = await readFile(storeFile, "utf8");
     return normalizeStore(JSON.parse(raw) as Partial<AgentStore>);
@@ -298,24 +304,15 @@ export async function readAgentStore(): Promise<AgentStore> {
   }
 }
 
-export function findAgentInvitationBySlug(slug: string) {
-  try {
-    const raw = readFileSync(storeFile, "utf8");
-    const store = normalizeStore(JSON.parse(raw) as Partial<AgentStore>);
-    return store.invitations.find((invitation) => invitation.slug === slug) ?? null;
-  } catch (error) {
-    if (isFileMissing(error)) {
-      return null;
-    }
-
-    throw error;
-  }
+export async function findAgentInvitationBySlug(slug: string) {
+  const store = await readAgentStore();
+  return store.invitations.find((invitation) => invitation.slug === slug) ?? null;
 }
 
 export async function updateAgentStore<T>(mutator: (store: AgentStore) => T): Promise<T> {
   const store = await readAgentStore();
   const result = mutator(store);
-  await writeAgentStore(store);
+  await persistAgentStore(store);
   return result;
 }
 
@@ -341,7 +338,7 @@ export function createOrderFromPayload(payload: Record<string, unknown>): AgentO
     customerName: pickString(payload, ["name", "customer_name", "customerName"]),
     partnerId: pickString(payload, ["partner_id", "partnerId"]),
     conversationId: pickString(payload, ["conversation_id", "conversationId", "chat_id", "chatId"]),
-    status: "collecting",
+    status: "collecting_data",
     toiType,
     tariff,
     templateId: pickString(payload, ["template_id", "templateId"]),
@@ -411,7 +408,7 @@ export function createOrUpdateDraftInvitation(store: AgentStore, orderId: string
     store.invitations.unshift(invitation);
   }
 
-  order.status = "draft";
+  order.status = "preview";
   order.templateId = template.id;
   order.slug = slug;
   order.updatedAt = now;
@@ -456,7 +453,7 @@ function createInitialStore(): AgentStore {
       toiType: template.category,
       name: template.title,
       style: template.tags.includes("premium") || template.tariff === "VIP" ? "luxury" : template.tags.includes("simple") ? "minimal" : index % 2 === 0 ? "classic" : "modern",
-      tariff: template.tariff === "Free" ? "lite" : template.tariff === "Standard" ? "standard" : template.tariff === "Premium" ? "premium" : "custom",
+      tariff: "fixed",
       previewImage: "",
       componentKey: `${pascalCase(template.id)}Template`,
       isActive: true,
@@ -465,6 +462,7 @@ function createInitialStore(): AgentStore {
     conversations: [],
     orders: [],
     invitations: [],
+    payments: [],
     rsvpResponses: [],
     actionLogs: [],
   };
@@ -488,9 +486,336 @@ function normalizeStore(store: Partial<AgentStore>): AgentStore {
     conversations: Array.isArray(store.conversations) ? store.conversations : [],
     orders: Array.isArray(store.orders) ? store.orders : [],
     invitations: Array.isArray(store.invitations) ? store.invitations : [],
+    payments: Array.isArray(store.payments) ? store.payments : [],
     rsvpResponses: Array.isArray(store.rsvpResponses) ? store.rsvpResponses : [],
     actionLogs: Array.isArray(store.actionLogs) ? store.actionLogs : [],
   };
+}
+
+type SupabaseTemplateRow = {
+  id: string;
+  toi_type: string;
+  name: string;
+  style: AgentTemplate["style"];
+  tariff: AgentTariff;
+  preview_image: string | null;
+  component_key: string;
+  is_active: boolean;
+  created_at: string;
+};
+
+type SupabaseConversationRow = {
+  id: string;
+  channel: AgentConversation["channel"];
+  external_chat_id: string;
+  customer_phone: string | null;
+  customer_name: string | null;
+  current_order_id: string | null;
+  state: AgentConversationState;
+  created_at: string;
+  updated_at: string;
+  last_message_at: string;
+};
+
+type SupabaseOrderRow = {
+  id: string;
+  customer_phone: string;
+  customer_name: string | null;
+  partner_id: string | null;
+  conversation_id: string | null;
+  status: AgentOrderStatus;
+  toi_type: string;
+  tariff: AgentTariff;
+  template_id: string | null;
+  slug: string | null;
+  price: number;
+  language: AgentLanguage;
+  source: AgentOrder["source"];
+  fields: InvitationFields | null;
+  handoff_reason: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+type SupabaseInvitationRow = {
+  id: string;
+  order_id: string;
+  template_id: string;
+  slug: string;
+  status: AgentInvitationStatus;
+  title: string;
+  language: AgentLanguage;
+  data: InvitationFields | null;
+  created_at: string;
+  updated_at: string;
+  published_at: string | null;
+};
+
+type SupabasePaymentRow = {
+  id: string;
+  order_id: string | null;
+  invitation_id: string | null;
+  customer_phone: string | null;
+  amount: number;
+  method: AgentPayment["method"];
+  status: AgentPayment["status"];
+  receipt_urls: string[] | null;
+  reviewer_note: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+async function readSupabaseAgentStore(): Promise<AgentStore> {
+  const [templateRows, conversationRows, orderRows, invitationRows, paymentRows] = await Promise.all([
+    selectSupabaseRows<SupabaseTemplateRow>("templates"),
+    selectSupabaseRows<SupabaseConversationRow>("conversations"),
+    selectSupabaseRows<SupabaseOrderRow>("orders"),
+    selectSupabaseRows<SupabaseInvitationRow>("invitations"),
+    selectSupabaseRows<SupabasePaymentRow>("payments"),
+  ]);
+
+  const store = normalizeStore({
+    templates: templateRows.map(rowToTemplate),
+    conversations: conversationRows.map(rowToConversation),
+    orders: orderRows.map(rowToOrder),
+    invitations: invitationRows.map(rowToInvitation),
+    payments: paymentRows.map(rowToPayment),
+    rsvpResponses: [],
+    actionLogs: [],
+  });
+
+  if (!templateRows.length) {
+    await upsertSupabaseRows("templates", store.templates.map(templateToRow));
+  }
+
+  return store;
+}
+
+async function writeSupabaseAgentStore(store: AgentStore) {
+  await upsertSupabaseRows("templates", store.templates.map(templateToRow));
+  await upsertSupabaseRows("conversations", store.conversations.map(conversationToRow));
+  await upsertSupabaseRows("orders", store.orders.map(orderToRow));
+  await upsertSupabaseRows("invitations", store.invitations.map(invitationToRow));
+  await upsertSupabaseRows("payments", store.payments.map(paymentToRow));
+}
+
+async function selectSupabaseRows<T>(table: string): Promise<T[]> {
+  return supabaseRest<T[]>(`${table}?select=*`);
+}
+
+async function upsertSupabaseRows(table: string, rows: Array<Record<string, unknown>>) {
+  if (!rows.length) {
+    return;
+  }
+
+  await supabaseRest(`${table}?on_conflict=id`, {
+    method: "POST",
+    headers: {
+      Prefer: "resolution=merge-duplicates,return=minimal",
+    },
+    body: JSON.stringify(rows),
+  });
+}
+
+function rowToTemplate(row: SupabaseTemplateRow): AgentTemplate {
+  return {
+    id: row.id,
+    toiType: row.toi_type,
+    name: row.name,
+    style: row.style,
+    tariff: normalizeTariff(row.tariff),
+    previewImage: row.preview_image ?? "",
+    componentKey: row.component_key,
+    isActive: row.is_active,
+    createdAt: row.created_at,
+  };
+}
+
+function templateToRow(template: AgentTemplate): Record<string, unknown> {
+  return {
+    id: template.id,
+    toi_type: template.toiType,
+    name: template.name,
+    style: template.style,
+    tariff: template.tariff,
+    preview_image: template.previewImage || null,
+    component_key: template.componentKey,
+    is_active: template.isActive,
+    created_at: template.createdAt,
+  };
+}
+
+function rowToConversation(row: SupabaseConversationRow): AgentConversation {
+  return {
+    id: row.id,
+    channel: row.channel,
+    externalChatId: row.external_chat_id,
+    customerPhone: row.customer_phone ?? undefined,
+    customerName: row.customer_name ?? undefined,
+    currentOrderId: row.current_order_id ?? undefined,
+    state: row.state,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+    lastMessageAt: row.last_message_at,
+  };
+}
+
+function conversationToRow(conversation: AgentConversation): Record<string, unknown> {
+  return {
+    id: conversation.id,
+    channel: conversation.channel,
+    external_chat_id: conversation.externalChatId,
+    customer_phone: conversation.customerPhone ?? null,
+    customer_name: conversation.customerName ?? null,
+    current_order_id: conversation.currentOrderId ?? null,
+    state: conversation.state,
+    created_at: conversation.createdAt,
+    updated_at: conversation.updatedAt,
+    last_message_at: conversation.lastMessageAt,
+  };
+}
+
+function rowToOrder(row: SupabaseOrderRow): AgentOrder {
+  return {
+    id: row.id,
+    customerPhone: row.customer_phone,
+    customerName: row.customer_name ?? undefined,
+    partnerId: row.partner_id ?? undefined,
+    conversationId: row.conversation_id ?? undefined,
+    status: normalizeOrderStatus(row.status) ?? "collecting_data",
+    toiType: row.toi_type,
+    tariff: normalizeTariff(row.tariff),
+    templateId: row.template_id ?? undefined,
+    slug: row.slug ?? undefined,
+    price: row.price,
+    language: normalizeLanguage(row.language),
+    source: row.source,
+    fields: normalizeInvitationFields(objectFrom(row.fields)),
+    handoffReason: row.handoff_reason ?? undefined,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
+
+function orderToRow(order: AgentOrder): Record<string, unknown> {
+  return {
+    id: order.id,
+    customer_phone: order.customerPhone,
+    customer_name: order.customerName ?? null,
+    partner_id: order.partnerId ?? null,
+    conversation_id: order.conversationId ?? null,
+    status: order.status,
+    toi_type: order.toiType,
+    tariff: order.tariff,
+    template_id: order.templateId ?? null,
+    slug: order.slug ?? null,
+    price: order.price,
+    language: order.language,
+    source: order.source,
+    fields: order.fields,
+    handoff_reason: order.handoffReason ?? null,
+    created_at: order.createdAt,
+    updated_at: order.updatedAt,
+  };
+}
+
+function rowToInvitation(row: SupabaseInvitationRow): AgentInvitation {
+  const fields = normalizeInvitationFields(objectFrom(row.data));
+
+  return {
+    id: row.id,
+    orderId: row.order_id,
+    templateId: row.template_id,
+    slug: row.slug,
+    status: row.status,
+    title: row.title,
+    language: normalizeLanguage(row.language),
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+    publishedAt: row.published_at ?? undefined,
+    ...fields,
+  };
+}
+
+function invitationToRow(invitation: AgentInvitation): Record<string, unknown> {
+  return {
+    id: invitation.id,
+    order_id: invitation.orderId,
+    template_id: invitation.templateId,
+    slug: invitation.slug,
+    status: invitation.status,
+    title: invitation.title,
+    language: invitation.language,
+    data: invitationFieldsFromInvitation(invitation),
+    created_at: invitation.createdAt,
+    updated_at: invitation.updatedAt,
+    published_at: invitation.publishedAt ?? null,
+  };
+}
+
+function rowToPayment(row: SupabasePaymentRow): AgentPayment {
+  return {
+    id: row.id,
+    orderId: row.order_id ?? undefined,
+    invitationId: row.invitation_id ?? undefined,
+    customerPhone: row.customer_phone ?? undefined,
+    amount: row.amount,
+    method: row.method,
+    status: row.status,
+    receiptUrls: row.receipt_urls ?? [],
+    reviewerNote: row.reviewer_note ?? undefined,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
+
+function paymentToRow(payment: AgentPayment): Record<string, unknown> {
+  return {
+    id: payment.id,
+    order_id: payment.orderId ?? null,
+    invitation_id: payment.invitationId ?? null,
+    customer_phone: payment.customerPhone ?? null,
+    amount: payment.amount,
+    method: payment.method,
+    status: payment.status,
+    receipt_urls: payment.receiptUrls,
+    reviewer_note: payment.reviewerNote ?? null,
+    created_at: payment.createdAt,
+    updated_at: payment.updatedAt,
+  };
+}
+
+function invitationFieldsFromInvitation(invitation: AgentInvitation): InvitationFields {
+  return {
+    hostNames: invitation.hostNames,
+    parentsNames: invitation.parentsNames,
+    date: invitation.date,
+    time: invitation.time,
+    venueName: invitation.venueName,
+    address: invitation.address,
+    mapLink: invitation.mapLink,
+    contactPhone: invitation.contactPhone,
+    whatsappPhone: invitation.whatsappPhone,
+    musicUrl: invitation.musicUrl,
+    heroPhotoUrl: invitation.heroPhotoUrl,
+    galleryUrls: invitation.galleryUrls ?? [],
+    customText: invitation.customText,
+    programItems: invitation.programItems ?? [],
+    dressCode: invitation.dressCode,
+    rsvpEnabled: invitation.rsvpEnabled,
+    wishesEnabled: invitation.wishesEnabled,
+    privacyMode: invitation.privacyMode,
+    password: invitation.password,
+  };
+}
+
+async function persistAgentStore(store: AgentStore) {
+  if (isSupabaseConfigured()) {
+    await writeSupabaseAgentStore(store);
+    return;
+  }
+
+  await writeAgentStore(store);
 }
 
 async function writeAgentStore(store: AgentStore) {

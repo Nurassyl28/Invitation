@@ -12,15 +12,15 @@ export type Template = {
 
 export type PaymentStatus = "approved" | "pending" | "review";
 
-export const categories = [
+export const MVP_FIXED_PRICE = 12900;
+
+export const mvpCategories = [
   "Свадьба",
   "Қыз ұзату",
   "Құдалық",
-  "Бесік той",
-  "Тұсаукесер",
-  "Сүндет той",
-  "Юбилей",
-];
+] as const;
+
+export const categories = [...mvpCategories];
 
 export const templates: Template[] = [
   {

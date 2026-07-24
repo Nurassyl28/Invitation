@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { InvitationRenderer } from "@/components/invitation-renderer";
 import { getDemoInvite } from "@/lib/demo-invitations";
+import { templates } from "@/lib/data";
 
 export const dynamic = "force-static";
 
@@ -25,6 +26,15 @@ export default async function DemoInvitePage({ params }: { params: Promise<{ tem
 
   const hasFixedTemplateNav = ["qyz-uzatu-anel", "wedding-emerald-envelope", "wedding-classic-gold", "wedding-emerald-card", "wedding-editorial-istara", "kudalyk-gold-mobile"].includes(demo.templateId ?? "");
   const hideDemoBackLink = demo.templateId === "wedding-editorial-istara";
+  const template = templates.find((item) => item.id === templateId);
+  const demoUrl = `${publicBaseUrl()}/demo/${templateId}`;
+  const orderText = [
+    "Сәлеметсіз бе! Осы дизайнға тапсырыс бергім келеді.",
+    "",
+    `Дизайн: ${template?.title ?? demo.type}`,
+    `Коды: ${templateId}`,
+    `Сілтеме: ${demoUrl}`,
+  ].join("\n");
 
   return (
     <>
@@ -38,6 +48,13 @@ export default async function DemoInvitePage({ params }: { params: Promise<{ tem
         </Link>
       ) : null}
       <InvitationRenderer invite={demo} />
+      <a className="demo-order-cta" href={`https://wa.me/77056648971?text=${encodeURIComponent(orderText)}`}>
+        Осы дизайнға тапсырыс беру
+      </a>
     </>
   );
+}
+
+function publicBaseUrl() {
+  return (process.env.NEXT_PUBLIC_SITE_URL || process.env.PUBLIC_BASE_URL || "https://dellover.live").replace(/\/+$/, "");
 }
