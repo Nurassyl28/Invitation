@@ -69,10 +69,27 @@ function stringValue(value: FormDataEntryValue | null) {
 }
 
 function inviteRedirectUrl(request: Request, slug: string, status: string) {
-  return new URL(`/invite/${encodeURIComponent(slug)}?rsvp=${encodeURIComponent(status)}#rsvp`, request.url);
+  return new URL(`/invite/${encodeURIComponent(slug)}?rsvp=${encodeURIComponent(status)}#rsvp`, publicBaseUrl(request));
 }
 
 function demoRedirectUrl(request: Request, slug: string) {
   const templateId = slug.replace(/^demo-/, "");
-  return new URL(`/demo/${encodeURIComponent(templateId)}?rsvp=demo#rsvp`, request.url);
+  return new URL(`/demo/${encodeURIComponent(templateId)}?rsvp=demo#rsvp`, publicBaseUrl(request));
+}
+
+function publicBaseUrl(request: Request) {
+  const configured = process.env.NEXT_PUBLIC_SITE_URL || process.env.PUBLIC_BASE_URL;
+
+  if (configured) {
+    return configured.replace(/\/+$/, "");
+  }
+
+  const forwardedHost = request.headers.get("x-forwarded-host");
+  const forwardedProto = request.headers.get("x-forwarded-proto") ?? "https";
+
+  if (forwardedHost) {
+    return `${forwardedProto}://${forwardedHost}`.replace(/\/+$/, "");
+  }
+
+  return new URL(request.url).origin;
 }
