@@ -87,9 +87,26 @@ export async function POST(request: Request) {
     throw error;
   }
 
-  return NextResponse.redirect(new URL(token ? `/admin?token=${encodeURIComponent(token)}` : "/admin", request.url), 303);
+  return NextResponse.redirect(new URL(token ? `/admin?token=${encodeURIComponent(token)}` : "/admin", publicBaseUrl(request)), 303);
 }
 
 function stringValue(value: FormDataEntryValue | null) {
   return typeof value === "string" && value.trim() ? value.trim() : undefined;
+}
+
+function publicBaseUrl(request: Request) {
+  const configured = process.env.NEXT_PUBLIC_SITE_URL || process.env.PUBLIC_BASE_URL;
+
+  if (configured) {
+    return configured.replace(/\/+$/, "");
+  }
+
+  const forwardedHost = request.headers.get("x-forwarded-host");
+  const forwardedProto = request.headers.get("x-forwarded-proto") ?? "https";
+
+  if (forwardedHost) {
+    return `${forwardedProto}://${forwardedHost}`.replace(/\/+$/, "");
+  }
+
+  return new URL(request.url).origin;
 }

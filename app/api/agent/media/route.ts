@@ -40,12 +40,27 @@ export async function POST(request: Request) {
   const orderId = sanitizePathPart(stringValue(formData.get("order_id")) ?? stringValue(formData.get("orderId")) ?? "unassigned");
   const fileName = sanitizeFileName(file.name || "upload");
   const objectPath = `${orderId}/${Date.now()}-${randomUUID()}-${fileName}`;
-  const uploaded = await uploadSupabaseObject({
-    bucket,
-    objectPath,
-    body: file,
-    contentType: file.type || "application/octet-stream",
-  });
+  let uploaded: Awaited<ReturnType<typeof uploadSupabaseObject>>;
+
+  try {
+    uploaded = await uploadSupabaseObject({
+      bucket,
+      objectPath,
+      body: file,
+      contentType: file.type || "application/octet-stream",
+    });
+  } catch (error) {
+    console.error("Agent media upload failed", error);
+
+    return Response.json(
+      {
+        ok: false,
+        error: "media_upload_failed",
+        message: error instanceof Error ? error.message : "Media upload failed",
+      },
+      { status: 502 },
+    );
+  }
 
   return Response.json({
     ok: true,
