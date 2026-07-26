@@ -1,6 +1,6 @@
 export type AgentAuthResult =
   | { ok: true }
-  | { ok: false; status: number; error: string };
+  | { ok: false; status: number; error: string; errorCode: string };
 
 export function validateAgentAuth(request: Request): AgentAuthResult {
   const expectedKey = process.env.AGENT_API_KEY ?? (process.env.NODE_ENV === "production" ? "" : "dev-agent-key");
@@ -9,6 +9,7 @@ export function validateAgentAuth(request: Request): AgentAuthResult {
     return {
       ok: false,
       status: 500,
+      errorCode: "agent_api_key_not_configured",
       error: "AGENT_API_KEY is not configured",
     };
   }
@@ -22,6 +23,7 @@ export function validateAgentAuth(request: Request): AgentAuthResult {
     return {
       ok: false,
       status: 401,
+      errorCode: "invalid_agent_api_key",
       error: "Invalid agent API key",
     };
   }
@@ -33,7 +35,9 @@ export function agentAuthErrorResponse(result: Exclude<AgentAuthResult, { ok: tr
   return Response.json(
     {
       ok: false,
+      error_code: result.errorCode,
       error: result.error,
+      retryable: false,
     },
     { status: result.status },
   );

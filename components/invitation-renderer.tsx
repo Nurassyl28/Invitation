@@ -4,6 +4,7 @@ import { QyzUzatuInvite } from "@/components/qyz-uzatu-invite";
 import { EmeraldEnvelopeInvite } from "@/components/emerald-envelope-invite";
 import { EmeraldCardInvite } from "@/components/emerald-card-invite";
 import { EditorialWeddingInvite } from "@/components/editorial-wedding-invite";
+import { InvitationAudio } from "@/components/invitation-audio";
 import { KudalykGoldInvite } from "@/components/kudalyk-gold-invite";
 
 export type PublicInviteView = {
@@ -28,6 +29,7 @@ export type PublicInviteView = {
   whatsappPhone?: string;
   rsvpEnabled?: boolean;
   wishesEnabled?: boolean;
+  previewImage?: string;
 };
 
 type InviteTheme = {
@@ -221,6 +223,7 @@ export function InvitationRenderer({ invite }: { invite: PublicInviteView }) {
           <span className="toi-section-label">Music</span>
           <h2>{invite.musicUrl ? "Музыка дайын" : "Музыкалық атмосфера"}</h2>
           <p>{invite.musicUrl ? "Қонақтар шақыруды музыкамен ашады." : "Тарифке қарай музыка қосуға болады."}</p>
+          <InvitationAudio src={invite.musicUrl} />
         </div>
         <div className="toi-equalizer" aria-hidden="true">
           <span />
@@ -433,6 +436,7 @@ function WeddingClassicGoldInvite({ invite }: { invite: PublicInviteView }) {
         <div>
           <h2>{invite.musicUrl ? "Музыка дайын" : "Музыкалық атмосфера"}</h2>
           <p>{invite.musicUrl ? "Қонақтар шақыруды музыкамен ашады." : "Бұл блокқа клиент таңдаған ән қосылады."}</p>
+          <InvitationAudio src={invite.musicUrl} />
         </div>
         <div className="amanat-bars" aria-hidden="true">
           <span />

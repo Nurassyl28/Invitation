@@ -148,6 +148,16 @@ export type AgentActionLog = {
   createdAt: string;
 };
 
+export type AgentProcessedMessage = {
+  id: string;
+  idempotencyKey: string;
+  requestHash: string;
+  response: Record<string, unknown>;
+  createdAt: string;
+  updatedAt: string;
+  expiresAt?: string;
+};
+
 export type AgentStore = {
   version: 1;
   templates: AgentTemplate[];
@@ -156,6 +166,7 @@ export type AgentStore = {
   invitations: AgentInvitation[];
   payments: AgentPayment[];
   rsvpResponses: AgentRsvpResponse[];
+  processedMessages: AgentProcessedMessage[];
   actionLogs: AgentActionLog[];
 };
 
@@ -497,6 +508,7 @@ function createInitialStore(): AgentStore {
     invitations: [],
     payments: [],
     rsvpResponses: [],
+    processedMessages: [],
     actionLogs: [],
   };
 }
@@ -521,6 +533,7 @@ function normalizeStore(store: Partial<AgentStore>): AgentStore {
     invitations: Array.isArray(store.invitations) ? store.invitations : [],
     payments: Array.isArray(store.payments) ? store.payments : [],
     rsvpResponses: Array.isArray(store.rsvpResponses) ? store.rsvpResponses : [],
+    processedMessages: Array.isArray(store.processedMessages) ? store.processedMessages : [],
     actionLogs: Array.isArray(store.actionLogs) ? store.actionLogs : [],
   };
 }
@@ -609,14 +622,25 @@ type SupabaseRsvpResponseRow = {
   created_at: string;
 };
 
+type SupabaseProcessedMessageRow = {
+  id: string;
+  idempotency_key: string;
+  request_hash: string;
+  response: Record<string, unknown> | null;
+  created_at: string;
+  updated_at: string;
+  expires_at: string | null;
+};
+
 async function readSupabaseAgentStore(): Promise<AgentStore> {
-  const [templateRows, conversationRows, orderRows, invitationRows, paymentRows, rsvpRows] = await Promise.all([
+  const [templateRows, conversationRows, orderRows, invitationRows, paymentRows, rsvpRows, processedMessageRows] = await Promise.all([
     selectSupabaseRows<SupabaseTemplateRow>("templates"),
     selectSupabaseRows<SupabaseConversationRow>("conversations"),
     selectSupabaseRows<SupabaseOrderRow>("orders"),
     selectSupabaseRows<SupabaseInvitationRow>("invitations"),
     selectSupabaseRows<SupabasePaymentRow>("payments"),
     selectSupabaseRows<SupabaseRsvpResponseRow>("rsvp_responses"),
+    selectOptionalSupabaseRows<SupabaseProcessedMessageRow>("processed_messages"),
   ]);
 
   const store = normalizeStore({
@@ -626,6 +650,7 @@ async function readSupabaseAgentStore(): Promise<AgentStore> {
     invitations: invitationRows.map(rowToInvitation),
     payments: paymentRows.map(rowToPayment),
     rsvpResponses: rsvpRows.map(rowToRsvpResponse),
+    processedMessages: processedMessageRows.map(rowToProcessedMessage),
     actionLogs: [],
   });
 
@@ -643,10 +668,23 @@ async function writeSupabaseAgentStore(store: AgentStore) {
   await upsertSupabaseRows("invitations", store.invitations.map(invitationToRow));
   await upsertSupabaseRows("payments", store.payments.map(paymentToRow));
   await upsertSupabaseRows("rsvp_responses", store.rsvpResponses.map(rsvpResponseToRow));
+  await upsertOptionalSupabaseRows("processed_messages", store.processedMessages.map(processedMessageToRow));
 }
 
 async function selectSupabaseRows<T>(table: string): Promise<T[]> {
   return supabaseRest<T[]>(`${table}?select=*`);
+}
+
+async function selectOptionalSupabaseRows<T>(table: string): Promise<T[]> {
+  try {
+    return await selectSupabaseRows<T>(table);
+  } catch (error) {
+    if (isMissingSupabaseRelation(error)) {
+      return [];
+    }
+
+    throw error;
+  }
 }
 
 async function upsertSupabaseRows(table: string, rows: Array<Record<string, unknown>>) {
@@ -661,6 +699,16 @@ async function upsertSupabaseRows(table: string, rows: Array<Record<string, unkn
     },
     body: JSON.stringify(rows),
   });
+}
+
+async function upsertOptionalSupabaseRows(table: string, rows: Array<Record<string, unknown>>) {
+  try {
+    await upsertSupabaseRows(table, rows);
+  } catch (error) {
+    if (!isMissingSupabaseRelation(error)) {
+      throw error;
+    }
+  }
 }
 
 function rowToTemplate(row: SupabaseTemplateRow): AgentTemplate {
@@ -857,6 +905,30 @@ function rsvpResponseToRow(response: AgentRsvpResponse): Record<string, unknown>
   };
 }
 
+function rowToProcessedMessage(row: SupabaseProcessedMessageRow): AgentProcessedMessage {
+  return {
+    id: row.id,
+    idempotencyKey: row.idempotency_key,
+    requestHash: row.request_hash,
+    response: objectFrom(row.response),
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+    expiresAt: row.expires_at ?? undefined,
+  };
+}
+
+function processedMessageToRow(message: AgentProcessedMessage): Record<string, unknown> {
+  return {
+    id: message.id,
+    idempotency_key: message.idempotencyKey,
+    request_hash: message.requestHash,
+    response: message.response,
+    created_at: message.createdAt,
+    updated_at: message.updatedAt,
+    expires_at: message.expiresAt ?? null,
+  };
+}
+
 function invitationFieldsFromInvitation(invitation: AgentInvitation): InvitationFields {
   return {
     hostNames: invitation.hostNames,
@@ -905,6 +977,11 @@ function isFileMissing(error: unknown) {
 
 function errorMessage(error: unknown) {
   return error instanceof Error ? error.message : "Unknown error";
+}
+
+function isMissingSupabaseRelation(error: unknown) {
+  const message = errorMessage(error);
+  return message.includes("PGRST205") || message.includes("42P01") || message.includes("does not exist");
 }
 
 function pickString(input: Record<string, unknown>, keys: string[]) {

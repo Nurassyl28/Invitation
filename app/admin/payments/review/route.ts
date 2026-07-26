@@ -26,6 +26,8 @@ export async function POST(request: Request) {
     return Response.json({ ok: false, error: "payment_id and valid decision are required" }, { status: 400 });
   }
 
+  let publishedSlug: string | undefined;
+
   try {
     await updateAgentStore((store) => {
       const payment = store.payments.find((item) => item.id === paymentId);
@@ -48,6 +50,7 @@ export async function POST(request: Request) {
           invitation.status = "published";
           invitation.publishedAt = invitation.publishedAt ?? now;
           invitation.updatedAt = now;
+          publishedSlug = invitation.slug;
           order.status = "published";
           order.updatedAt = now;
 
@@ -87,7 +90,15 @@ export async function POST(request: Request) {
     throw error;
   }
 
-  return NextResponse.redirect(new URL(token ? `/admin?token=${encodeURIComponent(token)}` : "/admin", publicBaseUrl(request)), 303);
+  const redirectUrl = new URL("/admin", publicBaseUrl(request));
+  if (token) {
+    redirectUrl.searchParams.set("token", token);
+  }
+  if (publishedSlug) {
+    redirectUrl.searchParams.set("published", publishedSlug);
+  }
+
+  return NextResponse.redirect(redirectUrl, 303);
 }
 
 function stringValue(value: FormDataEntryValue | null) {

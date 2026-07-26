@@ -1,7 +1,8 @@
 "use client";
 
-import { Calendar, Clock, Heart, MapPin, MessageCircle, Send } from "lucide-react";
+import { Calendar, Clock, Heart, MapPin, MessageCircle, Music2, Send } from "lucide-react";
 import { useEffect, useRef, type CSSProperties } from "react";
+import { InvitationAudio } from "@/components/invitation-audio";
 import type { PublicInviteView } from "@/components/invitation-renderer";
 
 function splitProgramItem(item: string) {
@@ -91,6 +92,16 @@ export function EmeraldCardInvite({ invite }: { invite: PublicInviteView }) {
           })}
         </div>
       </section>
+
+      {invite.musicUrl ? (
+        <section className="ecard-section ecard-music" id="music" data-reveal>
+          <Music2 size={26} />
+          <span className="ecard-label">Музыка</span>
+          <h2>Музыка приглашения</h2>
+          <p>Мелодия будет доступна гостям прямо на странице.</p>
+          <InvitationAudio src={invite.musicUrl} />
+        </section>
+      ) : null}
 
       {/* VENUE / MAP */}
       <section className="ecard-section ecard-place" id="venue" data-reveal>

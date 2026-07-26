@@ -68,7 +68,11 @@ export default async function DemoTemplatesPage({ searchParams }: DemoTemplatesP
           <section className="demo-grid">
             {filteredDemos.map((demo) => (
               <article className={`demo-template-card ${demo.templateId}`} key={demo.templateId}>
-                <div className="demo-template-preview">
+                <div className={`demo-template-preview ${demo.previewImage ? "has-image" : ""}`}>
+                  {demo.previewImage ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={demo.previewImage} alt={`${demo.type} ${demo.names}`} />
+                  ) : null}
                   <span>{demo.type}</span>
                   <strong>{demo.names}</strong>
                   <small>{demo.date}</small>

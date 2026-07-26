@@ -1,7 +1,8 @@
 "use client";
 
-import { Heart, MapPin, MessageCircle, Send, Sparkles } from "lucide-react";
+import { Heart, MapPin, MessageCircle, Music2, Send, Sparkles } from "lucide-react";
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { InvitationAudio } from "@/components/invitation-audio";
 import type { PublicInviteView } from "@/components/invitation-renderer";
 
 const WAX_SEAL = "/images/wax-seal.jpg";
@@ -298,6 +299,15 @@ export function EmeraldEnvelopeInvite({ invite }: { invite: PublicInviteView }) 
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img className="ev-ill ev-ill-rings" src={ILL.rings} alt="" aria-hidden="true" />
         </section>
+
+        {invite.musicUrl ? (
+          <section className="ev-music" data-reveal>
+            <Music2 size={24} />
+            <h2>Музыка вечера</h2>
+            <p>Включите мелодию приглашения перед просмотром деталей.</p>
+            <InvitationAudio src={invite.musicUrl} />
+          </section>
+        ) : null}
 
         {/* RSVP */}
         {invite.rsvpEnabled ? (

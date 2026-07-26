@@ -111,6 +111,16 @@ create table if not exists rsvp_responses (
   created_at timestamptz not null default now()
 );
 
+create table if not exists processed_messages (
+  id text primary key,
+  idempotency_key text not null unique,
+  request_hash text not null,
+  response jsonb not null default '{}'::jsonb,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  expires_at timestamptz
+);
+
 create index if not exists templates_toi_type_idx on templates(toi_type);
 create index if not exists orders_template_id_idx on orders(template_id);
 create index if not exists orders_status_idx on orders(status);
@@ -120,6 +130,7 @@ create index if not exists payments_status_idx on payments(status);
 create index if not exists payments_order_id_idx on payments(order_id);
 create index if not exists rsvp_responses_invitation_id_idx on rsvp_responses(invitation_id);
 create index if not exists rsvp_responses_created_at_idx on rsvp_responses(created_at desc);
+create index if not exists processed_messages_expires_at_idx on processed_messages(expires_at);
 
 insert into templates (id, toi_type, name, style, tariff, preview_image, component_key, is_active)
 values

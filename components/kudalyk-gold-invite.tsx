@@ -2,6 +2,7 @@
 
 import { CalendarDays, Clock3, MapPin, Menu, MessageCircle, Music2, Shirt } from "lucide-react";
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { InvitationAudio } from "@/components/invitation-audio";
 import type { PublicInviteView } from "@/components/invitation-renderer";
 
 const fallbackGallery = [
@@ -289,6 +290,16 @@ export function KudalykGoldInvite({ invite }: { invite: PublicInviteView }) {
             ))}
           </div>
         </section>
+
+        {invite.musicUrl ? (
+          <section className="kg-music" data-kg-reveal>
+            <Music2 size={28} />
+            <h2>ТОЙ ӘУЕНІ</h2>
+            <Divider />
+            <p>Қонақтар шақыруды музыкалық сүйемелдеумен ашады.</p>
+            <InvitationAudio src={invite.musicUrl} label="Әуенді тыңдау" />
+          </section>
+        ) : null}
 
         <section className="kg-gallery" data-kg-reveal>
           <h2>ҚҰДАЛЫҚ СӘТТЕРІ</h2>

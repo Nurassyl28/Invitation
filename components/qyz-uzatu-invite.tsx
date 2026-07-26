@@ -2,6 +2,7 @@
 
 import { Heart, MapPin, MessageCircle, Music2, Send, Sparkles } from "lucide-react";
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { InvitationAudio } from "@/components/invitation-audio";
 import type { PublicInviteView } from "@/components/invitation-renderer";
 
 const HERO_PHOTO = "/images/qyz-hero.jpg";
@@ -259,6 +260,7 @@ export function QyzUzatuInvite({ invite }: { invite: PublicInviteView }) {
         <div>
           <h2>Музыка</h2>
           <p>{invite.musicUrl ? "Мелодия приглашения включена." : "Здесь будет фоновая мелодия приглашения."}</p>
+          <InvitationAudio src={invite.musicUrl} />
         </div>
         <div className="qu-eq" aria-hidden="true"><span /><span /><span /><span /></div>
       </section>

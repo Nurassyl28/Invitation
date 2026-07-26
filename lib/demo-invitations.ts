@@ -4,6 +4,7 @@ import type { PublicInviteView } from "@/components/invitation-renderer";
 const demos: Record<string, Partial<PublicInviteView> & { category: string }> = {
   "wedding-emerald-envelope": {
     category: "Свадьба",
+    previewImage: "/images/envelope-open.png",
     names: "Анатолий & Ксения",
     date: "2026-10-03",
     time: "16:30",
@@ -14,6 +15,7 @@ const demos: Record<string, Partial<PublicInviteView> & { category: string }> = 
   },
   "qyz-uzatu-anel": {
     category: "Қыз ұзату",
+    previewImage: "/images/qyz-hero.jpg",
     names: "Әнел",
     date: "2026-10-24",
     time: "16:00",
@@ -24,6 +26,7 @@ const demos: Record<string, Partial<PublicInviteView> & { category: string }> = 
   },
   "wedding-classic-gold": {
     category: "Свадьба",
+    previewImage: "/images/kazakh-ornament-yurt.jpg",
     names: "Арман & Аружан",
     date: "2026-09-12",
     time: "18:30",
@@ -34,6 +37,7 @@ const demos: Record<string, Partial<PublicInviteView> & { category: string }> = 
   },
   "wedding-emerald-card": {
     category: "Свадьба",
+    previewImage: "/images/wc-castle.png",
     names: "Арман и Аружан",
     date: "12 сентября 2026",
     time: "18:30",
@@ -44,6 +48,7 @@ const demos: Record<string, Partial<PublicInviteView> & { category: string }> = 
   },
   "wedding-editorial-istara": {
     category: "Свадьба",
+    previewImage: "/istara/assets/reference.jpg",
     names: "Евгений & Мария",
     date: "2026-07-20",
     time: "17:00",
@@ -54,6 +59,7 @@ const demos: Record<string, Partial<PublicInviteView> & { category: string }> = 
   },
   "kudalyk-gold-mobile": {
     category: "Құдалық",
+    previewImage: "/images/gold-fern-ornament.png",
     names: "Айдана & Нұрсұлтан",
     parentsNames: "Қыз жақ: Асанова Болатбек, Асанова Гүлнар; Ұл жақ: Төлегенов Серік, Төлегенова Райхан",
     date: "2026-10-25",
@@ -94,6 +100,7 @@ export function getDemoInvite(templateId: string): PublicInviteView | undefined 
     dressCode: demo.dressCode,
     rsvpEnabled: true,
     wishesEnabled: true,
+    previewImage: demo.previewImage,
   };
 }
 

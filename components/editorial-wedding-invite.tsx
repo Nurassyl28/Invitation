@@ -2,6 +2,7 @@
 
 import { Calendar, Heart, MapPin, MessageCircle, Music2, Send, Sparkles } from "lucide-react";
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { InvitationAudio } from "@/components/invitation-audio";
 import type { PublicInviteView } from "@/components/invitation-renderer";
 
 const OPEN_DURATION = 1900;
@@ -286,6 +287,7 @@ export function EditorialWeddingInvite({ invite }: { invite: PublicInviteView })
             <Music2 size={24} />
             <span>Музыка</span>
             <p>Приглашение можно открыть с музыкальным сопровождением.</p>
+            <InvitationAudio src={invite.musicUrl} />
           </section>
         ) : null}
 

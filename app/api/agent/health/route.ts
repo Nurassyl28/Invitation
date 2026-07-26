@@ -1,10 +1,17 @@
+import { agentAuthErrorResponse, validateAgentAuth } from "@/lib/agent-auth";
 import { readAgentStoreSnapshot } from "@/lib/agent-store";
 import { isSupabaseConfigured, SUPABASE_STORAGE_BUCKETS } from "@/lib/supabase-server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+export async function GET(request: Request) {
+  const auth = validateAgentAuth(request);
+
+  if (!auth.ok) {
+    return agentAuthErrorResponse(auth);
+  }
+
   const snapshot = await readAgentStoreSnapshot();
   const { store } = snapshot;
 

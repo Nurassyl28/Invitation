@@ -2,9 +2,11 @@ import Link from "next/link";
 import { RefreshCw } from "lucide-react";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
+import { AdminCopyButton } from "@/components/admin-copy-button";
 import { SiteNav } from "@/components/site-nav";
 import { adminTokenFromHeaders, isValidAdminToken } from "@/lib/admin-auth";
 import { readAgentStore } from "@/lib/agent-store";
+import { createSupabaseSignedObjectUrl, SUPABASE_STORAGE_BUCKETS } from "@/lib/supabase-server";
 
 export const metadata = {
   title: "Админ-панель — Toi Invite",
@@ -20,23 +22,29 @@ const paymentStatusLabels = {
 };
 
 type AdminPageProps = {
-  searchParams: Promise<{ token?: string | string[] }>;
+  searchParams: Promise<{ token?: string | string[]; published?: string | string[] }>;
 };
 
 export default async function AdminPage({ searchParams }: AdminPageProps) {
   const params = await searchParams;
   const token = firstParam(params.token);
+  const publishedSlug = firstParam(params.published);
 
   if (!(await hasAdminAccess(token))) {
     notFound();
   }
 
   const store = await readAgentStore();
-  const latestOrders = store.orders.slice(0, 8);
-  const latestPayments = store.payments.slice(0, 8);
+  const latestOrders = store.orders.slice(0, 12);
+  const latestPayments = store.payments.slice(0, 12);
   const latestRsvpResponses = store.rsvpResponses.slice(0, 8);
   const paymentsForReview = store.payments.filter((payment) => payment.status === "pending" || payment.status === "payment_review").length;
   const adminHref = token ? `/admin?token=${encodeURIComponent(token)}` : "/admin";
+  const baseUrl = publicBaseUrl();
+  const receiptLinksByPaymentId = new Map(
+    await Promise.all(store.payments.map(async (payment) => [payment.id, await resolveReceiptLinks(payment.receiptUrls)] as const)),
+  );
+  const publishedUrl = publishedSlug ? `${baseUrl}/invite/${publishedSlug}` : "";
 
   return (
     <div className="shell">
@@ -61,6 +69,17 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
           </aside>
 
           <div className="app-main">
+            {publishedUrl ? (
+              <section className="admin-success-panel">
+                <div>
+                  <span className="eyebrow">Оплата подтверждена</span>
+                  <h2>Готовая ссылка опубликована</h2>
+                  <a href={publishedUrl} rel="noreferrer" target="_blank">{publishedUrl}</a>
+                </div>
+                <AdminCopyButton text={publishedUrl} label="Копировать ссылку" />
+              </section>
+            ) : null}
+
             <div className="stats-grid">
               <article className="stat-card"><span className="eyebrow">MVP</span><strong>12 900 ₸</strong><p>фиксированная цена заказа</p></article>
               <article className="stat-card"><span className="eyebrow">Чеки</span><strong>{paymentsForReview}</strong><p>ждут ручной проверки</p></article>
@@ -101,6 +120,145 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
               </table>
             </section>
 
+            <section className="admin-order-cards">
+              <h2>Полные карточки заказов</h2>
+              {latestOrders.length ? (
+                latestOrders.map((order) => {
+                  const template = store.templates.find((item) => item.id === order.templateId);
+                  const invitation = store.invitations.find((item) => item.orderId === order.id);
+                  const orderPayments = store.payments.filter((item) => item.orderId === order.id);
+                  const rsvpResponses = invitation
+                    ? store.rsvpResponses.filter((item) => item.invitationId === invitation.id)
+                    : [];
+                  const inviteUrl = invitation ? `${baseUrl}/invite/${invitation.slug}` : "";
+                  const photos = [order.fields.heroPhotoUrl, ...(order.fields.galleryUrls ?? [])].filter((item): item is string => Boolean(item));
+
+                  return (
+                    <article className="admin-order-card" key={order.id}>
+                      <div className="admin-order-card-head">
+                        <div>
+                          <span className="eyebrow">{order.id}</span>
+                          <h3>{order.fields.hostNames ?? "Без имён"}</h3>
+                          <p>{order.toiType} · {template?.name ?? order.templateId ?? "шаблон не выбран"}</p>
+                        </div>
+                        <span className={`status ${order.status}`}>{order.status}</span>
+                      </div>
+
+                      {inviteUrl ? (
+                        <div className="admin-copy-row">
+                          <a href={inviteUrl} rel="noreferrer" target="_blank">{inviteUrl}</a>
+                          <AdminCopyButton text={inviteUrl} label="Копировать" />
+                        </div>
+                      ) : null}
+
+                      <dl className="admin-fields-grid">
+                        <div><dt>Клиент</dt><dd>{order.customerName ?? "-"} · {order.customerPhone}</dd></div>
+                        <div><dt>Язык</dt><dd>{order.language}</dd></div>
+                        <div><dt>Дата</dt><dd>{order.fields.date ?? "-"}</dd></div>
+                        <div><dt>Время</dt><dd>{order.fields.time ?? "-"}</dd></div>
+                        <div><dt>Зал</dt><dd>{order.fields.venueName ?? "-"}</dd></div>
+                        <div><dt>Адрес</dt><dd>{order.fields.address ?? order.fields.mapLink ?? "-"}</dd></div>
+                        <div><dt>Родители</dt><dd>{order.fields.parentsNames ?? "-"}</dd></div>
+                        <div><dt>Контакт</dt><dd>{order.fields.contactPhone ?? order.fields.whatsappPhone ?? "-"}</dd></div>
+                        <div><dt>Dress code</dt><dd>{order.fields.dressCode ?? "-"}</dd></div>
+                        <div><dt>Цена</dt><dd>{formatPrice(order.price)}</dd></div>
+                      </dl>
+
+                      {order.fields.customText ? (
+                        <div className="admin-note-block">
+                          <span>Текст приглашения</span>
+                          <p>{order.fields.customText}</p>
+                        </div>
+                      ) : null}
+
+                      {order.fields.programItems?.length ? (
+                        <div className="admin-note-block">
+                          <span>Программа</span>
+                          <p>{order.fields.programItems.join(" · ")}</p>
+                        </div>
+                      ) : null}
+
+                      <div className="admin-media-grid">
+                        <section>
+                          <h4>Фото</h4>
+                          {photos.length ? (
+                            <div className="admin-photo-list">
+                              {photos.slice(0, 6).map((photo) => (
+                                // eslint-disable-next-line @next/next/no-img-element
+                                <a href={photo} key={photo} rel="noreferrer" target="_blank"><img src={photo} alt="" /></a>
+                              ))}
+                            </div>
+                          ) : (
+                            <p>Фото не загружены</p>
+                          )}
+                        </section>
+
+                        <section>
+                          <h4>Музыка</h4>
+                          {order.fields.musicUrl ? (
+                            <div className="admin-audio-box">
+                              <audio controls preload="metadata" src={order.fields.musicUrl} />
+                              <a href={order.fields.musicUrl} rel="noreferrer" target="_blank">Открыть файл</a>
+                            </div>
+                          ) : (
+                            <p>Музыка не загружена</p>
+                          )}
+                        </section>
+                      </div>
+
+                      <div className="admin-media-grid">
+                        <section>
+                          <h4>Чеки</h4>
+                          {orderPayments.length ? (
+                            <div className="admin-link-list">
+                              {orderPayments.map((payment) => {
+                                const receiptLinks = receiptLinksByPaymentId.get(payment.id) ?? [];
+
+                                return (
+                                  <div key={payment.id}>
+                                    <span className={`status ${payment.status}`}>{paymentStatusLabels[payment.status]}</span>
+                                    {receiptLinks.length ? (
+                                      receiptLinks.map((receipt, index) => (
+                                        <a href={receipt.href} key={`${payment.id}-${receipt.raw}-${index}`} rel="noreferrer" target="_blank">
+                                          Чек {index + 1}
+                                        </a>
+                                      ))
+                                    ) : (
+                                      <p>Нет ссылки на чек</p>
+                                    )}
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          ) : (
+                            <p>Оплаты нет</p>
+                          )}
+                        </section>
+
+                        <section>
+                          <h4>RSVP</h4>
+                          {rsvpResponses.length ? (
+                            <div className="admin-rsvp-list">
+                              {rsvpResponses.slice(0, 6).map((response) => (
+                                <p key={response.id}>
+                                  <strong>{response.guestName}</strong> · {response.answer} · {response.guestCount} гостей
+                                  {response.comment ? ` · ${response.comment}` : ""}
+                                </p>
+                              ))}
+                            </div>
+                          ) : (
+                            <p>Ответов гостей пока нет</p>
+                          )}
+                        </section>
+                      </div>
+                    </article>
+                  );
+                })
+              ) : (
+                <p>Пока нет заказов.</p>
+              )}
+            </section>
+
             <section className="table-panel">
               <h2>Kaspi manual flow</h2>
               <table>
@@ -118,8 +276,8 @@ export default async function AdminPage({ searchParams }: AdminPageProps) {
                           </span>
                         </td>
                         <td>
-                          {payment.receiptUrls[0] ? (
-                            <a className="small-action" href={payment.receiptUrls[0]} rel="noreferrer" target="_blank">
+                          {(receiptLinksByPaymentId.get(payment.id) ?? [])[0] ? (
+                            <a className="small-action" href={(receiptLinksByPaymentId.get(payment.id) ?? [])[0].href} rel="noreferrer" target="_blank">
                               Открыть чек
                             </a>
                           ) : (
@@ -228,4 +386,53 @@ function firstParam(value: string | string[] | undefined) {
 
 function formatPrice(price: number) {
   return new Intl.NumberFormat("ru-KZ").format(price) + " ₸";
+}
+
+function publicBaseUrl() {
+  return (process.env.NEXT_PUBLIC_SITE_URL || process.env.PUBLIC_BASE_URL || "https://dellover.live").replace(/\/+$/, "");
+}
+
+async function resolveReceiptLinks(receiptUrls: string[]) {
+  return Promise.all(
+    receiptUrls.map(async (raw) => {
+      const storageObject = parseStorageObject(raw);
+
+      if (storageObject?.bucket === SUPABASE_STORAGE_BUCKETS.paymentReceipts) {
+        try {
+          return {
+            raw,
+            href: await createSupabaseSignedObjectUrl(storageObject.bucket, storageObject.path, 3600),
+          };
+        } catch (error) {
+          console.error("Admin receipt signed URL failed", error);
+        }
+      }
+
+      return {
+        raw,
+        href: raw,
+      };
+    }),
+  );
+}
+
+function parseStorageObject(value: string) {
+  if (value.startsWith("storage://")) {
+    const withoutProtocol = value.replace(/^storage:\/\//, "");
+    const [bucket, ...pathParts] = withoutProtocol.split("/");
+    const objectPath = pathParts.join("/");
+
+    if (bucket && objectPath) {
+      return { bucket, path: objectPath };
+    }
+  }
+
+  if (value.startsWith(`${SUPABASE_STORAGE_BUCKETS.paymentReceipts}/`)) {
+    return {
+      bucket: SUPABASE_STORAGE_BUCKETS.paymentReceipts,
+      path: value.slice(`${SUPABASE_STORAGE_BUCKETS.paymentReceipts}/`.length),
+    };
+  }
+
+  return undefined;
 }

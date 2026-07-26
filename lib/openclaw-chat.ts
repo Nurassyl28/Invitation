@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import {
   addActionLog,
   AgentConversation,
@@ -19,6 +19,14 @@ import {
 export type OpenClawMessagePayload = {
   chat_id?: string;
   chatId?: string;
+  idempotency_key?: string;
+  idempotencyKey?: string;
+  message_id?: string;
+  messageId?: string;
+  webhook_id?: string;
+  webhookId?: string;
+  event_id?: string;
+  eventId?: string;
   phone?: string;
   customer_phone?: string;
   customerPhone?: string;
@@ -31,7 +39,11 @@ export type OpenClawMessagePayload = {
   mediaType?: string;
 };
 
-export type OpenClawMessageResult = {
+export type OpenClawMessageResult =
+  | OpenClawMessageSuccess
+  | OpenClawMessageFailure;
+
+export type OpenClawMessageSuccess = {
   ok: true;
   reply: string;
   state: AgentConversationState;
@@ -40,26 +52,111 @@ export type OpenClawMessageResult = {
   missing_fields?: string[];
   invitation_text?: string;
   quick_replies?: string[];
+  idempotency_key?: string;
+  idempotent?: boolean;
+};
+
+export type OpenClawMessageFailure = {
+  ok: false;
+  error_code: string;
+  error: string;
+  reply: string;
+  retryable: boolean;
+  http_status?: number;
+  missing_fields?: string[];
+  idempotency_key?: string;
 };
 
 const categories = ["Свадьба", "Қыз ұзату", "Құдалық"];
+const fallbackIdempotencyTtlMs = 10 * 60 * 1000;
+const explicitIdempotencyTtlMs = 30 * 24 * 60 * 60 * 1000;
 
 export async function handleOpenClawMessage(payload: OpenClawMessagePayload): Promise<OpenClawMessageResult> {
-  return updateAgentStore((store) => handleMessage(store, payload));
+  const idempotency = buildIdempotency(payload);
+
+  return updateAgentStore((store) => {
+    if (idempotency) {
+      const existing = store.processedMessages.find((message) => message.idempotencyKey === idempotency.key);
+
+      if (existing && existing.requestHash !== idempotency.requestHash && !isProcessedMessageExpired(existing.expiresAt)) {
+        return {
+          ok: false,
+          error_code: "idempotency_key_conflict",
+          error: "The same idempotency key was already used for a different payload.",
+          reply: "Получили повтор с другим содержимым. Передал админу для проверки, чтобы не создать дубль.",
+          retryable: false,
+          http_status: 409,
+          idempotency_key: idempotency.key,
+        };
+      }
+
+      if (existing && !isProcessedMessageExpired(existing.expiresAt)) {
+        return {
+          ...(existing.response as OpenClawMessageResult),
+          idempotency_key: idempotency.key,
+          idempotent: true,
+        };
+      }
+    }
+
+    const result = handleMessage(store, payload);
+
+    if (idempotency && result.ok) {
+      const now = new Date();
+      const expiresAt = new Date(now.getTime() + (idempotency.explicit ? explicitIdempotencyTtlMs : fallbackIdempotencyTtlMs)).toISOString();
+      const processedMessage = {
+        id: `msg_${randomUUID()}`,
+        idempotencyKey: idempotency.key,
+        requestHash: idempotency.requestHash,
+        response: result as unknown as Record<string, unknown>,
+        createdAt: now.toISOString(),
+        updatedAt: now.toISOString(),
+        expiresAt,
+      };
+
+      store.processedMessages = [
+        processedMessage,
+        ...store.processedMessages.filter((message) => message.idempotencyKey !== idempotency.key && !isProcessedMessageExpired(message.expiresAt)),
+      ].slice(0, 1000);
+
+      return {
+        ...result,
+        idempotency_key: idempotency.key,
+      };
+    }
+
+    return result;
+  });
 }
 
 function handleMessage(store: AgentStore, payload: OpenClawMessagePayload): OpenClawMessageResult {
   const text = cleanText(payload.text);
   const mediaUrls = normalizedMediaUrls(payload);
+  const mediaKind = normalizeMediaKind(payload);
   const chatId = stringValue(payload.chat_id) ?? stringValue(payload.chatId) ?? stringValue(payload.phone) ?? stringValue(payload.customer_phone) ?? stringValue(payload.customerPhone);
   const phone = stringValue(payload.phone) ?? stringValue(payload.customer_phone) ?? stringValue(payload.customerPhone);
 
   if (!chatId) {
     return {
-      ok: true,
+      ok: false,
+      error_code: "missing_identity",
+      error: "chat_id or phone is required",
       reply: "Не вижу chat_id или phone. Передайте chat_id и phone, чтобы я мог сохранить заказ.",
-      state: "handoff",
-      quick_replies: ["Передать админу"],
+      retryable: false,
+      http_status: 400,
+      missing_fields: ["chat_id_or_phone"],
+    };
+  }
+
+  if (!text && !mediaUrls.length) {
+    return {
+      ok: false,
+      error_code: "empty_message",
+      error: "text or media_urls is required",
+      reply: "Не получил текст или файл. Отправьте сообщение, фото, музыку или чек.",
+      retryable: false,
+      http_status: 400,
+      missing_fields: ["text_or_media_urls"],
     };
   }
 
@@ -117,6 +214,12 @@ function handleMessage(store: AgentStore, payload: OpenClawMessagePayload): Open
 
     conversation.state = "payment_review";
     return reply(conversation, order, "Чек получил. Передал админу на проверку. После подтверждения мы отправим финальный текст приглашения.");
+  }
+
+  if (order && mediaUrls.length && mediaKind !== "receipt") {
+    const mediaReply = attachMediaToOrder(store, order, mediaUrls, mediaKind, payload);
+
+    return reply(conversation, order, mediaReply, nextQuickReplies(conversation.state));
   }
 
   if (!order) {
@@ -214,30 +317,45 @@ function handleMessage(store: AgentStore, payload: OpenClawMessagePayload): Open
     }
 
     case "collecting_names":
+      if (!text) {
+        return reply(conversation, order, "Напишите имена для приглашения текстом. Например: “Аян и Мадина”.");
+      }
       order.fields = mergeInvitationFields(order.fields, { hostNames: text });
       conversation.state = "collecting_date";
       touchOrder(order);
       return reply(conversation, order, "Теперь напишите дату тоя. Например: 20 сентября 2026.");
 
     case "collecting_date":
+      if (!text) {
+        return reply(conversation, order, "Напишите дату тоя текстом. Например: 20 сентября 2026.");
+      }
       order.fields = mergeInvitationFields(order.fields, { date: text });
       conversation.state = "collecting_time";
       touchOrder(order);
       return reply(conversation, order, "Напишите время начала. Например: 18:00.");
 
     case "collecting_time":
+      if (!text) {
+        return reply(conversation, order, "Напишите время начала текстом. Например: 18:00.");
+      }
       order.fields = mergeInvitationFields(order.fields, { time: text });
       conversation.state = "collecting_venue";
       touchOrder(order);
       return reply(conversation, order, "Напишите название ресторана или зала.");
 
     case "collecting_venue":
+      if (!text) {
+        return reply(conversation, order, "Напишите название ресторана или зала текстом.");
+      }
       order.fields = mergeInvitationFields(order.fields, { venueName: text });
       conversation.state = "collecting_address";
       touchOrder(order);
       return reply(conversation, order, "Отправьте адрес или ссылку 2GIS/Google Maps.");
 
     case "collecting_address":
+      if (!text) {
+        return reply(conversation, order, "Отправьте адрес текстом или ссылку 2GIS/Google Maps.");
+      }
       order.fields = mergeInvitationFields(order.fields, isLink(text) ? { mapLink: text } : { address: text });
       conversation.state = "collecting_language";
       touchOrder(order);
@@ -288,6 +406,9 @@ function handleMessage(store: AgentStore, payload: OpenClawMessagePayload): Open
     }
 
     case "collecting_contact":
+      if (!text) {
+        return reply(conversation, order, "Напишите контактный номер организатора текстом.");
+      }
       order.fields = mergeInvitationFields(order.fields, { contactPhone: text });
       conversation.state = "confirming";
       touchOrder(order);
@@ -295,6 +416,14 @@ function handleMessage(store: AgentStore, payload: OpenClawMessagePayload): Open
 
     case "confirming":
       if (isYes(text)) {
+        const missing = missingRequiredFields(order.fields);
+
+        if (missing.length) {
+          conversation.state = stateForMissingField(missing[0]);
+          touchOrder(order);
+          return reply(conversation, order, missingFieldQuestion(missing[0]), nextQuickReplies(conversation.state));
+        }
+
         const invitation = createOrUpdateDraftInvitation(store, order.id, order.templateId);
         const invitationText = formatInvitationText(order, selectedTemplate(store, order));
         const inviteUrl = `${publicBaseUrl()}/invite/${invitation.slug}`;
@@ -353,6 +482,35 @@ function reply(conversation: AgentConversation, order: AgentOrder | undefined, m
     missing_fields: order ? missingRequiredFields(order.fields) : undefined,
     quick_replies: quickReplies,
   };
+}
+
+function attachMediaToOrder(store: AgentStore, order: AgentOrder, mediaUrls: string[], mediaKind: MediaKind, payload: OpenClawMessagePayload) {
+  const now = new Date().toISOString();
+  const existingGallery = order.fields.galleryUrls ?? [];
+
+  if (mediaKind === "music") {
+    order.fields = mergeInvitationFields(order.fields, { musicUrl: mediaUrls[0] });
+    touchOrder(order);
+    addActionLog(store, "openclaw_music_attached", order.id, {
+      media_urls: mediaUrls,
+      media_type: payload.media_type ?? payload.mediaType,
+    });
+
+    return "Музыку сохранил. Она будет подключена к приглашению. Можете продолжить заполнять данные.";
+  }
+
+  const [firstPhoto, ...extraPhotos] = mediaUrls;
+  order.fields = mergeInvitationFields(order.fields, {
+    heroPhotoUrl: order.fields.heroPhotoUrl ?? firstPhoto,
+    galleryUrls: [...existingGallery, ...(order.fields.heroPhotoUrl ? mediaUrls : extraPhotos)].slice(0, 12),
+  });
+  order.updatedAt = now;
+  addActionLog(store, "openclaw_photos_attached", order.id, {
+    media_urls: mediaUrls,
+    media_type: payload.media_type ?? payload.mediaType,
+  });
+
+  return "Фото сохранил. Первое фото будет главным, остальные попадут в галерею. Можете продолжить заполнять данные.";
 }
 
 function getOrCreateConversation(
@@ -554,6 +712,22 @@ function normalizedMediaUrls(payload: OpenClawMessagePayload) {
   return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string" && item.trim().length > 0) : [];
 }
 
+type MediaKind = "photo" | "music" | "receipt";
+
+function normalizeMediaKind(payload: OpenClawMessagePayload): MediaKind {
+  const value = normalizeForMatch(stringValue(payload.media_type) ?? stringValue(payload.mediaType) ?? "");
+
+  if (value.includes("music") || value.includes("audio") || value.includes("song") || value.includes("ән")) {
+    return "music";
+  }
+
+  if (value.includes("receipt") || value.includes("payment") || value.includes("check") || value.includes("kaspi") || value.includes("чек")) {
+    return "receipt";
+  }
+
+  return "photo";
+}
+
 function stringValue(value: unknown) {
   return typeof value === "string" && value.trim() ? value.trim() : undefined;
 }
@@ -587,4 +761,108 @@ function wantsRestart(value: string) {
 
 function formatPrice(price: number) {
   return new Intl.NumberFormat("ru-KZ").format(price) + " ₸";
+}
+
+function buildIdempotency(payload: OpenClawMessagePayload) {
+  const explicitKey =
+    stringValue(payload.idempotency_key) ??
+    stringValue(payload.idempotencyKey) ??
+    stringValue(payload.message_id) ??
+    stringValue(payload.messageId) ??
+    stringValue(payload.webhook_id) ??
+    stringValue(payload.webhookId) ??
+    stringValue(payload.event_id) ??
+    stringValue(payload.eventId);
+  const chatId = stringValue(payload.chat_id) ?? stringValue(payload.chatId) ?? stringValue(payload.phone) ?? stringValue(payload.customer_phone) ?? stringValue(payload.customerPhone);
+  const normalizedPayload = stableStringify({
+    chatId,
+    text: cleanText(payload.text),
+    mediaUrls: normalizedMediaUrls(payload),
+    mediaType: stringValue(payload.media_type) ?? stringValue(payload.mediaType),
+    channel: payload.channel ?? "whatsapp",
+  });
+  const requestHash = sha256(normalizedPayload);
+
+  if (explicitKey) {
+    return {
+      key: `openclaw:${sha256(explicitKey).slice(0, 48)}`,
+      requestHash,
+      explicit: true,
+    };
+  }
+
+  if (!chatId) {
+    return undefined;
+  }
+
+  return {
+    key: `openclaw-fallback:${requestHash}`,
+    requestHash,
+    explicit: false,
+  };
+}
+
+function isProcessedMessageExpired(expiresAt?: string) {
+  if (!expiresAt) {
+    return false;
+  }
+
+  return new Date(expiresAt).getTime() <= Date.now();
+}
+
+function stableStringify(value: unknown): string {
+  if (Array.isArray(value)) {
+    return `[${value.map(stableStringify).join(",")}]`;
+  }
+
+  if (value && typeof value === "object") {
+    return `{${Object.entries(value as Record<string, unknown>)
+      .sort(([left], [right]) => left.localeCompare(right))
+      .map(([key, item]) => `${JSON.stringify(key)}:${stableStringify(item)}`)
+      .join(",")}}`;
+  }
+
+  return JSON.stringify(value) ?? "null";
+}
+
+function sha256(value: string) {
+  return createHash("sha256").update(value).digest("hex");
+}
+
+function nextQuickReplies(state: AgentConversationState) {
+  switch (state) {
+    case "choosing_toi_type":
+      return categories;
+    case "collecting_language":
+      return ["Қазақша", "Русский", "Қазақша + Русский"];
+    case "confirming":
+      return ["ОК", "Исправить", "Админ"];
+    case "waiting_payment":
+      return ["Отправить чек", "Нужен админ"];
+    default:
+      return undefined;
+  }
+}
+
+function stateForMissingField(field: string): AgentConversationState {
+  if (field === "host_names") return "collecting_names";
+  if (field === "date") return "collecting_date";
+  if (field === "time") return "collecting_time";
+  if (field === "venue_name") return "collecting_venue";
+  if (field === "address_or_map_link") return "collecting_address";
+  if (field === "contact_phone") return "collecting_contact";
+  return "confirming";
+}
+
+function missingFieldQuestion(field: string) {
+  const questions: Record<string, string> = {
+    host_names: "Не хватает имён для приглашения. Напишите имена текстом.",
+    date: "Не хватает даты тоя. Напишите дату, например: 20 сентября 2026.",
+    time: "Не хватает времени начала. Напишите время, например: 18:00.",
+    venue_name: "Не хватает названия зала. Напишите ресторан или зал.",
+    address_or_map_link: "Не хватает адреса или карты. Отправьте адрес текстом или ссылку 2GIS/Google Maps.",
+    contact_phone: "Не хватает контактного номера организатора. Напишите номер телефона.",
+  };
+
+  return questions[field] ?? "Не хватает данных для приглашения. Напишите недостающую информацию.";
 }

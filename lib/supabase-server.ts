@@ -23,6 +23,38 @@ export function getSupabasePublicUrl(bucket: string, objectPath: string) {
   return `${env.url}/storage/v1/object/public/${bucket}/${objectPath}`;
 }
 
+export async function createSupabaseSignedObjectUrl(bucket: string, objectPath: string, expiresIn = 3600) {
+  const env = requireSupabaseEnv();
+  const safePath = objectPath
+    .split("/")
+    .filter(Boolean)
+    .map((part) => encodeURIComponent(part))
+    .join("/");
+  const response = await fetch(`${env.url}/storage/v1/object/sign/${bucket}/${safePath}`, {
+    method: "POST",
+    headers: supabaseHeaders(env, "application/json"),
+    body: JSON.stringify({ expiresIn }),
+  });
+
+  if (!response.ok) {
+    const details = await response.text();
+    throw new Error(`Supabase Storage sign ${response.status}: ${details}`);
+  }
+
+  const data = (await response.json()) as { signedURL?: string; signedUrl?: string; signed_url?: string };
+  const signedPath = data.signedURL ?? data.signedUrl ?? data.signed_url;
+
+  if (!signedPath) {
+    throw new Error("Supabase Storage sign response did not include signedURL.");
+  }
+
+  if (signedPath.startsWith("http://") || signedPath.startsWith("https://")) {
+    return signedPath;
+  }
+
+  return `${env.url}/storage/v1${signedPath.startsWith("/") ? signedPath : `/${signedPath}`}`;
+}
+
 export async function supabaseRest<T>(path: string, init?: RequestInit): Promise<T> {
   const env = requireSupabaseEnv();
   const response = await fetch(`${env.url}/rest/v1/${path.replace(/^\/+/, "")}`, {
@@ -72,6 +104,7 @@ export async function uploadSupabaseObject(input: {
   return {
     bucket: input.bucket,
     path: input.objectPath,
+    storageUrl: `storage://${input.bucket}/${input.objectPath}`,
     publicUrl: input.bucket === SUPABASE_STORAGE_BUCKETS.paymentReceipts
       ? ""
       : getSupabasePublicUrl(input.bucket, input.objectPath),

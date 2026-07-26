@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { agentAuthErrorResponse, validateAgentAuth } from "@/lib/agent-auth";
 import {
+  createSupabaseSignedObjectUrl,
   isSupabaseConfigured,
   SUPABASE_STORAGE_BUCKETS,
   uploadSupabaseObject,
@@ -29,7 +30,21 @@ export async function POST(request: Request) {
     );
   }
 
-  const formData = await request.formData();
+  let formData: FormData;
+
+  try {
+    formData = await request.formData();
+  } catch {
+    return Response.json(
+      {
+        ok: false,
+        error: "invalid_multipart_body",
+        message: "Use multipart/form-data with a file field.",
+      },
+      { status: 400 },
+    );
+  }
+
   const file = formData.get("file");
 
   if (!(file instanceof File)) {
@@ -62,11 +77,20 @@ export async function POST(request: Request) {
     );
   }
 
+  const isPrivateReceipt = uploaded.bucket === SUPABASE_STORAGE_BUCKETS.paymentReceipts;
+  const signedUrl = isPrivateReceipt
+    ? await safeSignedUrl(uploaded.bucket, uploaded.path)
+    : "";
+
   return Response.json({
     ok: true,
     bucket: uploaded.bucket,
     path: uploaded.path,
+    storage_url: uploaded.storageUrl,
     url: uploaded.publicUrl,
+    signed_url: signedUrl,
+    signed_url_expires_in: signedUrl ? 3600 : undefined,
+    private: isPrivateReceipt,
   });
 }
 
@@ -97,4 +121,13 @@ function sanitizePathPart(value: string) {
 function sanitizeFileName(value: string) {
   const safe = value.toLowerCase().replace(/[^a-z0-9._-]+/g, "-").replace(/^-+|-+$/g, "");
   return safe || "upload";
+}
+
+async function safeSignedUrl(bucket: string, path: string) {
+  try {
+    return await createSupabaseSignedObjectUrl(bucket, path, 3600);
+  } catch (error) {
+    console.error("Receipt signed URL failed", error);
+    return "";
+  }
 }
