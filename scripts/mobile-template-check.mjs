@@ -9,6 +9,12 @@ const templateIds = [
   "wedding-editorial-istara",
   "kudalyk-gold-mobile",
   "besik-amanat",
+  "besik-stitch-heritage",
+  "birthday-gold-ornament",
+  "birthday-emerald-jubilee",
+  "mereytoy-gold-jubilee",
+  "sundet-blue-royal",
+  "tusaukeser-gold-baby",
 ];
 
 const paths = [

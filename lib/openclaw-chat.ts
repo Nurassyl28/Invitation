@@ -686,12 +686,14 @@ function getOrCreateConversation(
 
 function categoryQuestion(language: PublicLanguage) {
   return language === "kz"
-    ? "Сәлеметсіз бе! Қандай тойға шақыру жасаймыз?\n1. Үйлену тойы\n2. Қыз ұзату\n3. Құдалық"
-    : "Здравствуйте! Для какого события делаем приглашение?\n1. Свадьба\n2. Проводы невесты\n3. Сватовство";
+    ? "Сәлеметсіз бе! Қандай тойға шақыру жасаймыз?\n1. Үйлену тойы\n2. Қыз ұзату\n3. Құдалық\n4. Бесік той\n5. Туған күн\n6. Мерейтой\n7. Сүндет той\n8. Тұсаукесер"
+    : "Здравствуйте! Для какого события делаем приглашение?\n1. Свадьба\n2. Проводы невесты\n3. Сватовство\n4. Праздник колыбели\n5. День рождения\n6. Юбилей\n7. Обрезание\n8. Первый шаг";
 }
 
 function categoryOptions(language: PublicLanguage) {
-  return language === "kz" ? ["Үйлену тойы", "Қыз ұзату", "Құдалық"] : ["Свадьба", "Проводы невесты", "Сватовство"];
+  return language === "kz"
+    ? ["Үйлену тойы", "Қыз ұзату", "Құдалық", "Бесік той", "Туған күн", "Мерейтой", "Сүндет той", "Тұсаукесер"]
+    : ["Свадьба", "Проводы невесты", "Сватовство", "Праздник колыбели", "День рождения", "Юбилей", "Обрезание", "Первый шаг"];
 }
 
 function orderLanguage(order: AgentOrder | undefined, text?: string): PublicLanguage {
@@ -789,6 +791,11 @@ function parseToiType(text: string) {
   if (normalized === "1" || normalized.includes("svad") || normalized.includes("свад") || normalized.includes("уилен") || normalized.includes("үйлен")) return "Свадьба";
   if (normalized === "2" || normalized.includes("uzatu") || normalized.includes("ұзату") || normalized.includes("узату")) return "Қыз ұзату";
   if (normalized === "3" || normalized.includes("qudalyk") || normalized.includes("kudalyk") || normalized.includes("кудалык") || normalized.includes("құдалық") || normalized.includes("кұдалық")) return "Құдалық";
+  if (normalized === "4" || normalized.includes("besik") || normalized.includes("бесік") || normalized.includes("бесик") || normalized.includes("колыб")) return "Бесік той";
+  if (normalized === "5" || normalized.includes("birthday") || normalized.includes("туған") || normalized.includes("туган") || normalized.includes("день рождения")) return "Туған күн";
+  if (normalized === "6" || normalized.includes("mereytoy") || normalized.includes("мерейтой") || normalized.includes("юбилей")) return "Мерейтой";
+  if (normalized === "7" || normalized.includes("sundet") || normalized.includes("сүндет") || normalized.includes("сундет") || normalized.includes("обрез")) return "Сүндет той";
+  if (normalized === "8" || normalized.includes("tusau") || normalized.includes("тұсау") || normalized.includes("тусау") || normalized.includes("перв")) return "Тұсаукесер";
 
   return undefined;
 }

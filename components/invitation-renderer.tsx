@@ -7,7 +7,9 @@ import { EditorialWeddingInvite } from "@/components/editorial-wedding-invite";
 import { InvitationAudio } from "@/components/invitation-audio";
 import { KudalykGoldInvite } from "@/components/kudalyk-gold-invite";
 import { BesikAmanatInvite } from "@/components/besik-amanat-invite";
+import { StitchMobileInvite } from "@/components/stitch-mobile-invite";
 import { copyFor, eventTypeLabel, languageNames, templateName, toPublicLanguage, type StoredLanguage } from "@/lib/i18n";
+import { isStitchTemplateId } from "@/lib/stitch-template-ids";
 
 export type PublicInviteView = {
   slug: string;
@@ -126,6 +128,10 @@ export function InvitationRenderer({ invite }: { invite: PublicInviteView }) {
 
   if (invite.templateId === "besik-amanat") {
     return <BesikAmanatInvite invite={invite} />;
+  }
+
+  if (isStitchTemplateId(invite.templateId)) {
+    return <StitchMobileInvite invite={invite} />;
   }
 
   if (invite.templateId === "wedding-classic-gold") {

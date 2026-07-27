@@ -57,6 +57,10 @@ export const eventTypeCopy = {
     qyzUzatu: "Қыз ұзату",
     kudalyk: "Құдалық",
     besikToi: "Бесік той",
+    birthday: "Туған күн",
+    mereytoy: "Мерейтой",
+    sundetToi: "Сүндет той",
+    tusaukeser: "Тұсаукесер",
     unknown: "Той",
   },
   ru: {
@@ -64,6 +68,10 @@ export const eventTypeCopy = {
     qyzUzatu: "Проводы невесты",
     kudalyk: "Сватовство",
     besikToi: "Праздник колыбели",
+    birthday: "День рождения",
+    mereytoy: "Юбилей",
+    sundetToi: "Обрезание",
+    tusaukeser: "Первый шаг",
     unknown: "Событие",
   },
 } satisfies Record<PublicLanguage, Record<string, string>>;
@@ -81,6 +89,22 @@ export function eventTypeLabel(value: string | undefined, language: PublicLangua
 
   if (normalized.includes("besik") || normalized.includes("бесік") || normalized.includes("бесик")) {
     return eventTypeCopy[language].besikToi;
+  }
+
+  if (normalized.includes("birthday") || normalized.includes("туған") || normalized.includes("туган") || normalized.includes("день рождения")) {
+    return eventTypeCopy[language].birthday;
+  }
+
+  if (normalized.includes("mereytoy") || normalized.includes("мерейтой") || normalized.includes("юбилей")) {
+    return eventTypeCopy[language].mereytoy;
+  }
+
+  if (normalized.includes("sundet") || normalized.includes("сүндет") || normalized.includes("сундет") || normalized.includes("обрез")) {
+    return eventTypeCopy[language].sundetToi;
+  }
+
+  if (normalized.includes("tusau") || normalized.includes("тұсау") || normalized.includes("тусау") || normalized.includes("перв")) {
+    return eventTypeCopy[language].tusaukeser;
   }
 
   if (normalized.includes("wedding") || normalized.includes("свад") || normalized.includes("үйлен") || normalized.includes("уилен")) {
@@ -118,6 +142,30 @@ export const templateDisplayNames: Record<string, Record<PublicLanguage, string>
   "besik-amanat": {
     kz: "Аманат бесік той",
     ru: "Аманат: праздник колыбели",
+  },
+  "besik-stitch-heritage": {
+    kz: "Мұра бесік той",
+    ru: "Наследие колыбели",
+  },
+  "birthday-gold-ornament": {
+    kz: "Алтын туған күн",
+    ru: "Золотой день рождения",
+  },
+  "birthday-emerald-jubilee": {
+    kz: "Жасыл туған күн",
+    ru: "Изумрудный день рождения",
+  },
+  "mereytoy-gold-jubilee": {
+    kz: "Алтын мерейтой",
+    ru: "Золотой юбилей",
+  },
+  "sundet-blue-royal": {
+    kz: "Көк сүндет той",
+    ru: "Синий торжественный",
+  },
+  "tusaukeser-gold-baby": {
+    kz: "Алтын тұсаукесер",
+    ru: "Первый шаг в золоте",
   },
 };
 
