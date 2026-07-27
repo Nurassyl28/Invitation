@@ -18,6 +18,7 @@ export const mvpCategories = [
   "Свадьба",
   "Қыз ұзату",
   "Құдалық",
+  "Бесік той",
 ] as const;
 
 export const categories = [...mvpCategories];
@@ -76,6 +77,15 @@ export const templates: Template[] = [
     color: "gold",
     tags: ["kudalyk", "gold", "ivory", "mobile", "countdown", "rsvp", "kazakh"],
     description: "Мобильный шаблон для құдалық: ivory/gold палитра, гүлдер, той ақпараттары, countdown, галерея және WhatsApp арқылы қатысуды растау.",
+  },
+  {
+    id: "besik-amanat",
+    title: "Amanat & Legacy",
+    category: "Бесік той",
+    tariff: "Premium",
+    color: "teal",
+    tags: ["besik-toi", "amanat", "emerald", "gold", "ivory", "gallery", "rsvp", "kazakh"],
+    description: "Люкс-шаблон для бесік той в стиле Amanat: изумруд/золото/айвори, стеклянные карточки, круглое фото, той бағдарламасы, галерея, RSVP и карта.",
   },
 ];
 

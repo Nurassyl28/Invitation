@@ -1,14 +1,20 @@
 const baseUrl = process.env.MOBILE_QA_BASE_URL || "http://127.0.0.1:8080";
 const debuggerUrl = process.env.CHROME_DEBUGGER_URL || "http://127.0.0.1:9223";
 
+const templateIds = [
+  "wedding-emerald-envelope",
+  "qyz-uzatu-anel",
+  "wedding-classic-gold",
+  "wedding-emerald-card",
+  "wedding-editorial-istara",
+  "kudalyk-gold-mobile",
+  "besik-amanat",
+];
+
 const paths = [
-  "/demo",
-  "/demo/wedding-emerald-envelope",
-  "/demo/qyz-uzatu-anel",
-  "/demo/wedding-classic-gold",
-  "/demo/wedding-emerald-card",
-  "/demo/wedding-editorial-istara",
-  "/demo/kudalyk-gold-mobile",
+  "/demo?lang=kz",
+  "/demo?lang=ru",
+  ...templateIds.flatMap((templateId) => [`/demo/${templateId}?lang=kz`, `/demo/${templateId}?lang=ru`]),
 ];
 
 let commandId = 0;

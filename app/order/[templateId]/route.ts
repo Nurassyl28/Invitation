@@ -6,6 +6,7 @@ import {
   getTariffPrice,
   updateAgentStore,
 } from "@/lib/agent-store";
+import { templateName, toPublicLanguage } from "@/lib/i18n";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -16,6 +17,7 @@ type OrderStartRouteContext = {
 
 export async function POST(request: Request, context: OrderStartRouteContext) {
   const { templateId } = await context.params;
+  const language = toPublicLanguage(new URL(request.url).searchParams.get("lang"));
   const result = await updateAgentStore((store) => {
     const template = store.templates.find((item) => item.id === templateId && item.isActive);
 
@@ -27,7 +29,7 @@ export async function POST(request: Request, context: OrderStartRouteContext) {
       phone: `lead_${randomUUID()}`,
       toi_type: template.toiType,
       template_id: template.id,
-      language: "kz_ru",
+      language,
       tariff: "fixed",
     });
 
@@ -45,8 +47,9 @@ export async function POST(request: Request, context: OrderStartRouteContext) {
     return {
       ok: true as const,
       orderId: order.id,
-      templateName: template.name,
+      templateName: templateName(template.id, language, template.name),
       templateId: template.id,
+      language,
       demoUrl: `${publicBaseUrl(request)}/demo/${template.id}`,
     };
   });
@@ -58,15 +61,27 @@ export async function POST(request: Request, context: OrderStartRouteContext) {
   return NextResponse.redirect(whatsappUrl(result), 303);
 }
 
-function whatsappUrl(input: { orderId: string; templateName: string; templateId: string; demoUrl: string }) {
-  const text = [
-    "Сәлеметсіз бе! Осы дизайнға тапсырыс бергім келеді.",
-    "",
-    `Дизайн: ${input.templateName}`,
-    `Коды: ${input.templateId}`,
-    `Тапсырыс ID: ${input.orderId}`,
-    `Сілтеме: ${input.demoUrl}`,
-  ].join("\n");
+function whatsappUrl(input: { orderId: string; templateName: string; templateId: string; demoUrl: string; language: "kz" | "ru" }) {
+  const text =
+    input.language === "kz"
+      ? [
+          "Сәлеметсіз бе! Осы үлгіге тапсырыс бергім келеді.",
+          "",
+          `Үлгі: ${input.templateName}`,
+          `Код: ${input.templateId}`,
+          `Тапсырыс нөмірі: ${input.orderId}`,
+          "Тіл: Қазақша",
+          `Сілтеме: ${input.demoUrl}?lang=kz`,
+        ].join("\n")
+      : [
+          "Здравствуйте! Хочу заказать этот дизайн.",
+          "",
+          `Дизайн: ${input.templateName}`,
+          `Код: ${input.templateId}`,
+          `Номер заказа: ${input.orderId}`,
+          "Язык: Русский",
+          `Ссылка: ${input.demoUrl}?lang=ru`,
+        ].join("\n");
 
   return `https://wa.me/77056648971?text=${encodeURIComponent(text)}`;
 }

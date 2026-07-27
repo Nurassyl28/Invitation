@@ -6,6 +6,8 @@ import { EmeraldCardInvite } from "@/components/emerald-card-invite";
 import { EditorialWeddingInvite } from "@/components/editorial-wedding-invite";
 import { InvitationAudio } from "@/components/invitation-audio";
 import { KudalykGoldInvite } from "@/components/kudalyk-gold-invite";
+import { BesikAmanatInvite } from "@/components/besik-amanat-invite";
+import { copyFor, eventTypeLabel, languageNames, templateName, toPublicLanguage, type StoredLanguage } from "@/lib/i18n";
 
 export type PublicInviteView = {
   slug: string;
@@ -30,6 +32,7 @@ export type PublicInviteView = {
   rsvpEnabled?: boolean;
   wishesEnabled?: boolean;
   previewImage?: string;
+  language?: StoredLanguage;
 };
 
 type InviteTheme = {
@@ -95,8 +98,11 @@ const themes: Record<string, InviteTheme> = {
 const fallbackTheme = themes["wedding-classic-gold"];
 
 export function InvitationRenderer({ invite }: { invite: PublicInviteView }) {
+  const language = toPublicLanguage(invite.language);
+  const copy = copyFor(language);
   const theme = themes[invite.templateId ?? ""] ?? fallbackTheme;
   const gallery = invite.galleryUrls?.filter(Boolean) ?? [];
+  const localizedEventType = eventTypeLabel(invite.type, language);
 
   if (invite.templateId === "qyz-uzatu-anel") {
     return <QyzUzatuInvite invite={invite} />;
@@ -118,23 +124,27 @@ export function InvitationRenderer({ invite }: { invite: PublicInviteView }) {
     return <KudalykGoldInvite invite={invite} />;
   }
 
+  if (invite.templateId === "besik-amanat") {
+    return <BesikAmanatInvite invite={invite} />;
+  }
+
   if (invite.templateId === "wedding-classic-gold") {
     return <WeddingClassicGoldInvite invite={invite} />;
   }
 
   return (
     <main className={`toi-invite-canvas ${theme.className}`}>
-      <div className="toi-fixed-language">KZ / RU</div>
+      <div className="toi-fixed-language">{languageNames[language]}</div>
       <section className="toi-hero">
         <div className="toi-grain" />
         <div className="toi-floating-orb orb-one" />
         <div className="toi-floating-orb orb-two" />
         <div className="toi-hero-ornament" aria-hidden="true" />
         <div className="toi-hero-content">
-          {invite.status === "draft" ? <span className="toi-pill">Draft preview</span> : null}
-          <span className="toi-kicker">{theme.eventLabel}</span>
+          {invite.status === "draft" ? <span className="toi-pill">{copy.draftPreview as string}</span> : null}
+          <span className="toi-kicker">{localizedEventType}</span>
           <h1>{invite.names}</h1>
-          <p className="toi-quote">{theme.quote}</p>
+          <p className="toi-quote">{copy.quoteWedding as string}</p>
           <div className="toi-date-card">
             <Calendar size={18} />
             <strong>{invite.date}</strong>
@@ -145,23 +155,23 @@ export function InvitationRenderer({ invite }: { invite: PublicInviteView }) {
 
       <section className="toi-section toi-story toi-reveal">
         <Sparkles size={24} />
-        <h2>{theme.storyTitle}</h2>
+        <h2>{copy.dearRelatives as string}</h2>
         <p>{invite.text}</p>
-        <p>Бұл күні қуанышымызға ортақ болып, ақ батаңызды беруге шақырамыз.</p>
+        <p>{copy.weddingStory as string}</p>
       </section>
 
       <section className="toi-section toi-details toi-reveal delay-one">
-        <div className="toi-section-label">When & where</div>
+        <div className="toi-section-label">{copy.dateTime as string}</div>
         <div className="toi-detail-grid">
           <article>
             <Calendar size={20} />
-            <span>Күні мен уақыты</span>
+            <span>{copy.dateTime as string}</span>
             <strong>{invite.date}</strong>
             <p>{invite.time}</p>
           </article>
           <article>
             <MapPin size={20} />
-            <span>Өтетін орны</span>
+            <span>{copy.venue as string}</span>
             <strong>{invite.venue}</strong>
             <p>{invite.address}</p>
           </article>
@@ -169,7 +179,7 @@ export function InvitationRenderer({ invite }: { invite: PublicInviteView }) {
         {invite.mapLink ? (
           <a className="toi-action secondary" href={invite.mapLink}>
             <MapPin size={17} />
-            Картаны ашу
+            {copy.openMap as string}
           </a>
         ) : null}
       </section>
@@ -182,15 +192,15 @@ export function InvitationRenderer({ invite }: { invite: PublicInviteView }) {
           ) : (
             <div className="toi-photo-placeholder">
               <Camera size={34} />
-              <span>{theme.visualLabel}</span>
+              <span>{templateName(invite.templateId, language, theme.visualLabel)}</span>
             </div>
           )}
         </div>
       </section>
 
       <section className="toi-section toi-program toi-reveal delay-three">
-        <div className="toi-section-label">Program</div>
-        <h2>Той бағдарламасы</h2>
+        <div className="toi-section-label">{copy.program as string}</div>
+        <h2>{copy.eveningProgram as string}</h2>
         <div className="toi-timeline">
           {invite.program.map((item, index) => (
             <div className="toi-timeline-item" key={`${item}-${index}`} style={{ "--item-delay": `${index * 120}ms` } as CSSProperties}>
@@ -202,7 +212,7 @@ export function InvitationRenderer({ invite }: { invite: PublicInviteView }) {
       </section>
 
       <section className="toi-section toi-gallery toi-reveal delay-four">
-        <div className="toi-section-label">Gallery</div>
+        <div className="toi-section-label">{copy.gallery as string}</div>
         <div className="toi-gallery-grid">
           {[0, 1, 2].map((index) => (
             <div className="toi-gallery-card" key={index}>
@@ -220,10 +230,10 @@ export function InvitationRenderer({ invite }: { invite: PublicInviteView }) {
       <section className="toi-section toi-music toi-reveal delay-five">
         <Music2 size={22} />
         <div>
-          <span className="toi-section-label">Music</span>
-          <h2>{invite.musicUrl ? "Музыка дайын" : "Музыкалық атмосфера"}</h2>
-          <p>{invite.musicUrl ? "Қонақтар шақыруды музыкамен ашады." : "Тарифке қарай музыка қосуға болады."}</p>
-          <InvitationAudio src={invite.musicUrl} />
+          <span className="toi-section-label">{copy.music as string}</span>
+          <h2>{invite.musicUrl ? (copy.musicReady as string) : (copy.musicAtmosphere as string)}</h2>
+          <p>{invite.musicUrl ? (copy.musicReadyText as string) : (copy.musicMissingText as string)}</p>
+          <InvitationAudio src={invite.musicUrl} language={language} />
         </div>
         <div className="toi-equalizer" aria-hidden="true">
           <span />
@@ -236,26 +246,26 @@ export function InvitationRenderer({ invite }: { invite: PublicInviteView }) {
       {invite.rsvpEnabled ? (
         <section className="toi-section toi-rsvp toi-reveal delay-six" id="rsvp">
           <MessageCircle size={24} />
-          <h2>Қатысуыңызды растаңыз</h2>
+          <h2>{copy.confirmAttendance as string}</h2>
           <form action={`/api/invite/${invite.slug}/rsvp`} method="post">
             <input name="answer" type="hidden" value="yes" />
             <div className="toi-rsvp-grid">
               <label>
-                <span>Имя</span>
-                <input name="guest_name" placeholder="Ваше имя" required />
+                <span>{copy.guestName as string}</span>
+                <input name="guest_name" placeholder={copy.guestNamePlaceholder as string} required />
               </label>
               <label>
-                <span>Гостей</span>
+                <span>{copy.guestCount as string}</span>
                 <input defaultValue="2" min="1" name="guest_count" type="number" />
               </label>
               <label className="full">
-                <span>Пожелание</span>
-                <textarea name="comment" placeholder="Жылы тілегіңіз..." />
+                <span>{copy.wish as string}</span>
+                <textarea name="comment" placeholder={copy.wishPlaceholder as string} />
               </label>
             </div>
             <button className="toi-action" type="submit">
               <Send size={17} />
-              Жіберу
+              {copy.send as string}
             </button>
           </form>
         </section>
@@ -263,9 +273,9 @@ export function InvitationRenderer({ invite }: { invite: PublicInviteView }) {
 
       <section className="toi-section toi-footer">
         <Heart size={20} />
-        <p>Сізді асыға күтеміз</p>
+        <p>{copy.waitForYou as string}</p>
         <a className="toi-action secondary" href={`https://wa.me/?text=toi-invite.kz/invite/${invite.slug}`}>
-          WhatsApp арқылы бөлісу
+          {copy.shareWhatsapp as string}
         </a>
       </section>
     </main>
@@ -280,21 +290,27 @@ const weddingFallbackImages = [
 ];
 
 function WeddingClassicGoldInvite({ invite }: { invite: PublicInviteView }) {
-  const date = splitInviteDate(invite.date);
+  const language = toPublicLanguage(invite.language);
+  const copy = copyFor(language);
+  const date = splitInviteDate(invite.date, language);
   const names = splitInviteNames(invite.names);
   const gallery = [invite.heroPhotoUrl, ...(invite.galleryUrls ?? []), ...weddingFallbackImages].filter(Boolean);
-  const shareText = encodeURIComponent(`Сізді тойымызға шақырамыз: https://dellover.live/invite/${invite.slug}`);
+  const shareText = encodeURIComponent(
+    language === "kz"
+      ? `Сізді тойымызға шақырамыз: https://dellover.live/invite/${invite.slug}`
+      : `Приглашаем вас на нашу свадьбу: https://dellover.live/invite/${invite.slug}`,
+  );
 
   return (
     <main className="amanat-wedding">
       <header className="amanat-topbar">
-        <a aria-label="Бағдарламаға өту" href="#program">
+        <a aria-label={copy.program as string} href="#program">
           <span />
           <span />
           <span />
         </a>
-        <strong>Шақыру</strong>
-        <a aria-label="Музыка" href="#music">
+        <strong>{copy.invited as string}</strong>
+        <a aria-label={copy.music as string} href="#music">
           <Music2 size={22} />
         </a>
       </header>
@@ -308,9 +324,9 @@ function WeddingClassicGoldInvite({ invite }: { invite: PublicInviteView }) {
           <div className="amanat-mark" aria-hidden="true">
             <span />
           </div>
-          {invite.status === "draft" ? <p className="amanat-status">Draft preview</p> : null}
-          <p className="amanat-kicker">Қошқар мүйіз өрнегімен</p>
-          <p className="amanat-script">Үйлену той</p>
+          {invite.status === "draft" ? <p className="amanat-status">{copy.draftPreview as string}</p> : null}
+          <p className="amanat-kicker">{language === "kz" ? "Ұлттық өрнекпен" : "В национальном стиле"}</p>
+          <p className="amanat-script">{eventTypeLabel(invite.type, language)}</p>
           <h1>
             <span>{names.first}</span>
             <em>&amp;</em>
@@ -320,10 +336,10 @@ function WeddingClassicGoldInvite({ invite }: { invite: PublicInviteView }) {
             <Sparkles size={18} />
           </div>
           <p className="amanat-hero-date">{invite.date}</p>
-          <p className="amanat-hero-copy">Екі жүрек, бір шаңырақ. Сіздерді қуанышымыздың қадірлі қонағы болуға шақырамыз.</p>
+          <p className="amanat-hero-copy">{copy.quoteWedding as string}. {copy.weddingStory as string}</p>
           <div className="amanat-mini-oyu bottom" aria-hidden="true" />
         </div>
-        <a className="amanat-scroll" href="#invitation" aria-label="Төмен өту">
+        <a className="amanat-scroll" href="#invitation" aria-label={copy.scrollDown as string}>
           ↓
         </a>
       </section>
@@ -333,19 +349,18 @@ function WeddingClassicGoldInvite({ invite }: { invite: PublicInviteView }) {
       <section className="amanat-invitation amanat-reveal amanat-from-left" id="invitation">
         <div className="amanat-section-inner">
           <Sparkles className="amanat-section-icon" size={38} />
-          <h2>Құрметті ағайын-туыс, достар!</h2>
+          <h2>{copy.dearRelatives as string}</h2>
           <p>{invite.text}</p>
           <div className="amanat-divider slim">
             <Heart size={16} />
           </div>
-          <h2>Дорогие родные и друзья!</h2>
-          <p>Будем рады видеть вас рядом в день, когда начинается наша семейная история. Ваше присутствие и добрые пожелания станут для нас большой честью.</p>
+          <p>{copy.weddingStory as string}</p>
         </div>
       </section>
 
       <section className="amanat-date-grid amanat-reveal" id="details">
         <article className="amanat-info-card amanat-slide-card left">
-          <span>Дата / Күні</span>
+          <span>{copy.date as string}</span>
           <strong>{date.day}</strong>
           <p>{date.month}</p>
           <small>{date.year}</small>
@@ -357,22 +372,22 @@ function WeddingClassicGoldInvite({ invite }: { invite: PublicInviteView }) {
           </div>
         </article>
         <article className="amanat-info-card amanat-slide-card right">
-          <span>Время / Уақыты</span>
+          <span>{copy.time as string}</span>
           <strong>{invite.time}</strong>
-          <p>Қонақтарды қарсы алу</p>
-          <small>Банкет / Той дастарханы</small>
+          <p>{language === "kz" ? "Қонақтарды қарсы алу" : "Сбор гостей"}</p>
+          <small>{language === "kz" ? "Мерекелік дастархан" : "Праздничный ужин"}</small>
         </article>
       </section>
 
       <section className="amanat-venue amanat-reveal amanat-from-right" id="venue">
         <div>
-          <span className="amanat-kicker">Мекен-жайы / Адрес</span>
+          <span className="amanat-kicker">{copy.address as string}</span>
           <h2>{invite.venue}</h2>
           <p>{invite.address}</p>
           {invite.mapLink ? (
             <a className="amanat-primary-action" href={invite.mapLink}>
               <MapPin size={18} />
-              Картаны ашу
+              {copy.openMap as string}
             </a>
           ) : null}
         </div>
@@ -382,8 +397,8 @@ function WeddingClassicGoldInvite({ invite }: { invite: PublicInviteView }) {
       <section className="amanat-program amanat-reveal amanat-from-left" id="program">
         <div className="amanat-section-title">
           <Sparkles size={26} />
-          <h2>Кеш бағдарламасы</h2>
-          <p>Программа вечера</p>
+          <h2>{copy.eveningProgram as string}</h2>
+          <p>{copy.program as string}</p>
         </div>
         <div className="amanat-timeline">
           {invite.program.map((item, index) => {
@@ -404,8 +419,8 @@ function WeddingClassicGoldInvite({ invite }: { invite: PublicInviteView }) {
       <section className="amanat-gallery amanat-reveal amanat-from-right" id="gallery">
         <div className="amanat-gallery-head">
           <div>
-            <h2>Фотогалерея</h2>
-            <p>Beautiful moments of us</p>
+            <h2>{copy.gallery as string}</h2>
+            <p>{language === "kz" ? "Естелік сәттер" : "Памятные моменты"}</p>
           </div>
           <Camera size={28} />
         </div>
@@ -420,9 +435,9 @@ function WeddingClassicGoldInvite({ invite }: { invite: PublicInviteView }) {
 
       <section className="amanat-tradition amanat-reveal amanat-from-left">
         <div className="amanat-tradition-copy">
-          <span className="amanat-kicker">Қазақы нақыш</span>
-          <h2>Ұлттық өрнек пен салтанат</h2>
-          <p>Шаблонда қошқар мүйіз, алтын жиек, жылы ivory фон және ұлттық той атмосферасы сақталады. Фото келген кезде осы блоктар клиенттің суреттерімен ауысады.</p>
+          <span className="amanat-kicker">{language === "kz" ? "Ұлттық нақыш" : "Национальный стиль"}</span>
+          <h2>{language === "kz" ? "Өрнек пен салтанат" : "Орнамент и торжество"}</h2>
+          <p>{language === "kz" ? "Үлгіде ұлттық өрнек, алтын жиек және жылы ашық фон сақталады. Фото келген кезде осы блоктар клиенттің суреттерімен ауысады." : "В дизайне используются национальный орнамент, золотые акценты и тёплый светлый фон. После загрузки фото эти блоки заменяются снимками клиента."}</p>
         </div>
         <div className="amanat-ornament-cards" aria-hidden="true">
           <span />
@@ -434,9 +449,9 @@ function WeddingClassicGoldInvite({ invite }: { invite: PublicInviteView }) {
       <section className="amanat-music amanat-reveal amanat-from-right" id="music">
         <Music2 size={28} />
         <div>
-          <h2>{invite.musicUrl ? "Музыка дайын" : "Музыкалық атмосфера"}</h2>
-          <p>{invite.musicUrl ? "Қонақтар шақыруды музыкамен ашады." : "Бұл блокқа клиент таңдаған ән қосылады."}</p>
-          <InvitationAudio src={invite.musicUrl} />
+          <h2>{invite.musicUrl ? (copy.musicReady as string) : (copy.musicAtmosphere as string)}</h2>
+          <p>{invite.musicUrl ? (copy.musicReadyText as string) : (copy.musicMissingText as string)}</p>
+          <InvitationAudio src={invite.musicUrl} language={language} />
         </div>
         <div className="amanat-bars" aria-hidden="true">
           <span />
@@ -449,27 +464,27 @@ function WeddingClassicGoldInvite({ invite }: { invite: PublicInviteView }) {
       {invite.rsvpEnabled ? (
         <section className="amanat-rsvp amanat-reveal amanat-from-left" id="rsvp">
           <MessageCircle size={34} />
-          <h2>Өтінеміз, келетініңізді растаңыз</h2>
-          <p>Подтвердите участие, чтобы ұйымдастырушылар қонақ санын алдын ала білсін.</p>
+          <h2>{copy.confirmAttendance as string}</h2>
+          <p>{copy.confirmAttendanceLong as string}</p>
           <form action={`/api/invite/${invite.slug}/rsvp`} method="post">
             <input name="answer" type="hidden" value="yes" />
             <div className="amanat-rsvp-grid">
               <label>
-                <span>Ваше имя / Есіміңіз</span>
-                <input name="guest_name" placeholder="Атыңызды жазыңыз" required />
+                <span>{copy.guestName as string}</span>
+                <input name="guest_name" placeholder={copy.guestNamePlaceholder as string} required />
               </label>
               <label>
-                <span>Қонақ саны</span>
+                <span>{copy.guestCount as string}</span>
                 <input defaultValue="2" min="1" name="guest_count" type="number" />
               </label>
               <label className="full">
-                <span>Тілек / Пожелание</span>
-                <textarea name="comment" placeholder="Жылы тілегіңіз..." />
+                <span>{copy.wish as string}</span>
+                <textarea name="comment" placeholder={copy.wishPlaceholder as string} />
               </label>
             </div>
             <button className="amanat-primary-action" type="submit">
               <Send size={18} />
-              Жіберу / Отправить
+              {copy.send as string}
             </button>
           </form>
         </section>
@@ -480,14 +495,14 @@ function WeddingClassicGoldInvite({ invite }: { invite: PublicInviteView }) {
           <Heart size={18} />
         </div>
         <h2>{invite.names}</h2>
-        <p>Сізді асыға күтеміз</p>
+        <p>{copy.waitForYou as string}</p>
       </footer>
 
-      <nav className="amanat-bottom-nav" aria-label="Invitation navigation">
-        <a href="#invitation">Шақыру</a>
-        <a href="#program">Бағдарлама</a>
-        <a href="#rsvp">RSVP</a>
-        <a href={`https://wa.me/?text=${shareText}`}>Бөлісу</a>
+      <nav className="amanat-bottom-nav" aria-label={copy.navPrimary as string}>
+        <a href="#invitation">{copy.invited as string}</a>
+        <a href="#program">{copy.program as string}</a>
+        <a href="#rsvp">{copy.confirmAttendance as string}</a>
+        <a href={`https://wa.me/?text=${shareText}`}>{copy.share as string}</a>
       </nav>
     </main>
   );
@@ -503,29 +518,29 @@ function splitInviteNames(names: string) {
   return { first: names, second: "Той" };
 }
 
-function splitInviteDate(date: string) {
+function splitInviteDate(date: string, language: "kz" | "ru") {
   const isoMatch = date.match(/^(\d{4})-(\d{2})-(\d{2})$/);
 
   if (isoMatch) {
-    const monthNames: Record<string, { label: string; ru: string }> = {
-      "01": { label: "Қаңтар / Январь", ru: "января" },
-      "02": { label: "Ақпан / Февраль", ru: "февраля" },
-      "03": { label: "Наурыз / Март", ru: "марта" },
-      "04": { label: "Сәуір / Апрель", ru: "апреля" },
-      "05": { label: "Мамыр / Май", ru: "мая" },
-      "06": { label: "Маусым / Июнь", ru: "июня" },
-      "07": { label: "Шілде / Июль", ru: "июля" },
-      "08": { label: "Тамыз / Август", ru: "августа" },
-      "09": { label: "Қыркүйек / Сентябрь", ru: "сентября" },
-      "10": { label: "Қазан / Октябрь", ru: "октября" },
-      "11": { label: "Қараша / Ноябрь", ru: "ноября" },
-      "12": { label: "Желтоқсан / Декабрь", ru: "декабря" },
+    const monthNames: Record<string, { kz: string; ru: string }> = {
+      "01": { kz: "Қаңтар", ru: "Январь" },
+      "02": { kz: "Ақпан", ru: "Февраль" },
+      "03": { kz: "Наурыз", ru: "Март" },
+      "04": { kz: "Сәуір", ru: "Апрель" },
+      "05": { kz: "Мамыр", ru: "Май" },
+      "06": { kz: "Маусым", ru: "Июнь" },
+      "07": { kz: "Шілде", ru: "Июль" },
+      "08": { kz: "Тамыз", ru: "Август" },
+      "09": { kz: "Қыркүйек", ru: "Сентябрь" },
+      "10": { kz: "Қазан", ru: "Октябрь" },
+      "11": { kz: "Қараша", ru: "Ноябрь" },
+      "12": { kz: "Желтоқсан", ru: "Декабрь" },
     };
     const month = monthNames[isoMatch[2]];
 
     return {
       day: String(Number(isoMatch[3])),
-      month: month?.label ?? isoMatch[2],
+      month: month?.[language] ?? isoMatch[2],
       monthRu: month?.ru,
       monthNumber: isoMatch[2],
       year: isoMatch[1],

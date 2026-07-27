@@ -3,57 +3,66 @@ import { Eye, MessageCircle } from "lucide-react";
 import { SiteNav } from "@/components/site-nav";
 import { getAllDemoInvites } from "@/lib/demo-invitations";
 import { MVP_FIXED_PRICE } from "@/lib/data";
+import { copyFor, eventTypeLabel, languageNames, toPublicLanguage, withLanguage } from "@/lib/i18n";
 
 export const metadata = {
-  title: "Демо шаблоны — Toi",
+  title: "Toi",
 };
 
 type DemoTemplatesPageProps = {
-  searchParams: Promise<{ type?: string | string[] }>;
+  searchParams: Promise<{ type?: string | string[]; lang?: string | string[] }>;
 };
 
 export default async function DemoTemplatesPage({ searchParams }: DemoTemplatesPageProps) {
   const params = await searchParams;
+  const language = toPublicLanguage(selectedValue(params.lang));
+  const copy = copyFor(language);
   const selectedType = selectedValue(params.type);
-  const demos = getAllDemoInvites();
+  const demos = getAllDemoInvites(language);
   const categories = Array.from(new Set(demos.map((demo) => demo.type)));
   const filteredDemos = selectedType ? demos.filter((demo) => demo.type === selectedType) : demos;
   const formattedPrice = new Intl.NumberFormat("ru-KZ").format(MVP_FIXED_PRICE);
+  const otherLanguage = language === "kz" ? "ru" : "kz";
 
   return (
     <div className="shell demo-shell">
-      <SiteNav section="Демо" />
+      <SiteNav language={language} section={copy.navDemo as string} />
       <main>
         <section className="page-head">
           <div>
-            <span className="eyebrow">Каталог MVP</span>
-            <h1>Дизайны приглашений</h1>
+            <span className="eyebrow">{copy.demoEyebrow as string}</span>
+            <h1>{copy.demoTitle as string}</h1>
             <p className="page-lede">
-              Выберите тип тоя, откройте дизайн и отправьте клиенту ссылку. Сейчас в запуске только 6 готовых дизайнов и фиксированная цена {formattedPrice} ₸.
+              {(copy.demoLead as (price: string) => string)(formattedPrice)}
             </p>
           </div>
-          <a className="button primary" href="https://wa.me/?text=Посмотрите%20демо%20шаблоны%20приглашений">
-            <MessageCircle size={16} />
-            WhatsApp
-          </a>
+          <div className="demo-head-actions">
+            <a className="button secondary" href={withLanguage("/demo", otherLanguage)}>
+              {languageNames[otherLanguage]}
+            </a>
+            <a className="button primary" href={`https://wa.me/?text=${encodeURIComponent(copy.demoWhatsappText as string)}`}>
+              <MessageCircle size={16} />
+              WhatsApp
+            </a>
+          </div>
         </section>
 
         {categories.length ? (
-          <section className="demo-category-panel" aria-label="Фильтр по типу тоя">
+          <section className="demo-category-panel" aria-label={copy.demoFilterAria as string}>
             <div>
-              <span className="eyebrow">Тип тоя</span>
-              <h2>Показать дизайны по категории</h2>
+              <span className="eyebrow">{copy.eventType as string}</span>
+              <h2>{copy.showByCategory as string}</h2>
             </div>
             <div className="demo-category-list">
-              <Link className={`demo-category-chip ${!selectedType ? "is-active" : ""}`} href="/demo">
-                Все
+              <Link className={`demo-category-chip ${!selectedType ? "is-active" : ""}`} href={withLanguage("/demo", language)}>
+                {copy.all as string}
                 <span>{demos.length}</span>
               </Link>
               {categories.map((category) => (
                 <Link
                   aria-current={selectedType === category ? "page" : undefined}
                   className={`demo-category-chip ${selectedType === category ? "is-active" : ""}`}
-                  href={`/demo?type=${encodeURIComponent(category)}`}
+                  href={`/demo?lang=${language}&type=${encodeURIComponent(category)}`}
                   key={category}
                 >
                   {category}
@@ -75,15 +84,15 @@ export default async function DemoTemplatesPage({ searchParams }: DemoTemplatesP
                   ) : null}
                   <span>{demo.type}</span>
                   <strong>{demo.names}</strong>
-                  <small>{demo.date}</small>
+                  <small>{eventTypeLabel(demo.type, language)}</small>
                 </div>
                 <div className="demo-template-body">
                   <span className="muted">{demo.templateId}</span>
                   <h2>{demo.type}</h2>
                   <p>{demo.text}</p>
-                  <Link className="button primary" href={`/demo/${demo.templateId}`}>
+                  <Link className="button primary" href={withLanguage(`/demo/${demo.templateId}`, language)}>
                     <Eye size={16} />
-                    Посмотреть
+                    {copy.view as string}
                   </Link>
                 </div>
               </article>
@@ -91,9 +100,9 @@ export default async function DemoTemplatesPage({ searchParams }: DemoTemplatesP
           </section>
         ) : (
           <section className="empty-state">
-            <span className="eyebrow">Reset</span>
-            <h2>Шаблоны очищены</h2>
-            <p>Старая библиотека удалена из показа. Следующий шаг - собрать новые шаблоны с нуля в нужном казахском стиле.</p>
+            <span className="eyebrow">{copy.emptyEyebrow as string}</span>
+            <h2>{copy.emptyTitle as string}</h2>
+            <p>{copy.emptyText as string}</p>
           </section>
         )}
       </main>

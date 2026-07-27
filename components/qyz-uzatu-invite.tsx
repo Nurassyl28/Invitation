@@ -4,6 +4,7 @@ import { Heart, MapPin, MessageCircle, Music2, Send, Sparkles } from "lucide-rea
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { InvitationAudio } from "@/components/invitation-audio";
 import type { PublicInviteView } from "@/components/invitation-renderer";
+import { copyFor, dateParts, months, parseEventDate, toPublicLanguage } from "@/lib/i18n";
 
 const HERO_PHOTO = "/images/qyz-hero.jpg";
 
@@ -21,12 +22,7 @@ const monthTitleKz = [
 ];
 
 function parseDate(value: string): Date | undefined {
-  const iso = value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-  if (iso) {
-    return new Date(Number(iso[1]), Number(iso[2]) - 1, Number(iso[3]), 0, 0, 0);
-  }
-  const parsed = new Date(value);
-  return Number.isNaN(parsed.getTime()) ? undefined : parsed;
+  return parseEventDate(value);
 }
 
 function splitNames(names: string) {
@@ -106,6 +102,8 @@ function Swallow({ className, style }: { className?: string; style?: CSSProperti
 }
 
 export function QyzUzatuInvite({ invite }: { invite: PublicInviteView }) {
+  const language = toPublicLanguage(invite.language);
+  const copy = copyFor(language);
   const rootRef = useScrollReveal();
   const eventDate = useMemo(() => parseDate(invite.date), [invite.date]);
   const countdown = useCountdown(eventDate);
@@ -114,14 +112,16 @@ export function QyzUzatuInvite({ invite }: { invite: PublicInviteView }) {
   const heroName = names.toUpperCase();
   const program = invite.program.length
     ? invite.program
-    : ["16:00 - Қонақтарды қарсы алу", "17:00 - Сыңсу", "18:00 - Ақ бата", "19:00 - Қыз ұзату рәсімі"];
-  const shareText = encodeURIComponent(`Қыз ұзату шақыруы: ${invite.venue}`);
+    : language === "kz"
+      ? ["16:00 - Қонақтарды қарсы алу", "17:00 - Сыңсу", "18:00 - Ақ бата", "19:00 - Қыз ұзату рәсімі"]
+      : ["16:00 - Встреча гостей", "17:00 - Традиционная церемония", "18:00 - Благословение", "19:00 - Проводы невесты"];
+  const shareText = encodeURIComponent(language === "kz" ? `Қыз ұзату шақыруы: ${invite.venue}` : `Приглашение на проводы невесты: ${invite.venue}`);
 
-  const day = eventDate ? eventDate.getDate() : 25;
-  const monthIndex = eventDate ? eventDate.getMonth() : 3;
-  const year = eventDate ? eventDate.getFullYear() : 2026;
+  const { day, monthIndex, year } = dateParts(invite.date, language, 25, 3, 2026);
   const dateShort = `${day}.${pad(monthIndex + 1)}.${year}`;
-  const dateLong = `${day} ${monthNamesRu[monthIndex]} ${year}`;
+  const dateLong = language === "kz" ? `${day} ${months.kz.lower[monthIndex]} ${year} жыл` : `${day} ${months.ru.lower[monthIndex]} ${year}`;
+  const countdownUnits = copy.countdownUnits as string[];
+  const weekLabels = months[language].weekdaysShort;
 
   // Build month calendar grid (Monday-first).
   const firstDay = new Date(year, monthIndex, 1);
@@ -146,55 +146,55 @@ export function QyzUzatuInvite({ invite }: { invite: PublicInviteView }) {
       </div>
 
       <header className="qu-topbar">
-        <strong>Qyz Uzatu</strong>
-        <a href="#music" aria-label="Музыка"><Music2 size={20} /></a>
+        <strong>{copy.qyzCoverTitle as string}</strong>
+        <a href="#music" aria-label={copy.music as string}><Music2 size={20} /></a>
       </header>
 
       {/* HERO */}
       <section className="qu-hero" id="hero">
         <div className="qu-hero-title" data-reveal>
-          <p>Qyz Uzatu</p>
-          <span>Shaqyru</span>
+          <p>{copy.qyzCoverTitle as string}</p>
+          <span>{copy.qyzCoverSubtitle as string}</span>
         </div>
 
         <div className="qu-photo-frame" data-reveal>
           <div className="qu-photo" style={{ "--photo": `url(${invite.heroPhotoUrl || HERO_PHOTO})` } as CSSProperties}>
             <div className="qu-photo-overlay">
               <strong>{heroName}</strong>
-              <span>QYZ UZATU</span>
-              <small>ПРОВЕДИТЕ ВВЕРХ</small>
+              <span>{(copy.qyzCoverTitle as string).toUpperCase()}</span>
+              <small>{(copy.scrollDown as string).toUpperCase()}</small>
               <em>{dateShort}</em>
             </div>
           </div>
         </div>
 
-        <a className="qu-scroll-hint" href="#countdown" aria-label="Листайте вниз">
+        <a className="qu-scroll-hint" href="#countdown" aria-label={copy.scrollDown as string}>
           <span />
         </a>
       </section>
 
       {/* COUNTDOWN */}
       <section className="qu-countdown" id="countdown" data-reveal>
-        <p className="qu-countdown-title">До торжества осталось</p>
+        <p className="qu-countdown-title">{copy.countdownTitle as string}</p>
         <div className="qu-countdown-grid">
-          <div><strong>{countdown.days}</strong><span>дней</span></div>
-          <div><strong>{countdown.hours}</strong><span>часов</span></div>
-          <div><strong>{countdown.minutes}</strong><span>минут</span></div>
-          <div><strong>{countdown.seconds}</strong><span>секунд</span></div>
+          <div><strong>{countdown.days}</strong><span>{countdownUnits[0]}</span></div>
+          <div><strong>{countdown.hours}</strong><span>{countdownUnits[1]}</span></div>
+          <div><strong>{countdown.minutes}</strong><span>{countdownUnits[2]}</span></div>
+          <div><strong>{countdown.seconds}</strong><span>{countdownUnits[3]}</span></div>
         </div>
       </section>
 
       {/* DATE + CALENDAR */}
       <section className="qu-card qu-date" id="date" data-reveal>
         <p className="qu-script">{dateLong}</p>
-        <h2>Начало в {invite.time}</h2>
+        <h2>{copy.beginningAt as string}: {invite.time}</h2>
         <div className="qu-calendar">
           <div className="qu-calendar-head">
-            <span>{monthTitleRu[monthIndex]} · {monthTitleKz[monthIndex]} {year}</span>
+            <span>{months[language].title[monthIndex]} {year}</span>
             <Swallow className="qu-calendar-bird" />
           </div>
           <div className="qu-week">
-            {["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"].map((d) => <b key={d}>{d}</b>)}
+            {weekLabels.map((d) => <b key={d}>{d}</b>)}
           </div>
           <div className="qu-days">
             {cells.map((value, index) =>
@@ -209,15 +209,15 @@ export function QyzUzatuInvite({ invite }: { invite: PublicInviteView }) {
       {/* INVITATION TEXT */}
       <section className="qu-card qu-invitation" id="invitation" data-reveal>
         <Sparkles size={26} />
-        <h2>Дорогие друзья и родные!</h2>
+        <h2>{copy.qyzDear as string}</h2>
         <p>{invite.text}</p>
-        <p>Приглашаем вас разделить с нами этот праздник и стать дорогими гостями трепетного и радостного события.</p>
+        <p>{copy.qyzTextExtra as string}</p>
       </section>
 
       {/* PROGRAM */}
       <section className="qu-card qu-program" id="program" data-reveal>
-        <span className="qu-kicker">Той бағдарламасы</span>
-        <h2>Салтанатты кеш</h2>
+        <span className="qu-kicker">{copy.program as string}</span>
+        <h2>{copy.eveningProgram as string}</h2>
         <div className="qu-program-list">
           {program.map((item, index) => {
             const row = splitProgramItem(item);
@@ -231,16 +231,16 @@ export function QyzUzatuInvite({ invite }: { invite: PublicInviteView }) {
         </div>
       </section>
 
-      {/* DRESS CODE — placeholder tiles; ждём фото нарядов от клиента */}
+      {/* Placeholder tiles until the client provides dress reference photos. */}
       <section className="qu-card qu-dress" id="dress" data-reveal>
-        <span className="qu-kicker">Казахский национальный костюм</span>
-        <h2>Dress code</h2>
-        <p>Примеры женских и мужских нарядов</p>
+        <span className="qu-kicker">{copy.nationalDress as string}</span>
+        <h2>{copy.dressCode as string}</h2>
+        <p>{copy.dressExamples as string}</p>
         <div className="qu-dress-grid">
           {Array.from({ length: 6 }, (_, index) => (
             <div className="qu-dress-tile" key={index} data-reveal style={{ "--i": index } as CSSProperties}>
-              <span>{index < 3 ? "Әйел" : "Ер"}</span>
-              <small>фото</small>
+              <span>{index < 3 ? (copy.female as string) : (copy.male as string)}</span>
+              <small>{copy.photo as string}</small>
             </div>
           ))}
         </div>
@@ -251,16 +251,16 @@ export function QyzUzatuInvite({ invite }: { invite: PublicInviteView }) {
         <MapPin size={28} />
         <h2>{invite.venue}</h2>
         <p>{invite.address}</p>
-        {invite.mapLink ? <a href={invite.mapLink}>Открыть карту</a> : null}
+        {invite.mapLink ? <a href={invite.mapLink}>{copy.openMap as string}</a> : null}
       </section>
 
       {/* MUSIC */}
       <section className="qu-card qu-music" id="music" data-reveal>
         <Music2 size={26} />
         <div>
-          <h2>Музыка</h2>
-          <p>{invite.musicUrl ? "Мелодия приглашения включена." : "Здесь будет фоновая мелодия приглашения."}</p>
-          <InvitationAudio src={invite.musicUrl} />
+          <h2>{copy.music as string}</h2>
+          <p>{invite.musicUrl ? (copy.musicReadyText as string) : (copy.musicMissingText as string)}</p>
+          <InvitationAudio src={invite.musicUrl} language={language} />
         </div>
         <div className="qu-eq" aria-hidden="true"><span /><span /><span /><span /></div>
       </section>
@@ -269,34 +269,34 @@ export function QyzUzatuInvite({ invite }: { invite: PublicInviteView }) {
       {invite.rsvpEnabled ? (
         <section className="qu-card qu-rsvp" id="rsvp" data-reveal>
           <MessageCircle size={28} />
-          <h2>Растау / RSVP</h2>
-          <p>Пожалуйста, сообщите заранее, сможете ли вы прийти.</p>
+          <h2>{copy.confirmAttendance as string}</h2>
+          <p>{copy.confirmAttendanceLong as string}</p>
           <form action={`/api/invite/${invite.slug}/rsvp`} method="post">
             <input name="answer" type="hidden" value="yes" />
             <label>
-              <span>Аты-жөніңіз / Ваше имя</span>
-              <input name="guest_name" placeholder="Напишите полное имя" required />
+              <span>{copy.guestName as string}</span>
+              <input name="guest_name" placeholder={copy.guestNamePlaceholder as string} required />
             </label>
             <label>
-              <span>Қонақтар саны / Гостей</span>
+              <span>{copy.guestCount as string}</span>
               <input defaultValue="2" min="1" name="guest_count" type="number" />
             </label>
-            <button type="submit"><Send size={17} />Жіберу / Отправить</button>
+            <button type="submit"><Send size={17} />{copy.send as string}</button>
           </form>
         </section>
       ) : null}
 
       <footer className="qu-footer" data-reveal>
         <Heart size={18} />
-        <p>Сізді асыға күтеміз</p>
+        <p>{copy.waitForYou as string}</p>
         <strong>{names}</strong>
       </footer>
 
-      <nav className="qu-nav" aria-label="Навигация">
-        <a href="#hero">Басы</a>
-        <a href="#program">Program</a>
-        <a href="#rsvp">RSVP</a>
-        <a href={`https://wa.me/?text=${shareText}`}>Share</a>
+      <nav className="qu-nav" aria-label={copy.navPrimary as string}>
+        <a href="#hero">{copy.invited as string}</a>
+        <a href="#program">{copy.program as string}</a>
+        <a href="#rsvp">{copy.confirmAttendance as string}</a>
+        <a href={`https://wa.me/?text=${shareText}`}>{copy.share as string}</a>
       </nav>
     </main>
   );

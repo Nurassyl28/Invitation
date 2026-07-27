@@ -217,7 +217,7 @@ export function normalizeLanguage(value: unknown): AgentLanguage {
     return "ru";
   }
 
-  return "kz_ru";
+  return "kz";
 }
 
 export function normalizeOrderStatus(value: unknown): AgentOrderStatus | undefined {
@@ -267,6 +267,7 @@ export function getPublicInviteData(invitation: AgentInvitation) {
     whatsappPhone: invitation.whatsappPhone,
     rsvpEnabled: invitation.rsvpEnabled ?? true,
     wishesEnabled: invitation.wishesEnabled ?? false,
+    language: invitation.language,
   };
 }
 

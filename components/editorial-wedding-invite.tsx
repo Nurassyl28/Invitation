@@ -4,6 +4,7 @@ import { Calendar, Heart, MapPin, MessageCircle, Music2, Send, Sparkles } from "
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { InvitationAudio } from "@/components/invitation-audio";
 import type { PublicInviteView } from "@/components/invitation-renderer";
+import { copyFor, dateParts, toPublicLanguage } from "@/lib/i18n";
 
 const OPEN_DURATION = 1900;
 const BOTANICAL_BASE = "/images/istara-botanical";
@@ -87,24 +88,26 @@ function useReveal(active: boolean) {
 }
 
 export function EditorialWeddingInvite({ invite }: { invite: PublicInviteView }) {
+  const language = toPublicLanguage(invite.language);
+  const copy = copyFor(language);
   const [opening, setOpening] = useState(false);
   const [opened, setOpened] = useState(false);
   const rootRef = useReveal(opened);
   const program = invite.program.length
     ? invite.program
-    : ["16:30 - Сбор гостей", "17:00 - Церемония", "18:00 - Ужин", "22:30 - Завершение"];
+    : language === "kz"
+      ? ["16:30 - Қонақтарды қарсы алу", "17:00 - Неке қию рәсімі", "18:00 - Мерекелік кеш", "22:30 - Кештің аяқталуы"]
+      : ["16:30 - Сбор гостей", "17:00 - Церемония", "18:00 - Ужин", "22:30 - Завершение"];
   const eventDate = useMemo(() => parseDate(invite.date), [invite.date]);
   const names = splitNames(invite.names);
-  const day = eventDate ? eventDate.getDate() : 20;
-  const month = eventDate ? monthNamesRu[eventDate.getMonth()] : "июля";
-  const weekday = eventDate ? weekdaysRu[eventDate.getDay()] : "пятница";
-  const year = eventDate ? eventDate.getFullYear() : 2026;
+  const { day, monthLower: month, weekdayLower: weekday, year } = dateParts(invite.date, language, 20, 6, 2026);
   const publicUrl = invite.slug.startsWith("demo-")
-    ? "https://dellover.live/demo/wedding-editorial-istara"
+    ? `https://dellover.live/demo/wedding-editorial-istara?lang=${language}`
     : `https://dellover.live/invite/${invite.slug}`;
-  const shareText = encodeURIComponent(`Свадебное приглашение: ${invite.names} — ${invite.venue}. ${publicUrl}`);
+  const shareText = encodeURIComponent(language === "kz" ? `Үйлену тойына шақыру: ${invite.names} — ${invite.venue}. ${publicUrl}` : `Свадебное приглашение: ${invite.names} — ${invite.venue}. ${publicUrl}`);
   const telegramHref = `https://t.me/share/url?url=${encodeURIComponent(publicUrl)}&text=${shareText}`;
   const gallery = invite.galleryUrls?.filter(Boolean) ?? [];
+  const nameConnector = language === "kz" ? "және" : "и";
 
   useEffect(() => {
     document.body.style.overflow = opened ? "" : "hidden";
@@ -148,7 +151,7 @@ export function EditorialWeddingInvite({ invite }: { invite: PublicInviteView })
   return (
     <main className={`ew ${opening ? "is-gate-opening" : ""} ${opened ? "is-open" : ""}`} ref={rootRef}>
       {!opened ? (
-        <section className="ew-gate-cover" aria-label="Открыть приглашение">
+        <section className="ew-gate-cover" aria-label={copy.invited as string}>
           <div className="ew-gate-mist" aria-hidden="true" />
           <div className="ew-gate-frame">
             <div className="ew-corner ew-corner-tl" />
@@ -162,7 +165,7 @@ export function EditorialWeddingInvite({ invite }: { invite: PublicInviteView })
                 <BotanicalAsset className="ew-gate-dove-img ew-gate-dove-left-img" file="dove-left.png" />
                 <BotanicalAsset className="ew-gate-dove-img ew-gate-dove-right-img" file="dove-right.png" />
                 <BotanicalAsset className="ew-gate-bow-img" file="bow.png" />
-                <span>Приглашаем на свадьбу</span>
+                <span>{copy.weddingInvite as string}</span>
                 <BotanicalAsset className="ew-gate-divider-img" file="divider-wide.png" />
                 <strong>{invite.names}</strong>
                 <p>{day} {month} {year}</p>
@@ -176,8 +179,8 @@ export function EditorialWeddingInvite({ invite }: { invite: PublicInviteView })
                 <BotanicalAsset className="ew-gate-image ew-gate-image-right" file="gate-right.png" />
               </div>
 
-              <button className="ew-gate-button" type="button" onClick={handleOpen} aria-label="Открыть приглашение">
-                <span className="ew-gate-button-ring">Нажмите</span>
+              <button className="ew-gate-button" type="button" onClick={handleOpen} aria-label={copy.invited as string}>
+                <span className="ew-gate-button-ring">{copy.click as string}</span>
               </button>
             </div>
           </div>
@@ -199,14 +202,14 @@ export function EditorialWeddingInvite({ invite }: { invite: PublicInviteView })
             <BotanicalAsset className="ew-card-flower-img ew-card-flower-left-img" file="flowers-left.png" />
             <BotanicalAsset className="ew-card-flower-img ew-card-flower-right-img" file="flowers-left.png" />
 
-            <span className="ew-kicker">Мы женимся!</span>
-            <h1 aria-label={names.second ? `${names.first} и ${names.second}` : names.first}>
+            <span className="ew-kicker">{copy.weMarry as string}</span>
+            <h1 aria-label={names.second ? `${names.first} ${nameConnector} ${names.second}` : names.first}>
               <span>{names.first}</span>
-              {names.second ? <em>и</em> : null}
+              {names.second ? <em>{nameConnector}</em> : null}
               {names.second ? <span>{names.second}</span> : null}
             </h1>
             <BotanicalAsset className="ew-card-divider-img" file="divider-wide.png" />
-            <p className="ew-hero-note">Будем счастливы видеть вас рядом в этот особенный день</p>
+            <p className="ew-hero-note">{copy.weddingNote as string}</p>
 
             <div className="ew-date-stack">
               <span>{weekday}</span>
@@ -223,34 +226,32 @@ export function EditorialWeddingInvite({ invite }: { invite: PublicInviteView })
         </section>
 
         <section className="ew-story" data-reveal="left">
-          <span>Дорогие гости!</span>
+          <span>{copy.dearGuests as string}</span>
           <p>{invite.text}</p>
-          <p>
-            В этот день мы скажем друг другу «да» и хотим разделить радость с самыми близкими людьми.
-          </p>
+          <p>{copy.weddingStory as string}</p>
         </section>
 
         <section className="ew-details" id="details">
           <article className="ew-detail-card ew-detail-date" data-reveal="left">
             <Calendar size={24} />
-            <span>Дата и время</span>
+            <span>{copy.dateTime as string}</span>
             <h2>{day} {month}</h2>
-            <p>{weekday}, начало в {invite.time}</p>
+            <p>{weekday}, {copy.beginningAt as string}: {invite.time}</p>
             <small>{year}</small>
           </article>
 
           <article className="ew-detail-card ew-detail-place" data-reveal="right">
             <MapPin size={24} />
-            <span>Локация</span>
+            <span>{copy.location as string}</span>
             <h2>{invite.venue}</h2>
             <p>{invite.address}</p>
-            {invite.mapLink ? <a href={invite.mapLink}>Открыть карту</a> : null}
+            {invite.mapLink ? <a href={invite.mapLink}>{copy.openMap as string}</a> : null}
           </article>
         </section>
 
         <section className="ew-program" id="program" data-reveal>
-          <span>Программа дня</span>
-          <h2>Той бағдарламасы</h2>
+          <span>{copy.dayProgram as string}</span>
+          <h2>{copy.program as string}</h2>
           <div>
             {program.map((item, index) => {
               const row = splitProgramItem(item);
@@ -266,13 +267,13 @@ export function EditorialWeddingInvite({ invite }: { invite: PublicInviteView })
 
         <section className="ew-quote" data-reveal="right">
           <Sparkles size={24} />
-          <blockquote>«Екі жүрек, бір шаңырақ»</blockquote>
-          <p>Сіздердің ақ тілектеріңіз біздің жаңа өміріміздің ең әдемі бастамасы болады.</p>
+          <blockquote>«{copy.quoteWedding as string}»</blockquote>
+          <p>{copy.quoteWeddingText as string}</p>
         </section>
 
         {(invite.heroPhotoUrl || gallery.length) ? (
           <section className="ew-gallery" data-reveal>
-            <span>Фото</span>
+            <span>{copy.gallery as string}</span>
             <div>
               {[invite.heroPhotoUrl, ...gallery].filter(Boolean).slice(0, 3).map((src, index) => (
                 // eslint-disable-next-line @next/next/no-img-element
@@ -285,29 +286,29 @@ export function EditorialWeddingInvite({ invite }: { invite: PublicInviteView })
         {invite.musicUrl ? (
           <section className="ew-music" data-reveal="left">
             <Music2 size={24} />
-            <span>Музыка</span>
-            <p>Приглашение можно открыть с музыкальным сопровождением.</p>
-            <InvitationAudio src={invite.musicUrl} />
+            <span>{copy.music as string}</span>
+            <p>{copy.musicReadyText as string}</p>
+            <InvitationAudio src={invite.musicUrl} language={language} />
           </section>
         ) : null}
 
         {invite.rsvpEnabled ? (
           <section className="ew-rsvp" id="rsvp" data-reveal>
             <MessageCircle size={28} />
-            <h2>Қатысуыңызды растаңыз</h2>
+            <h2>{copy.confirmAttendance as string}</h2>
             <form action={`/api/invite/${invite.slug}/rsvp`} method="post">
               <input name="answer" type="hidden" value="yes" />
               <label>
-                <span>Имя</span>
-                <input name="guest_name" placeholder="Имя и фамилия" required />
+                <span>{copy.guestName as string}</span>
+                <input name="guest_name" placeholder={copy.guestNamePlaceholder as string} required />
               </label>
               <label>
-                <span>Количество гостей</span>
+                <span>{copy.guestCount as string}</span>
                 <input defaultValue="2" min="1" name="guest_count" type="number" />
               </label>
               <button type="submit">
                 <Send size={16} />
-                Подтвердить участие
+                {copy.confirmAttendance as string}
               </button>
             </form>
           </section>
@@ -317,9 +318,9 @@ export function EditorialWeddingInvite({ invite }: { invite: PublicInviteView })
           <div className="ew-footer-card">
             <BotanicalAsset className="ew-footer-flourish" file="flourish-center.png" />
             <Heart size={18} />
-            <span className="ew-footer-kicker">До встречи на торжестве</span>
+            <span className="ew-footer-kicker">{copy.seeYou as string}</span>
             <strong>{invite.names}</strong>
-            <p>Сізді асыға күтеміз. Бұл күннің ең әдемі бөлігі — жақын адамдарымыздың жанымызда болуы.</p>
+            <p>{copy.waitForYou as string}. {copy.weddingStory as string}</p>
             <div className="ew-share-actions">
               <a href={`https://wa.me/?text=${shareText}`}>WhatsApp</a>
               <a href={telegramHref}>Telegram</a>

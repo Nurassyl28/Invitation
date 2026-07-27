@@ -4,6 +4,7 @@ import { CalendarDays, Clock3, MapPin, Menu, MessageCircle, Music2, Shirt } from
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { InvitationAudio } from "@/components/invitation-audio";
 import type { PublicInviteView } from "@/components/invitation-renderer";
+import { copyFor, dateParts, toPublicLanguage } from "@/lib/i18n";
 
 const fallbackGallery = [
   "/images/kazakh-ornament-yurt.jpg",
@@ -62,8 +63,8 @@ function splitParents(value?: string) {
 
   const groups = value.split(/\s*;\s*/).map((part) => part.trim()).filter(Boolean);
   return {
-    brideParents: (groups[0] || value).replace(/^қыз жақ[:\s-]*/i, "").split(/\s*,\s*/).filter(Boolean).slice(0, 2),
-    groomParents: (groups[1] || "").replace(/^ұл жақ[:\s-]*/i, "").split(/\s*,\s*/).filter(Boolean).slice(0, 2),
+    brideParents: (groups[0] || value).replace(/^(қыз жақ|сторона невесты)[:\s-]*/i, "").split(/\s*,\s*/).filter(Boolean).slice(0, 2),
+    groomParents: (groups[1] || "").replace(/^(ұл жақ|сторона жениха)[:\s-]*/i, "").split(/\s*,\s*/).filter(Boolean).slice(0, 2),
   };
 }
 
@@ -183,29 +184,30 @@ function OrnaIcon() {
 }
 
 export function KudalykGoldInvite({ invite }: { invite: PublicInviteView }) {
+  const language = toPublicLanguage(invite.language);
+  const copy = copyFor(language);
   const rootRef = useReveal();
   const eventDate = useMemo(() => parseDate(invite.date), [invite.date]);
   const countdown = useCountdown(eventDate);
   const names = splitNames(invite.names);
   const parents = splitParents(invite.parentsNames);
   const gallery = (invite.galleryUrls?.filter(Boolean).length ? invite.galleryUrls.filter(Boolean) : fallbackGallery).slice(0, 4);
-  const day = eventDate ? eventDate.getDate() : 25;
-  const month = eventDate ? monthsKz[eventDate.getMonth()] : "мамыр";
-  const year = eventDate ? eventDate.getFullYear() : 2026;
-  const weekday = eventDate ? weekdaysKz[eventDate.getDay()] : "Жексенбі";
+  const { day, monthLower: month, year, weekday } = dateParts(invite.date, language, 25, 4, 2026);
   const whatsapp = invite.whatsappPhone || invite.contactPhone || "";
+  const whatsappMessage = language === "kz" ? `Қатысамын: ${invite.names}` : `Буду присутствовать: ${invite.names}`;
   const whatsappHref = whatsapp
-    ? `https://wa.me/${whatsapp.replace(/\D/g, "")}?text=${encodeURIComponent(`Қатысамын: ${invite.names}`)}`
-    : `https://wa.me/?text=${encodeURIComponent(`Қатысамын: ${invite.names}`)}`;
+    ? `https://wa.me/${whatsapp.replace(/\D/g, "")}?text=${encodeURIComponent(whatsappMessage)}`
+    : `https://wa.me/?text=${encodeURIComponent(whatsappMessage)}`;
+  const countdownUnits = copy.countdownUnits as string[];
 
   return (
     <main className="kg" ref={rootRef}>
       <section className="kg-card">
         <header className="kg-nav" data-kg-reveal>
-          <button type="button" aria-label="Меню">
+          <button type="button" aria-label={copy.menu as string}>
             <Menu size={28} />
           </button>
-          <button type="button" aria-label="Музыка">
+          <button type="button" aria-label={copy.music as string}>
             <Music2 size={24} />
           </button>
         </header>
@@ -214,8 +216,8 @@ export function KudalykGoldInvite({ invite }: { invite: PublicInviteView }) {
           <TopFlourish />
           <SideFlowers side="left" />
           <SideFlowers side="right" />
-          <p className="kg-kicker">ҚҰДАЛЫҚ ТОЙЫНА</p>
-          <h1>ШАҚЫРАМЫЗ!</h1>
+          <p className="kg-kicker">{language === "kz" ? "ҚҰДАЛЫҚ ТОЙЫНА" : "НА СВАТОВСТВО"}</p>
+          <h1>{language === "kz" ? "ШАҚЫРАМЫЗ!" : "ПРИГЛАШАЕМ!"}</h1>
           <Divider />
           <p className="kg-intro">{invite.text}</p>
           <RingsIllustration />
@@ -224,10 +226,10 @@ export function KudalykGoldInvite({ invite }: { invite: PublicInviteView }) {
         <section className="kg-families" data-kg-reveal>
           <div className="kg-heart-badge" aria-hidden="true">♡</div>
           <article>
-            <span>ҚЫЗ ЖАҚ</span>
+            <span>{(copy.familyBride as string).toUpperCase()}</span>
             <Divider />
             {parents.brideParents.map((parent) => <p key={parent}>{parent}</p>)}
-            <small>Қызымыз</small>
+            <small>{copy.daughter as string}</small>
             <strong>{names.bride}</strong>
           </article>
           <div className="kg-family-line">
@@ -236,56 +238,56 @@ export function KudalykGoldInvite({ invite }: { invite: PublicInviteView }) {
             <span />
           </div>
           <article>
-            <span>ҰЛ ЖАҚ</span>
+            <span>{(copy.familyGroom as string).toUpperCase()}</span>
             <Divider />
             {parents.groomParents.map((parent) => <p key={parent}>{parent}</p>)}
-            <small>Ұлымыз</small>
+            <small>{copy.son as string}</small>
             <strong>{names.groom}</strong>
           </article>
         </section>
 
         <section className="kg-info" data-kg-reveal>
-          <h2>ТОЙ АҚПАРАТЫ</h2>
+          <h2>{copy.eventType as string}</h2>
           <Divider />
           <div className="kg-info-grid">
             <article className="kg-info-date">
               <CalendarDays size={30} />
-              <span>КҮНІ</span>
-              <p>{day} {month} {year} жыл</p>
+              <span>{(copy.date as string).toUpperCase()}</span>
+              <p>{language === "kz" ? `${day} ${month} ${year} жыл` : `${day} ${month} ${year}`}</p>
               <small>{weekday}</small>
             </article>
             <article className="kg-info-time">
               <Clock3 size={30} />
-              <span>УАҚЫТЫ</span>
+              <span>{(copy.time as string).toUpperCase()}</span>
               <p>{invite.time}</p>
             </article>
             <article className="kg-info-place">
               <MapPin size={32} />
-              <span>ӨТЕТІН ОРНЫ</span>
+              <span>{(copy.venue as string).toUpperCase()}</span>
               <p>{invite.address}</p>
               <small>{invite.venue}</small>
             </article>
             <article className="kg-info-dress">
               <Shirt size={30} />
-              <span>КИІМ ҮЛГІСІ</span>
-              <p>{invite.dressCode || "Дәстүрлі / ұлттық киімде келулеріңізді сұраймыз"}</p>
+              <span>{(copy.dressCode as string).toUpperCase()}</span>
+              <p>{invite.dressCode || (copy.traditionalDress as string)}</p>
             </article>
           </div>
         </section>
 
         <section className="kg-countdown" data-kg-reveal>
-          <h2>ТОЙҒА ДЕЙІН</h2>
+          <h2>{(copy.countdownTitle as string).toUpperCase()}</h2>
           <Divider />
           <div className="kg-count-grid">
             {[
-              ["КҮН", countdown.days],
-              ["САҒАТ", countdown.hours],
-              ["МИНУТ", countdown.minutes],
-              ["СЕКУНД", countdown.seconds],
+              [countdownUnits[0], countdown.days],
+              [countdownUnits[1], countdown.hours],
+              [countdownUnits[2], countdown.minutes],
+              [countdownUnits[3], countdown.seconds],
             ].map(([label, value], index) => (
               <article key={label} style={{ "--i": index } as CSSProperties}>
                 <strong>{value}</strong>
-                <span>{label}</span>
+                <span>{label.toUpperCase()}</span>
               </article>
             ))}
           </div>
@@ -294,46 +296,46 @@ export function KudalykGoldInvite({ invite }: { invite: PublicInviteView }) {
         {invite.musicUrl ? (
           <section className="kg-music" data-kg-reveal>
             <Music2 size={28} />
-            <h2>ТОЙ ӘУЕНІ</h2>
+            <h2>{(copy.music as string).toUpperCase()}</h2>
             <Divider />
-            <p>Қонақтар шақыруды музыкалық сүйемелдеумен ашады.</p>
-            <InvitationAudio src={invite.musicUrl} label="Әуенді тыңдау" />
+            <p>{copy.musicReadyText as string}</p>
+            <InvitationAudio src={invite.musicUrl} language={language} />
           </section>
         ) : null}
 
         <section className="kg-gallery" data-kg-reveal>
-          <h2>ҚҰДАЛЫҚ СӘТТЕРІ</h2>
+          <h2>{(copy.qudalykMoments as string).toUpperCase()}</h2>
           <Divider />
-          <button className="kg-gallery-arrow left" type="button" aria-label="Алдыңғы">‹</button>
+          <button className="kg-gallery-arrow left" type="button" aria-label={copy.previous as string}>‹</button>
           <div>
             {gallery.map((src, index) => (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={src} alt={`Құдалық сәттері ${index + 1}`} key={src} />
             ))}
           </div>
-          <button className="kg-gallery-arrow right" type="button" aria-label="Келесі">›</button>
+          <button className="kg-gallery-arrow right" type="button" aria-label={copy.next as string}>›</button>
         </section>
 
         {invite.rsvpEnabled ? (
           <section className="kg-rsvp" data-kg-reveal>
-            <h2>ҚАТЫСУЫҢЫЗДЫ РАСТАҢЫЗ</h2>
+            <h2>{(copy.confirmAttendance as string).toUpperCase()}</h2>
             <Divider />
             <form action={`/api/invite/${invite.slug}/rsvp`} method="post">
               <input name="answer" type="hidden" value="yes" />
-              <input name="guest_name" placeholder="Аты-жөніңіз" required />
+              <input name="guest_name" placeholder={copy.guestNamePlaceholder as string} required />
               <input defaultValue="2" min="1" name="guest_count" type="number" />
               <button type="submit">
                 <MessageCircle size={24} />
-                ҚАТЫСАТЫНЫҢЫЗДЫ ХАБАРЛАҢЫЗ
+                {(copy.attendByWhatsapp as string).toUpperCase()}
               </button>
             </form>
-            <a className="kg-rsvp-whatsapp" href={whatsappHref}>WhatsApp арқылы жазу</a>
-            <p>Сіздің жауаптарыңыз біз үшін маңызды ♥</p>
+            <a className="kg-rsvp-whatsapp" href={whatsappHref}>{language === "kz" ? "WhatsApp арқылы жазу" : "Написать в WhatsApp"}</a>
+            <p>{language === "kz" ? "Сіздің жауаптарыңыз біз үшін маңызды" : "Ваш ответ очень важен для нас"} ♥</p>
           </section>
         ) : null}
 
         <footer className="kg-footer" data-kg-reveal>
-          <p>АҚ ДАСТАРХАНЫМЫЗДАН АУЫЗ ТИГЕНДЕРІҢІЗГЕ МЫҢ АЛҒЫС!</p>
+          <p>{(copy.gratitude as string).toUpperCase()}</p>
           <Divider />
         </footer>
       </section>

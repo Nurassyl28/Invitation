@@ -3,14 +3,16 @@
 import Link from "next/link";
 import { Menu, MessageCircle, X } from "lucide-react";
 import { useState } from "react";
+import { copyFor, toPublicLanguage, withLanguage, type PublicLanguage } from "@/lib/i18n";
 
-const links = [
-  { href: "/demo", label: "Демо" },
-];
+const linkItems = [{ href: "/demo", key: "navDemo" }] as const;
 
-export function SiteNav({ section = "Онлайн-приглашения" }: { section?: string }) {
+export function SiteNav({ section, language: languageInput = "kz" }: { section?: string; language?: PublicLanguage }) {
+  const language = toPublicLanguage(languageInput);
+  const copy = copyFor(language);
   const [open, setOpen] = useState(false);
-  const whatsappHref = "https://wa.me/?text=%D0%A5%D0%BE%D1%87%D1%83%20%D1%81%D0%B4%D0%B5%D0%BB%D0%B0%D1%82%D1%8C%20%D0%BE%D0%BD%D0%BB%D0%B0%D0%B9%D0%BD-%D0%BF%D1%80%D0%B8%D0%B3%D0%BB%D0%B0%D1%88%D0%B5%D0%BD%D0%B8%D0%B5";
+  const whatsappText = language === "kz" ? "Онлайн шақыру жасатқым келеді" : "Хочу сделать онлайн-приглашение";
+  const whatsappHref = `https://wa.me/?text=${encodeURIComponent(whatsappText)}`;
 
   return (
     <header className="topbar">
@@ -18,14 +20,14 @@ export function SiteNav({ section = "Онлайн-приглашения" }: { s
         <span className="brand-mark">T</span>
         <span>
           <strong>Toi</strong>
-          <small>{section}</small>
+          <small>{section ?? (copy.navSection as string)}</small>
         </span>
       </Link>
 
-      <nav className="desktop-nav" aria-label="Основная навигация">
-        {links.map((link) => (
-          <Link key={link.href} href={link.href}>
-            {link.label}
+      <nav className="desktop-nav" aria-label={copy.navPrimary as string}>
+        {linkItems.map((link) => (
+          <Link key={link.href} href={withLanguage(link.href, language)}>
+            {copy[link.key] as string}
           </Link>
         ))}
         <a className="button primary" href={whatsappHref}>
@@ -37,7 +39,7 @@ export function SiteNav({ section = "Онлайн-приглашения" }: { s
       <button
         className="icon-button mobile-only"
         type="button"
-        aria-label={open ? "Закрыть меню" : "Открыть меню"}
+        aria-label={open ? (copy.closeMenu as string) : (copy.openMenu as string)}
         aria-expanded={open}
         onClick={() => setOpen((value) => !value)}
       >
@@ -45,10 +47,10 @@ export function SiteNav({ section = "Онлайн-приглашения" }: { s
       </button>
 
       {open ? (
-        <nav className="mobile-nav" aria-label="Мобильная навигация">
-          {links.map((link) => (
-            <Link key={link.href} href={link.href} onClick={() => setOpen(false)}>
-              {link.label}
+        <nav className="mobile-nav" aria-label={copy.navPrimary as string}>
+          {linkItems.map((link) => (
+            <Link key={link.href} href={withLanguage(link.href, language)} onClick={() => setOpen(false)}>
+              {copy[link.key] as string}
             </Link>
           ))}
           <a className="button primary" href={whatsappHref} onClick={() => setOpen(false)}>

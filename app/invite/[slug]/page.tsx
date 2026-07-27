@@ -29,6 +29,7 @@ export default async function InvitePage({ params }: { params: Promise<{ slug: s
             galleryUrls: [],
             rsvpEnabled: true,
             wishesEnabled: false,
+            language: "ru" as const,
           }
         : undefined;
 

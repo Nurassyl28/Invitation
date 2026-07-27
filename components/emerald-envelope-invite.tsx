@@ -4,6 +4,7 @@ import { Heart, MapPin, MessageCircle, Music2, Send, Sparkles } from "lucide-rea
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { InvitationAudio } from "@/components/invitation-audio";
 import type { PublicInviteView } from "@/components/invitation-renderer";
+import { copyFor, dateParts, months, toPublicLanguage } from "@/lib/i18n";
 
 const WAX_SEAL = "/images/wax-seal.jpg";
 const ILL = {
@@ -63,6 +64,8 @@ function useCountdown(target?: Date) {
 }
 
 export function EmeraldEnvelopeInvite({ invite }: { invite: PublicInviteView }) {
+  const language = toPublicLanguage(invite.language);
+  const copy = copyFor(language);
   const [opened, setOpened] = useState(false);
   const [opening, setOpening] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -72,12 +75,14 @@ export function EmeraldEnvelopeInvite({ invite }: { invite: PublicInviteView }) 
   const names = splitNames(invite.names);
   const program = invite.program.length
     ? invite.program
-    : ["16:30 - Сбор гостей", "17:00 - Церемония", "18:00 - Ужин", "22:30 - Завершение"];
+    : language === "kz"
+      ? ["16:30 - Қонақтарды қарсы алу", "17:00 - Неке қию рәсімі", "18:00 - Мерекелік кеш", "22:30 - Кештің аяқталуы"]
+      : ["16:30 - Сбор гостей", "17:00 - Церемония", "18:00 - Ужин", "22:30 - Завершение"];
 
-  const day = eventDate ? eventDate.getDate() : 3;
-  const monthIndex = eventDate ? eventDate.getMonth() : 9;
-  const year = eventDate ? eventDate.getFullYear() : 2026;
-  const shareText = encodeURIComponent(`Свадебное приглашение: ${invite.venue}`);
+  const { day, monthIndex, year } = dateParts(invite.date, language, 3, 9, 2026);
+  const shareText = encodeURIComponent(language === "kz" ? `Үйлену тойына шақыру: ${invite.venue}` : `Свадебное приглашение: ${invite.venue}`);
+  const weekLabels = months[language].weekdaysShort;
+  const countdownUnits = copy.countdownUnits as string[];
 
   // calendar grid (Monday-first)
   const startOffset = (new Date(year, monthIndex, 1).getDay() + 6) % 7;
@@ -138,10 +143,10 @@ export function EmeraldEnvelopeInvite({ invite }: { invite: PublicInviteView }) 
       {!opened ? (
         <div className={`ev-cover ${opening ? "is-opening" : ""}`}>
           <div className="ev-cover-inner">
-            <span className="ev-kicker">Вы приглашены</span>
-            <h1 className="ev-cover-title">на&nbsp;свадьбу</h1>
+            <span className="ev-kicker">{copy.invited as string}</span>
+            <h1 className="ev-cover-title">{copy.weddingInvite as string}</h1>
 
-            <button className="ev-envelope" type="button" onClick={handleOpen} aria-label="Открыть приглашение">
+            <button className="ev-envelope" type="button" onClick={handleOpen} aria-label={copy.invited as string}>
               <div className="ev-env-back" />
               <div className="ev-env-letter">
                 <span>{names.first}</span>
@@ -151,12 +156,12 @@ export function EmeraldEnvelopeInvite({ invite }: { invite: PublicInviteView }) 
               <div className="ev-env-front" />
               <div className="ev-env-flap" />
               <div className="ev-seal" style={{ "--seal": `url(${WAX_SEAL})` } as CSSProperties}>
-                <span>Нажмите</span>
+                <span>{copy.click as string}</span>
               </div>
             </button>
 
             <p className="ev-cover-note">
-              Вы не просто так получили это приглашение! В особенный для нас день мы очень хотим, чтобы вы были рядом.
+              {copy.envelopeNote as string}
             </p>
           </div>
         </div>
@@ -173,7 +178,7 @@ export function EmeraldEnvelopeInvite({ invite }: { invite: PublicInviteView }) 
             <div className="ev-names-inner">
               <h2>{names.first}<em>&amp;</em>{names.second}</h2>
               <EvFlourish className="ev-flourish" />
-              <p>Спешим сообщить радостную новость&nbsp;— мы женимся!</p>
+              <p>{copy.happyNews as string}</p>
               <div className="ev-vdate">
                 <strong>{pad(day)}</strong>
                 <i />
@@ -187,12 +192,12 @@ export function EmeraldEnvelopeInvite({ invite }: { invite: PublicInviteView }) 
 
         {/* GUESTS + CALENDAR */}
         <section className="ev-guests" data-reveal>
-          <h2>Дорогие гости!</h2>
+          <h2>{copy.dearGuests as string}</h2>
           <p>{invite.text}</p>
           <div className="ev-calendar">
-            <strong>Наш {monthTitleRu[monthIndex].toLowerCase()}</strong>
+            <strong>{copy.ourMonth as string}: {months[language].title[monthIndex]}</strong>
             <div className="ev-week">
-              {["ПН", "ВТ", "СР", "ЧТ", "ПТ", "СБ", "ВС"].map((d) => <b key={d}>{d}</b>)}
+              {weekLabels.map((d) => <b key={d}>{d}</b>)}
             </div>
             <div className="ev-days">
               {cells.map((value, index) => value === null
@@ -209,8 +214,8 @@ export function EmeraldEnvelopeInvite({ invite }: { invite: PublicInviteView }) 
 
         {/* PROGRAM */}
         <section className="ev-program" data-reveal>
-          <span className="ev-label">Расписание вечера</span>
-          <h2>Программа</h2>
+          <span className="ev-label">{copy.schedule as string}</span>
+          <h2>{copy.program as string}</h2>
           <div className="ev-timeline">
             {program.map((item, index) => {
               const row = splitProgramItem(item);
@@ -225,7 +230,7 @@ export function EmeraldEnvelopeInvite({ invite }: { invite: PublicInviteView }) 
           <div className="ev-finale" data-reveal>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img className="ev-ill ev-ill-candelabra" src={ILL.candelabra} alt="" aria-hidden="true" />
-            <span className="ev-finale-title">Завершение</span>
+            <span className="ev-finale-title">{copy.finale as string}</span>
             <strong>{splitProgramItem(program[program.length - 1]).time || "22:30"}</strong>
           </div>
         </section>
@@ -236,7 +241,7 @@ export function EmeraldEnvelopeInvite({ invite }: { invite: PublicInviteView }) 
           <img className="ev-ill ev-ill-flourish" src={ILL.flourish} alt="" aria-hidden="true" />
           <div className="ev-quote-card">
             <Sparkles size={22} />
-            <p>Жизнь&nbsp;— прекрасное путешествие. Глупо тратить бесценное время на то, что не про любовь.</p>
+            <p>{copy.quoteLife as string}</p>
           </div>
         </section>
 
@@ -244,19 +249,19 @@ export function EmeraldEnvelopeInvite({ invite }: { invite: PublicInviteView }) 
         <section className="ev-wishes" data-reveal>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img className="ev-ill ev-ill-key" src={ILL.key} alt="" aria-hidden="true" />
-          <h2>Пожелания</h2>
+          <h2>{copy.wishes as string}</h2>
           <ol>
             <li data-reveal style={{ "--i": 0 } as CSSProperties}>
               <span>1</span>
-              <p>Мы будем признательны, если вы поможете осуществить наши мечты, подарив ваши пожелания в конверте.</p>
+              <p>{copy.wishesOne as string}</p>
             </li>
             <li data-reveal style={{ "--i": 1 } as CSSProperties}>
               <span>2</span>
-              <p>Наш праздник имеет формат 18+, поэтому просим заранее предусмотреть, с кем останутся ваши детки.</p>
+              <p>{copy.wishesTwo as string}</p>
             </li>
             <li data-reveal style={{ "--i": 2 } as CSSProperties}>
               <span>3</span>
-              <p>Мы создали чат праздника, где можно узнать детали и поделиться фото и видео в день свадьбы и после.</p>
+              <p>{copy.wishesThree as string}</p>
             </li>
           </ol>
         </section>
@@ -266,16 +271,16 @@ export function EmeraldEnvelopeInvite({ invite }: { invite: PublicInviteView }) 
           <MapPin size={26} />
           <h2>{invite.venue}</h2>
           <p>{invite.address}</p>
-          {invite.mapLink ? <a href={invite.mapLink}>Открыть карту</a> : null}
+          {invite.mapLink ? <a href={invite.mapLink}>{copy.openMap as string}</a> : null}
         </section>
 
         {/* CONTACT — real open-envelope illustration with text on the letter */}
         <section className="ev-contact" data-reveal>
           <div className="ev-envelope-img-scene">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img className="ev-envelope-img" src="/images/envelope-open.png" alt="Конверт" />
+            <img className="ev-envelope-img" src="/images/envelope-open.png" alt="" />
             <div className="ev-envelope-text">
-              <p>Мы будем очень волноваться на свадьбе, поэтому все вопросы доверили в руки нашего организатора Ольги.</p>
+              <p>{copy.contactOrganizer as string}</p>
               <div className="ev-oe-icons">
                 <a href="https://t.me/" aria-label="Telegram"><Send size={15} /></a>
                 <a href="https://wa.me/" aria-label="WhatsApp"><MessageCircle size={15} /></a>
@@ -286,15 +291,15 @@ export function EmeraldEnvelopeInvite({ invite }: { invite: PublicInviteView }) 
 
         {/* COUNTDOWN */}
         <section className="ev-countdown" data-reveal>
-          <h2>Мы скажем «Да» через…</h2>
+          <h2>{copy.sayYesThrough as string}</h2>
           <div className="ev-count-grid">
-            <div><strong>{countdown.days}</strong><span>дней</span></div>
+            <div><strong>{countdown.days}</strong><span>{countdownUnits[0]}</span></div>
             <i>:</i>
-            <div><strong>{countdown.hours}</strong><span>часов</span></div>
+            <div><strong>{countdown.hours}</strong><span>{countdownUnits[1]}</span></div>
             <i>:</i>
-            <div><strong>{countdown.minutes}</strong><span>минут</span></div>
+            <div><strong>{countdown.minutes}</strong><span>{countdownUnits[2]}</span></div>
             <i>:</i>
-            <div><strong>{countdown.seconds}</strong><span>секунд</span></div>
+            <div><strong>{countdown.seconds}</strong><span>{countdownUnits[3]}</span></div>
           </div>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img className="ev-ill ev-ill-rings" src={ILL.rings} alt="" aria-hidden="true" />
@@ -303,9 +308,9 @@ export function EmeraldEnvelopeInvite({ invite }: { invite: PublicInviteView }) 
         {invite.musicUrl ? (
           <section className="ev-music" data-reveal>
             <Music2 size={24} />
-            <h2>Музыка вечера</h2>
-            <p>Включите мелодию приглашения перед просмотром деталей.</p>
-            <InvitationAudio src={invite.musicUrl} />
+            <h2>{copy.music as string}</h2>
+            <p>{copy.musicReadyText as string}</p>
+            <InvitationAudio src={invite.musicUrl} language={language} />
           </section>
         ) : null}
 
@@ -313,18 +318,18 @@ export function EmeraldEnvelopeInvite({ invite }: { invite: PublicInviteView }) 
         {invite.rsvpEnabled ? (
           <section className="ev-rsvp" data-reveal>
             <MessageCircle size={26} />
-            <h2>Подтвердите участие</h2>
+            <h2>{copy.confirmAttendance as string}</h2>
             <form action={`/api/invite/${invite.slug}/rsvp`} method="post">
               <input name="answer" type="hidden" value="yes" />
               <label>
-                <span>Ваше имя</span>
-                <input name="guest_name" placeholder="Имя и фамилия" required />
+                <span>{copy.guestName as string}</span>
+                <input name="guest_name" placeholder={copy.guestNamePlaceholder as string} required />
               </label>
               <label>
-                <span>Количество гостей</span>
+                <span>{copy.guestCount as string}</span>
                 <input defaultValue="2" min="1" name="guest_count" type="number" />
               </label>
-              <button type="submit"><Send size={16} />Отправить</button>
+              <button type="submit"><Send size={16} />{copy.send as string}</button>
             </form>
           </section>
         ) : null}
@@ -332,8 +337,8 @@ export function EmeraldEnvelopeInvite({ invite }: { invite: PublicInviteView }) 
         <footer className="ev-footer" data-reveal>
           <Heart size={18} />
           <strong>{names.first} &amp; {names.second}</strong>
-          <p>Ждём вас на нашем празднике</p>
-          <a className="ev-share" href={`https://wa.me/?text=${shareText}`}>Поделиться</a>
+          <p>{copy.waitForYou as string}</p>
+          <a className="ev-share" href={`https://wa.me/?text=${shareText}`}>{copy.share as string}</a>
         </footer>
       </div>
     </main>
